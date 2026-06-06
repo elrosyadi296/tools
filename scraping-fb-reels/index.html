@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>296Tools — FB Reel Extractor</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0a0c10;
+    --bg2:       #111318;
+    --bg3:       #181c23;
+    --bg4:       #1e232d;
+    --border:    rgba(255,255,255,0.07);
+    --border2:   rgba(255,255,255,0.13);
+    --accent:    #1877F2;
+    --accent2:   #3b95ff;
+    --accentGlow:rgba(24,119,242,0.25);
+    --green:     #2ecc88;
+    --greenBg:   rgba(46,204,136,0.12);
+    --text:      #e8eaf0;
+    --text2:     #8b92a5;
+    --text3:     #555e72;
+    --mono:      'DM Mono', monospace;
+    --sans:      'DM Sans', sans-serif;
+    --display:   'Syne', sans-serif;
+    --radius:    12px;
+    --radius-sm: 8px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Background decoration ── */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px; left: 50%;
+    transform: translateX(-50%);
+    width: 800px; height: 600px;
+    background: radial-gradient(ellipse, rgba(24,119,242,0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Layout ── */
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  /* ── Header ── */
+  header {
+    padding: 48px 0 36px;
+    text-align: center;
+  }
+
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 50px;
+    padding: 6px 16px 6px 8px;
+    margin-bottom: 24px;
+    animation: fadeDown 0.5s ease both;
+  }
+
+  .logo-icon {
+    width: 28px; height: 28px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .logo-icon svg { width: 16px; height: 16px; fill: #fff; }
+
+  .logo-badge span {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text2);
+    letter-spacing: 0.03em;
+  }
+
+  header h1 {
+    font-family: var(--display);
+    font-size: clamp(28px, 6vw, 44px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--text);
+    animation: fadeDown 0.5s 0.1s ease both;
+  }
+
+  header h1 span {
+    color: var(--accent2);
+  }
+
+  header p {
+    margin-top: 12px;
+    font-size: 15px;
+    color: var(--text2);
+    font-weight: 300;
+    animation: fadeDown 0.5s 0.2s ease both;
+  }
+
+  /* ── Steps guide ── */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 10px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.5s 0.3s ease both;
+  }
+
+  .step {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .step-num {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--accentGlow);
+    border: 1px solid rgba(24,119,242,0.4);
+    color: var(--accent2);
+    font-size: 12px;
+    font-weight: 600;
+    font-family: var(--mono);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .step-text {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.5;
+  }
+
+  .step-text strong { color: var(--text); font-weight: 500; }
+
+  /* ── Card ── */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    animation: fadeUp 0.5s 0.35s ease both;
+  }
+
+  .card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .card-header-left {
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .card-title {
+    font-family: var(--display);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .char-count {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text3);
+  }
+
+  /* ── Textarea ── */
+  textarea {
+    width: 100%;
+    min-height: 180px;
+    background: var(--bg2);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.7;
+    padding: 16px 20px;
+    border: none;
+    outline: none;
+    resize: vertical;
+    display: block;
+    transition: background 0.2s;
+  }
+
+  textarea::placeholder { color: var(--text3); }
+  textarea:focus { background: var(--bg3); }
+
+  /* ── Action bar ── */
+  .action-bar {
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    background: var(--bg3);
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 18px;
+    border-radius: var(--radius-sm);
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: 1px solid transparent;
+    white-space: nowrap;
+  }
+
+  .btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .btn-primary:hover { background: var(--accent2); border-color: var(--accent2); }
+  .btn-primary:active { transform: scale(0.97); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text2);
+    border-color: var(--border2);
+  }
+  .btn-ghost:hover { background: var(--bg4); color: var(--text); border-color: var(--border2); }
+  .btn-ghost:active { transform: scale(0.97); }
+
+  .btn-danger {
+    background: transparent;
+    color: #e05555;
+    border-color: rgba(224,85,85,0.25);
+  }
+  .btn-danger:hover { background: rgba(224,85,85,0.1); border-color: rgba(224,85,85,0.4); }
+
+  /* ── Stats ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .stat-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+
+  .stat-card.highlight { border-color: rgba(24,119,242,0.35); }
+
+  .stat-val {
+    font-family: var(--display);
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--accent2);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--text3);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── Result panel ── */
+  .result-panel {
+    margin-top: 20px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .result-toolbar {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: var(--bg3);
+  }
+
+  .filter-tabs {
+    display: flex;
+    gap: 6px;
+  }
+
+  .tab {
+    padding: 5px 13px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--text2);
+    font-family: var(--sans);
+    transition: all 0.15s;
+  }
+
+  .tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  .export-btns { display: flex; gap: 6px; }
+
+  .link-list {
+    max-height: 380px;
+    overflow-y: auto;
+    padding: 8px;
+  }
+
+  .link-list::-webkit-scrollbar { width: 4px; }
+  .link-list::-webkit-scrollbar-track { background: transparent; }
+  .link-list::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 4px; }
+
+  .link-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: var(--radius-sm);
+    transition: background 0.15s;
+  }
+
+  .link-item:hover { background: var(--bg3); }
+
+  .type-badge {
+    font-size: 10px;
+    font-weight: 600;
+    font-family: var(--mono);
+    padding: 3px 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-reel {
+    background: rgba(24,119,242,0.15);
+    color: var(--accent2);
+    border: 1px solid rgba(24,119,242,0.3);
+  }
+
+  .badge-video {
+    background: var(--greenBg);
+    color: var(--green);
+    border: 1px solid rgba(46,204,136,0.3);
+  }
+
+  .link-url {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text2);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .link-url:hover { color: var(--accent2); }
+
+  .copy-one {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text3);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+
+  .copy-one:hover { background: var(--bg4); color: var(--text); border-color: var(--border2); }
+  .copy-one svg { width: 13px; height: 13px; }
+
+  .no-result {
+    text-align: center;
+    padding: 56px 20px;
+    color: var(--text3);
+  }
+
+  .no-result svg { width: 40px; height: 40px; margin: 0 auto 14px; display: block; opacity: 0.4; }
+  .no-result p { font-size: 14px; }
+
+  /* ── Empty state ── */
+  .empty-state {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+    margin-top: 20px;
+  }
+
+  .empty-icon {
+    width: 56px; height: 56px;
+    margin: 0 auto 16px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .empty-icon svg { width: 28px; height: 28px; color: var(--text3); }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 12px 18px;
+    font-size: 13px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    z-index: 1000;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast svg { width: 16px; height: 16px; color: var(--green); flex-shrink: 0; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 32px 0 0;
+    font-size: 12px;
+    color: var(--text3);
+    animation: fadeUp 0.5s 0.5s ease both;
+  }
+
+  footer a { color: var(--text2); text-decoration: none; }
+  footer a:hover { color: var(--accent2); }
+
+  /* ── Animations ── */
+  @keyframes fadeDown {
+    from { opacity:0; transform: translateY(-16px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(16px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  /* ── Scrollbar global ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- Header -->
+  <header>
+    <div class="logo-badge">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+      </div>
+      <span>296Tools — FB Reel Extractor</span>
+    </div>
+    <h1>Extract <span>Reel Links</span><br>dari Profil Facebook</h1>
+    <p>Paste HTML source halaman profil FB — dapatkan semua URL reel &amp; video seketika</p>
+  </header>
+
+  <!-- Steps -->
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-text">Buka profil FB target, scroll tab <strong>Reels / Videos</strong> sampai cukup</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-text">Tekan <strong>Ctrl+U</strong> untuk buka page source di tab baru</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-text"><strong>Ctrl+A</strong> lalu <strong>Ctrl+C</strong> untuk copy semua isi HTML</div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-text">Paste di bawah, klik <strong>Ekstrak</strong> — link langsung muncul!</div>
+    </div>
+  </div>
+
+  <!-- Input card -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-left">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1877F2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+        <span class="card-title">HTML Source</span>
+      </div>
+      <span class="char-count" id="charCount">0 karakter</span>
+    </div>
+    <textarea id="htmlInput" spellcheck="false"
+      placeholder="Paste HTML source halaman Facebook di sini...&#10;&#10;Ctrl+U pada halaman profil FB → Ctrl+A → Ctrl+C → Ctrl+V di sini"></textarea>
+    <div class="action-bar">
+      <button class="btn btn-primary" id="btnExtract">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Ekstrak Link
+      </button>
+      <button class="btn btn-ghost" id="btnPaste">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+        Paste Clipboard
+      </button>
+      <button class="btn btn-danger" id="btnClear">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+        Bersihkan
+      </button>
+    </div>
+  </div>
+
+  <!-- Empty error state -->
+  <div class="empty-state" id="emptyState">
+    <div class="empty-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+    </div>
+    <p style="color:var(--text2); font-weight:500; margin-bottom:6px;">Tidak ditemukan link reel atau video</p>
+    <p style="color:var(--text3); font-size:13px;">Pastikan kamu sudah scroll halaman profil FB terlebih dahulu sebelum copy HTML-nya</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid" id="statsGrid" style="display:none;">
+    <div class="stat-card">
+      <div class="stat-val" id="statReel">0</div>
+      <div class="stat-label">Reel</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" id="statVideo">0</div>
+      <div class="stat-label">Video</div>
+    </div>
+    <div class="stat-card highlight">
+      <div class="stat-val" id="statTotal">0</div>
+      <div class="stat-label">Total Unik</div>
+    </div>
+  </div>
+
+  <!-- Result panel -->
+  <div class="result-panel" id="resultPanel" style="display:none;">
+    <div class="result-toolbar">
+      <div class="filter-tabs">
+        <button class="tab active" data-f="all">Semua</button>
+        <button class="tab" data-f="reel">Reel</button>
+        <button class="tab" data-f="video">Video</button>
+      </div>
+      <div class="export-btns">
+        <button class="btn btn-ghost" id="btnCopyAll" style="padding:6px 12px; font-size:12px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          Copy Semua
+        </button>
+        <button class="btn btn-ghost" id="btnDlTxt" style="padding:6px 12px; font-size:12px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          .TXT
+        </button>
+        <button class="btn btn-ghost" id="btnDlJson" style="padding:6px 12px; font-size:12px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          .JSON
+        </button>
+      </div>
+    </div>
+    <div class="link-list" id="linkList"></div>
+  </div>
+
+  <footer>
+    <p>FB Reel Extractor &nbsp;·&nbsp; Dibuat oleh <a href="https://296.web.id">296GROUP</a> &nbsp;·&nbsp; Hanya untuk keperluan pribadi yang sah</p>
+  </footer>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toastMsg">Disalin!</span>
+</div>
+
+<script>
+  // ── State
+  let allLinks = [];
+  let activeFilter = 'all';
+
+  // ── DOM refs
+  const htmlInput   = document.getElementById('htmlInput');
+  const charCount   = document.getElementById('charCount');
+  const statsGrid   = document.getElementById('statsGrid');
+  const resultPanel = document.getElementById('resultPanel');
+  const linkList    = document.getElementById('linkList');
+  const emptyState  = document.getElementById('emptyState');
+
+  // ── Char counter
+  htmlInput.addEventListener('input', () => {
+    const n = htmlInput.value.length;
+    charCount.textContent = n.toLocaleString('id') + ' karakter';
+  });
+
+  // ── Extract patterns
+  function extractLinks(html) {
+    const seen = new Set();
+    const results = [];
+
+    const push = (url, type) => {
+      // clean URL — strip query/fragment, normalize slashes
+      const clean = url.replace(/\\u002F/g, '/').replace(/\\/g, '')
+                       .split(/["'\s>)<]/)[0]
+                       .replace(/[?&].*$/, '').replace(/\/$/, '');
+      if (clean && !seen.has(clean)) { seen.add(clean); results.push({ url: clean, type }); }
+    };
+
+    const patterns = [
+      { re: /https?:\/\/(?:www\.)?facebook\.com\/reel\/(\d{5,})/gi,            type: 'reel'  },
+      { re: /https?:\/\/(?:www\.)?fb\.watch\/([A-Za-z0-9_-]{4,})/gi,           type: 'reel'  },
+      { re: /https?:\/\/(?:www\.)?facebook\.com\/[^"'\s<>]+?\/videos\/(\d{5,})/gi, type: 'video' },
+      { re: /https?:\/\/(?:www\.)?facebook\.com\/watch\/?\?v=(\d{5,})/gi,       type: 'video' },
+      { re: /https?:\/\/(?:www\.)?facebook\.com\/video\/embed\?video_id=(\d{5,})/gi, type: 'video' },
+    ];
+
+    for (const { re, type } of patterns) {
+      let m;
+      while ((m = re.exec(html)) !== null) push(m[0], type);
+    }
+
+    // JSON embedded video IDs
+    for (const m of html.matchAll(/"video_id"\s*:\s*"(\d{10,})"/g)) {
+      push(`https://www.facebook.com/watch/?v=${m[1]}`, 'video');
+    }
+    // Reel IDs embedded in JSON
+    for (const m of html.matchAll(/"reel_id"\s*:\s*"(\d{8,})"/g)) {
+      push(`https://www.facebook.com/reel/${m[1]}`, 'reel');
+    }
+
+    return results;
+  }
+
+  // ── Render list
+  function renderList() {
+    const filtered = activeFilter === 'all'
+      ? allLinks
+      : allLinks.filter(l => l.type === activeFilter);
+
+    if (filtered.length === 0) {
+      linkList.innerHTML = `<div class="no-result">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <p>Tidak ada link untuk filter ini</p>
+      </div>`;
+      return;
+    }
+
+    linkList.innerHTML = filtered.map((item, i) => `
+      <div class="link-item">
+        <span class="type-badge ${item.type === 'reel' ? 'badge-reel' : 'badge-video'}">${item.type}</span>
+        <a class="link-url" href="${item.url}" target="_blank" rel="noopener" title="${item.url}">${item.url}</a>
+        <button class="copy-one" onclick="copyOne('${item.url}', this)" title="Copy link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        </button>
+      </div>
+    `).join('');
+  }
+
+  // ── Extract button
+  document.getElementById('btnExtract').addEventListener('click', () => {
+    const html = htmlInput.value.trim();
+    if (!html) { showToast('Paste HTML dulu sebelum ekstrak!', false); return; }
+
+    allLinks = extractLinks(html);
+    const reels  = allLinks.filter(l => l.type === 'reel').length;
+    const videos = allLinks.filter(l => l.type === 'video').length;
+
+    document.getElementById('statReel').textContent  = reels;
+    document.getElementById('statVideo').textContent = videos;
+    document.getElementById('statTotal').textContent = allLinks.length;
+
+    if (allLinks.length === 0) {
+      statsGrid.style.display   = 'none';
+      resultPanel.style.display = 'none';
+      emptyState.style.display  = 'block';
+    } else {
+      emptyState.style.display  = 'none';
+      statsGrid.style.display   = 'grid';
+      resultPanel.style.display = 'block';
+      activeFilter = 'all';
+      document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.f === 'all'));
+      renderList();
+      showToast(`${allLinks.length} link berhasil ditemukan!`);
+    }
+  });
+
+  // ── Paste clipboard
+  document.getElementById('btnPaste').addEventListener('click', async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      htmlInput.value = text;
+      charCount.textContent = text.length.toLocaleString('id') + ' karakter';
+      showToast('HTML berhasil di-paste dari clipboard!');
+    } catch {
+      showToast('Izin clipboard ditolak — paste manual (Ctrl+V)', false);
+    }
+  });
+
+  // ── Clear
+  document.getElementById('btnClear').addEventListener('click', () => {
+    htmlInput.value = '';
+    charCount.textContent = '0 karakter';
+    statsGrid.style.display   = 'none';
+    resultPanel.style.display = 'none';
+    emptyState.style.display  = 'none';
+    allLinks = [];
+  });
+
+  // ── Filter tabs
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeFilter = btn.dataset.f;
+      document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t === btn));
+      renderList();
+    });
+  });
+
+  // ── Copy one
+  function copyOne(url, btn) {
+    navigator.clipboard.writeText(url).then(() => {
+      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;color:var(--green)"><polyline points="20 6 9 17 4 12"/></svg>`;
+      showToast('Link disalin!');
+      setTimeout(() => {
+        btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`;
+      }, 1800);
+    });
+  }
+
+  // ── Copy all
+  document.getElementById('btnCopyAll').addEventListener('click', () => {
+    const filtered = activeFilter === 'all' ? allLinks : allLinks.filter(l => l.type === activeFilter);
+    navigator.clipboard.writeText(filtered.map(l => l.url).join('\n')).then(() => {
+      showToast(`${filtered.length} link disalin ke clipboard!`);
+    });
+  });
+
+  // ── Download TXT
+  document.getElementById('btnDlTxt').addEventListener('click', () => {
+    const filtered = activeFilter === 'all' ? allLinks : allLinks.filter(l => l.type === activeFilter);
+    const content = filtered.map(l => l.url).join('\n');
+    download(`fb_reels_${Date.now()}.txt`, content, 'text/plain');
+  });
+
+  // ── Download JSON
+  document.getElementById('btnDlJson').addEventListener('click', () => {
+    const filtered = activeFilter === 'all' ? allLinks : allLinks.filter(l => l.type === activeFilter);
+    const data = {
+      total: filtered.length,
+      extracted_at: new Date().toISOString(),
+      filter: activeFilter,
+      links: filtered
+    };
+    download(`fb_reels_${Date.now()}.json`, JSON.stringify(data, null, 2), 'application/json');
+  });
+
+  function download(filename, content, type) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([content], { type }));
+    a.download = filename;
+    a.click();
+    showToast(`File ${filename.split('_')[2]?.split('.')[1]?.toUpperCase() || 'file'} berhasil diunduh!`);
+  }
+
+  // ── Toast
+  let toastTimer;
+  function showToast(msg, success = true) {
+    const t = document.getElementById('toast');
+    const icon = t.querySelector('svg');
+    document.getElementById('toastMsg').textContent = msg;
+    icon.style.color = success ? 'var(--green)' : '#e05555';
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+  }
+</script>
+</body>
+</html>
