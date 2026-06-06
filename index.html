@@ -1,0 +1,396 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.page {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--color-background-tertiary);
+  min-height: 100vh;
+  padding: 0 0 3rem;
+  color: var(--color-text-primary);
+}
+
+.hero {
+  padding: 2.5rem 1.5rem 2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -40px; left: 50%;
+  transform: translateX(-50%);
+  width: 500px; height: 200px;
+  background: radial-gradient(ellipse, rgba(83,74,183,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  background: var(--color-background-secondary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: 20px;
+  padding: 5px 14px;
+  margin-bottom: 1.2rem;
+}
+
+.hero-eyebrow i { font-size: 13px; }
+
+h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(26px, 5vw, 40px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.75rem;
+}
+
+h1 span {
+  color: #534AB7;
+}
+
+.hero-sub {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  max-width: 420px;
+  margin: 0 auto 1.75rem;
+  line-height: 1.6;
+}
+
+.search-wrap {
+  display: flex;
+  align-items: center;
+  max-width: 420px;
+  margin: 0 auto;
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: 12px;
+  padding: 0 14px;
+  gap: 8px;
+}
+
+.search-wrap i { font-size: 16px; color: var(--color-text-tertiary); }
+
+.search-wrap input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 12px 0;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--color-text-primary);
+  outline: none;
+}
+
+.search-wrap input::placeholder { color: var(--color-text-tertiary); }
+
+.stats-row {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin: 1.5rem 0 0;
+  flex-wrap: wrap;
+}
+
+.stat { font-size: 12px; color: var(--color-text-secondary); }
+.stat strong { font-weight: 600; color: var(--color-text-primary); font-size: 13px; }
+
+.section {
+  padding: 0 1rem;
+  margin-top: 1.5rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0.85rem;
+}
+
+.section-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--color-text-secondary);
+}
+
+.dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dot-purple { background: #534AB7; }
+.dot-teal { background: #0F6E56; }
+.dot-coral { background: #993C1D; }
+.dot-amber { background: #854F0B; }
+.dot-blue { background: #185FA5; }
+.dot-pink { background: #993556; }
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.tool-card {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 14px 12px;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+
+.tool-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.15s;
+  border-radius: inherit;
+}
+
+.tool-card:hover { border-color: var(--color-border-secondary); transform: translateY(-2px); }
+.tool-card:active { transform: translateY(0) scale(0.98); }
+
+.tool-icon {
+  width: 36px; height: 36px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.icon-purple { background: #EEEDFE; color: #534AB7; }
+.icon-teal   { background: #E1F5EE; color: #0F6E56; }
+.icon-coral  { background: #FAECE7; color: #993C1D; }
+.icon-amber  { background: #FAEEDA; color: #854F0B; }
+.icon-blue   { background: #E6F1FB; color: #185FA5; }
+.icon-pink   { background: #FBEAF0; color: #993556; }
+.icon-green  { background: #EAF3DE; color: #3B6D11; }
+.icon-gray   { background: #F1EFE8; color: #5F5E5A; }
+
+.tool-name {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+  margin-bottom: 3px;
+}
+
+.tool-desc {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+.badge-hot {
+  position: absolute;
+  top: 8px; right: 8px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: #FAECE7;
+  color: #993C1D;
+  border-radius: 4px;
+  padding: 2px 5px;
+}
+
+.badge-new {
+  position: absolute;
+  top: 8px; right: 8px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: #E1F5EE;
+  color: #0F6E56;
+  border-radius: 4px;
+  padding: 2px 5px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  margin-bottom: 1.2rem;
+  scrollbar-width: none;
+}
+.filter-row::-webkit-scrollbar { display: none; }
+
+.filter-btn {
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  border: 0.5px solid var(--color-border-tertiary);
+  background: var(--color-background-primary);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.filter-btn:hover { border-color: var(--color-border-secondary); color: var(--color-text-primary); }
+.filter-btn.active {
+  background: #534AB7;
+  border-color: #534AB7;
+  color: #fff;
+}
+
+.no-results {
+  text-align: center;
+  padding: 2rem;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  display: none;
+}
+</style>
+
+<div class="page">
+  <h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Homepage kumpulan tools internet populer berbagai kategori</h2>
+
+  <div class="hero">
+    <div class="hero-eyebrow"><i class="ti ti-tools" aria-hidden="true"></i> Mr. BOB Toolkit</div>
+    <h1>Internet <span>Tools</span><br>Serba Bisa</h1>
+    <p class="hero-sub">Kumpulan tools online terbaik untuk produktivitas, desain, pengembangan, dan kehidupan digital.</p>
+    <div class="search-wrap">
+      <i class="ti ti-search" aria-hidden="true"></i>
+      <input type="text" id="searchInput" placeholder="Cari tools..." />
+    </div>
+    <div class="stats-row">
+      <div class="stat"><strong id="totalCount">36</strong> tools tersedia</div>
+      <div class="stat"><strong>6</strong> kategori</div>
+      <div class="stat"><strong>100%</strong> gratis</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="filter-row" id="filterRow">
+      <button class="filter-btn active" data-cat="all">Semua</button>
+      <button class="filter-btn" data-cat="ai">🤖 AI & Produktivitas</button>
+      <button class="filter-btn" data-cat="design">🎨 Desain</button>
+      <button class="filter-btn" data-cat="dev">💻 Developer</button>
+      <button class="filter-btn" data-cat="seo">📈 SEO & Analitik</button>
+      <button class="filter-btn" data-cat="media">🎬 Media & Konten</button>
+      <button class="filter-btn" data-cat="util">🔧 Utilitas</button>
+    </div>
+
+    <div class="tools-grid" id="toolsGrid"></div>
+    <div class="no-results" id="noResults"><i class="ti ti-mood-sad" style="font-size:24px; display:block; margin-bottom:8px"></i>Tools tidak ditemukan</div>
+  </div>
+</div>
+
+<script>
+const tools = [
+  { name:"ChatGPT", desc:"AI chatbot serba bisa", icon:"ti-message-chatbot", color:"icon-purple", cat:"ai", url:"https://chat.openai.com", hot:true },
+  { name:"Claude AI", desc:"Asisten AI Anthropic", icon:"ti-sparkles", color:"icon-purple", cat:"ai", url:"https://claude.ai" },
+  { name:"Gemini", desc:"AI dari Google", icon:"ti-star", color:"icon-blue", cat:"ai", url:"https://gemini.google.com" },
+  { name:"Perplexity", desc:"Pencarian bertenaga AI", icon:"ti-search", color:"icon-teal", cat:"ai", url:"https://perplexity.ai", hot:true },
+  { name:"Notion AI", desc:"Workspace + AI menulis", icon:"ti-note", color:"icon-gray", cat:"ai", url:"https://notion.so" },
+  { name:"Gamma", desc:"Presentasi otomatis AI", icon:"ti-presentation", color:"icon-amber", cat:"ai", url:"https://gamma.app", isnew:true },
+
+  { name:"Canva", desc:"Desain grafis mudah", icon:"ti-palette", color:"icon-coral", cat:"design", url:"https://canva.com", hot:true },
+  { name:"Figma", desc:"Desain UI/UX kolaboratif", icon:"ti-vector", color:"icon-purple", cat:"design", url:"https://figma.com" },
+  { name:"Adobe Express", desc:"Edit foto & grafis", icon:"ti-photo", color:"icon-coral", cat:"design", url:"https://express.adobe.com" },
+  { name:"Remove.bg", desc:"Hapus background foto", icon:"ti-cut", color:"icon-teal", cat:"design", url:"https://remove.bg", hot:true },
+  { name:"Coolors", desc:"Generator palet warna", icon:"ti-droplet", color:"icon-pink", cat:"design", url:"https://coolors.co" },
+  { name:"Unsplash", desc:"Foto gratis berkualitas", icon:"ti-camera", color:"icon-gray", cat:"design", url:"https://unsplash.com" },
+
+  { name:"GitHub", desc:"Hosting kode & kolaborasi", icon:"ti-brand-github", color:"icon-gray", cat:"dev", url:"https://github.com" },
+  { name:"CodePen", desc:"Playground HTML/CSS/JS", icon:"ti-code", color:"icon-blue", cat:"dev", url:"https://codepen.io" },
+  { name:"Replit", desc:"IDE online multi-bahasa", icon:"ti-terminal", color:"icon-amber", cat:"dev", url:"https://replit.com" },
+  { name:"JSON Formatter", desc:"Format & validasi JSON", icon:"ti-brackets-curly", color:"icon-green", cat:"dev", url:"https://jsonformatter.curiousconcept.com" },
+  { name:"Regex101", desc:"Uji ekspresi reguler", icon:"ti-regex", color:"icon-purple", cat:"dev", url:"https://regex101.com" },
+  { name:"Vercel", desc:"Deploy web instan", icon:"ti-triangle", color:"icon-gray", cat:"dev", url:"https://vercel.com", isnew:true },
+
+  { name:"Google Analytics", desc:"Analitik traffic website", icon:"ti-chart-line", color:"icon-amber", cat:"seo", url:"https://analytics.google.com", hot:true },
+  { name:"Ahrefs", desc:"SEO & riset keyword", icon:"ti-chart-bar", color:"icon-blue", cat:"seo", url:"https://ahrefs.com" },
+  { name:"Semrush", desc:"All-in-one marketing SEO", icon:"ti-trending-up", color:"icon-coral", cat:"seo", url:"https://semrush.com" },
+  { name:"Google Search Console", desc:"Monitor performa search", icon:"ti-brand-google", color:"icon-blue", cat:"seo", url:"https://search.google.com/search-console" },
+  { name:"GTmetrix", desc:"Analisis kecepatan web", icon:"ti-speedboat", color:"icon-teal", cat:"seo", url:"https://gtmetrix.com" },
+  { name:"Ubersuggest", desc:"Riset kata kunci gratis", icon:"ti-bulb", color:"icon-amber", cat:"seo", url:"https://neilpatel.com/ubersuggest" },
+
+  { name:"YouTube Studio", desc:"Kelola channel YouTube", icon:"ti-brand-youtube", color:"icon-coral", cat:"media", url:"https://studio.youtube.com", hot:true },
+  { name:"Canva Video", desc:"Edit video online", icon:"ti-video", color:"icon-pink", cat:"media", url:"https://canva.com/video-editor" },
+  { name:"CapCut", desc:"Edit video & reels", icon:"ti-scissors", color:"icon-gray", cat:"media", url:"https://capcut.com", hot:true },
+  { name:"Descript", desc:"Edit video via transkrip", icon:"ti-microphone", color:"icon-purple", cat:"media", url:"https://descript.com", isnew:true },
+  { name:"Pexels", desc:"Video stok gratis", icon:"ti-movie", color:"icon-blue", cat:"media", url:"https://pexels.com" },
+  { name:"Epidemic Sound", desc:"Musik bebas hak cipta", icon:"ti-music", color:"icon-teal", cat:"media", url:"https://epidemicsound.com" },
+
+  { name:"Google Drive", desc:"Penyimpanan cloud Google", icon:"ti-brand-google-drive", color:"icon-blue", cat:"util", url:"https://drive.google.com", hot:true },
+  { name:"WeTransfer", desc:"Kirim file besar mudah", icon:"ti-upload", color:"icon-pink", cat:"util", url:"https://wetransfer.com" },
+  { name:"Notion", desc:"Catatan & manajemen tugas", icon:"ti-notebook", color:"icon-gray", cat:"util", url:"https://notion.so" },
+  { name:"Trello", desc:"Manajemen proyek Kanban", icon:"ti-layout-kanban", color:"icon-blue", cat:"util", url:"https://trello.com" },
+  { name:"TinyPNG", desc:"Kompresi gambar online", icon:"ti-photo-down", color:"icon-green", cat:"util", url:"https://tinypng.com", isnew:true },
+  { name:"I Love PDF", desc:"Semua tools PDF online", icon:"ti-file-type-pdf", color:"icon-coral", cat:"util", url:"https://ilovepdf.com" },
+];
+
+function renderTools(list) {
+  const grid = document.getElementById('toolsGrid');
+  const noRes = document.getElementById('noResults');
+  if (!list.length) {
+    grid.innerHTML = '';
+    noRes.style.display = 'block';
+    return;
+  }
+  noRes.style.display = 'none';
+  grid.innerHTML = list.map(t => `
+    <a class="tool-card" href="${t.url}" target="_blank" rel="noopener" data-cat="${t.cat}">
+      ${t.hot ? '<span class="badge-hot">Hot</span>' : ''}
+      ${t.isnew ? '<span class="badge-new">New</span>' : ''}
+      <div class="tool-icon ${t.color}"><i class="ti ${t.icon}" aria-hidden="true"></i></div>
+      <div class="tool-name">${t.name}</div>
+      <div class="tool-desc">${t.desc}</div>
+    </a>
+  `).join('');
+}
+
+let activeCat = 'all';
+let searchQ = '';
+
+function applyFilters() {
+  let list = tools;
+  if (activeCat !== 'all') list = list.filter(t => t.cat === activeCat);
+  if (searchQ) list = list.filter(t => t.name.toLowerCase().includes(searchQ) || t.desc.toLowerCase().includes(searchQ));
+  document.getElementById('totalCount').textContent = list.length;
+  renderTools(list);
+}
+
+document.getElementById('filterRow').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeCat = btn.dataset.cat;
+  applyFilters();
+});
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchQ = e.target.value.toLowerCase().trim();
+  applyFilters();
+});
+
+renderTools(tools);
+</script>
