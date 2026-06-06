@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>296Tools - WhatsApp Link Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<!-- --- FAVICON (SVG Crown Emoji) --- -->
+    <link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
+    
+	
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .wa-green { background-color: #25D366; }
+        .wa-green-dark { background-color: #128C7E; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+    <div class="max-w-4xl mx-auto px-4 py-12">
+        <header class="text-center mb-12 animate-fade-in">
+            <div class="inline-flex items-center justify-center w-16 h-16 wa-green text-white rounded-2xl shadow-lg mb-4">
+                <i class="fab fa-whatsapp text-3xl"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-slate-800">WA Link Generator</h1>
+            <p class="text-slate-500 mt-2 text-lg">Buat tautan pesan WhatsApp dengan teks dan link otomatis.</p>
+        </header>
+
+        <main class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <section class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 animate-fade-in" style="animation-delay: 0.1s">
+                <h2 class="text-xl font-semibold mb-6 text-slate-800 flex items-center">
+                    <i class="fas fa-edit mr-3 text-blue-500"></i> Konfigurasi Pesan
+                </h2>
+
+                <div class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Nomor WhatsApp (dengan kode negara)</label>
+                        <input type="text" id="phone" placeholder="Contoh: 628123456789" 
+                               class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all">
+                        <p class="text-xs text-slate-400 mt-1 italic">*Gunakan format 62 (Indonesia), bukan 08.</p>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Isi Pesan (Kalimat)</label>
+                        <textarea id="message" rows="3" placeholder="Halo, saya tertarik dengan penawaran Anda..." 
+                                  class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Link Tujuan (URL)</label>
+                        <input type="url" id="targetLink" placeholder="https://website-anda.com/promo" 
+                               class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all">
+                    </div>
+                </div>
+            </section>
+
+            <section class="space-y-6 animate-fade-in" style="animation-delay: 0.2s">
+                <!-- Preview WhatsApp Mockup -->
+                <div class="bg-[#E5DDD5] rounded-3xl overflow-hidden shadow-sm border border-slate-200">
+                    <div class="bg-[#075E54] p-4 text-white flex items-center gap-3">
+                        <div class="w-10 h-10 bg-slate-300 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-slate-500"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-sm" id="preview-header">User</p>
+                            <p class="text-[10px] opacity-80">Online</p>
+                        </div>
+                    </div>
+                    <div class="p-4 min-h-[150px] relative bg-[url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')]">
+                        <div class="bg-white p-3 rounded-lg rounded-tl-none shadow-sm max-w-[85%] relative">
+                            <p id="preview-bubble" class="text-sm text-slate-800 break-words">Isi pesan akan muncul di sini...</p>
+                            <p class="text-[9px] text-slate-400 text-right mt-1">12:00</p>
+                            <div class="absolute -left-2 top-0 w-0 h-0 border-t-[10px] border-t-white border-l-[10px] border-l-transparent"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Result Box -->
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                    <h2 class="text-lg font-semibold mb-4 text-slate-800">Link yang Dihasilkan:</h2>
+                    <div class="relative group">
+                        <div id="resultLink" class="w-full bg-slate-50 p-4 rounded-xl border border-dashed border-slate-300 text-sm break-all text-slate-600 min-h-[60px]">
+                            Isi formulir untuk membuat link...
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3 mt-4">
+                        <button onclick="copyLink()" class="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-900 text-white px-4 py-3 rounded-xl transition-all font-medium">
+                            <i class="fas fa-copy"></i> Salin Link
+                        </button>
+                        <button onclick="openWhatsApp()" class="flex items-center justify-center gap-2 wa-green hover:bg-green-600 text-white px-4 py-3 rounded-xl transition-all font-medium">
+                            <i class="fab fa-whatsapp"></i> Test Link
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Message Toast -->
+        <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-6 py-3 rounded-full shadow-xl opacity-0 transition-all pointer-events-none z-50">
+            Tautan berhasil disalin!
+        </div>
+    </div>
+
+    <script>
+        const phoneInput = document.getElementById('phone');
+        const messageInput = document.getElementById('message');
+        const linkInput = document.getElementById('targetLink');
+        const resultDisplay = document.getElementById('resultLink');
+        const previewBubble = document.getElementById('preview-bubble');
+        const previewHeader = document.getElementById('preview-header');
+
+        let generatedURL = "";
+
+        const inputs = [phoneInput, messageInput, linkInput];
+        
+        inputs.forEach(input => {
+            input.addEventListener('input', updateLink);
+        });
+
+        function updateLink() {
+            const phone = phoneInput.value.replace(/[^0-9]/g, '');
+            const message = messageInput.value;
+            const targetLink = linkInput.value;
+
+            // Update Header Preview
+            previewHeader.innerText = phone || "User";
+
+            if (!phone && !message && !targetLink) {
+                resultDisplay.innerText = "Isi formulir untuk membuat link...";
+                previewBubble.innerText = "Isi pesan akan muncul di sini...";
+                generatedURL = "";
+                return;
+            }
+
+            // Gabungkan teks dan link
+            const fullMessage = `${message}${message && targetLink ? '\n\n' : ''}${targetLink}`;
+            const encodedMessage = encodeURIComponent(fullMessage);
+            
+            generatedURL = `https://wa.me/${phone}?text=${encodedMessage}`;
+            
+            resultDisplay.innerText = generatedURL;
+            
+            // Update Preview Bubble with line breaks
+            previewBubble.innerHTML = fullMessage.replace(/\n/g, '<br>') || "Mengetik...";
+        }
+
+        function copyLink() {
+            if (!generatedURL) return;
+            
+            const tempInput = document.createElement('input');
+            tempInput.value = generatedURL;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            showToast("Tautan berhasil disalin ke clipboard!");
+        }
+
+        function openWhatsApp() {
+            if (!generatedURL) {
+                showToast("Harap isi nomor telepon terlebih dahulu.");
+                return;
+            }
+            window.open(generatedURL, '_blank');
+        }
+
+        function showToast(text) {
+            const toast = document.getElementById('toast');
+            toast.innerText = text;
+            toast.classList.remove('opacity-0');
+            toast.classList.add('opacity-100', '-translate-y-4');
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+                toast.classList.remove('opacity-100', '-translate-y-4');
+            }, 3000);
+        }
+
+        window.onload = function() {
+            console.log("WA Link Generator loaded successfully.");
+        };
+    </script>
+</body>
+</html>
