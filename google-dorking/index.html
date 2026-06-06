@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>296Tools - Google Search Operator Tool</title>
+  <!-- --- FAVICON (SVG Crown Emoji) --- -->
+    <link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
+    
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: #07070a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 0;
+      line-height: 1.5;
+    }
+
+    .app {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 1rem 4rem;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 0.5rem;
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
+    }
+
+    .logo-text {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #60a5fa, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .tagline {
+      font-size: 0.95rem;
+      color: #64748b;
+      letter-spacing: 0.05em;
+    }
+
+    /* Tabs */
+    .tabs-container {
+      display: flex;
+      background: #11111b;
+      padding: 4px;
+      border-radius: 10px;
+      border: 1px solid #1e1e2f;
+      margin-bottom: 1.5rem;
+    }
+
+    .tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      padding: 10px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .tab-btn.active {
+      background: #1e1b4b;
+      color: #a78bfa;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Section Styles */
+    .section-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #64748b;
+      margin-bottom: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Grid Operator */
+    .operators-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 10px;
+      margin-bottom: 2rem;
+    }
+
+    .op-card {
+      background: #11111b;
+      border: 1px solid #1e1e2f;
+      border-radius: 10px;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      text-align: left;
+    }
+
+    .op-card:hover {
+      border-color: #3b82f6;
+      background: #151926;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+    }
+
+    .op-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #60a5fa;
+    }
+
+    .op-desc {
+      font-size: 0.75rem;
+      color: #64748b;
+      line-height: 1.4;
+    }
+
+    /* Builder Card */
+    .builder-section {
+      background: #11111b;
+      border: 1px solid #1e1e2f;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .fields-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 1.25rem;
+    }
+
+    @media (max-width: 640px) {
+      .fields-grid {
+        grid-template-columns: 1fr;
+      }
+      .operators-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    label .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      background: #1e1e2f;
+      color: #60a5fa;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid #2a2a3f;
+    }
+
+    input[type="text"], input[type="date"], select {
+      background: #07070a;
+      border: 1px solid #1e1e2f;
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #e2e8f0;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.88rem;
+      width: 100%;
+      outline: none;
+      transition: all 0.15s;
+    }
+
+    input[type="text"]:focus, input[type="date"]:focus, select:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+    }
+
+    select option {
+      background: #11111b;
+    }
+
+    /* Date Range Picker Container */
+    .date-range-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    /* Checkbox & Options */
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .check-tag {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #1a1a2e;
+      border: 1px solid #2a2a44;
+      border-radius: 8px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      color: #94a3b8;
+      transition: all 0.15s;
+      user-select: none;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .check-tag input {
+      accent-color: #3b82f6;
+      width: 14px;
+      height: 14px;
+    }
+
+    .check-tag:hover {
+      border-color: #3b82f6;
+      color: #60a5fa;
+      background: #161b33;
+    }
+
+    .check-tag.active {
+      border-color: #3b82f6;
+      color: #60a5fa;
+      background: #0f172a;
+    }
+
+    /* Result Box styling */
+    .result-box-container {
+      margin-top: 1.5rem;
+    }
+
+    .result-box {
+      background: #07070a;
+      border: 1px solid #1e1e2f;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 60px;
+      position: relative;
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px dashed #1e1e2f;
+      padding-bottom: 8px;
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+
+    .result-query {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: #a3e635;
+      word-break: break-all;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .result-placeholder {
+      font-size: 0.85rem;
+      color: #475569;
+      font-style: italic;
+    }
+
+    /* Custom Notification Alert Modal replacement */
+    .custom-alert {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #1e1b4b;
+      border: 1px solid #4338ca;
+      color: #c084fc;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      transform: translateY(-20px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 1000;
+      pointer-events: none;
+    }
+
+    .custom-alert.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Buttons */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 1.25rem;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white;
+      flex: 2;
+      min-width: 180px;
+      box-shadow: 0 4px 15px rgba(124, 58, 237, 0.25);
+    }
+
+    .btn-primary:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35);
+    }
+
+    .btn-primary:active { transform: scale(0.98); }
+
+    .btn-copy {
+      background: #1e1e2f;
+      color: #cbd5e1;
+      border: 1px solid #2a2a3f;
+      flex: 1;
+      min-width: 100px;
+    }
+
+    .btn-copy:hover {
+      background: #27273f;
+      color: #f8fafc;
+    }
+
+    .btn-clear {
+      background: transparent;
+      color: #64748b;
+      border: 1px solid #1e1e2f;
+      padding: 12px 16px;
+    }
+
+    .btn-clear:hover {
+      color: #f87171;
+      border-color: #ef4444;
+      background: rgba(239, 68, 68, 0.05);
+    }
+
+    /* Preset & Examples Section */
+    .divider {
+      height: 1px;
+      background: #1e1e2f;
+      margin: 2rem 0;
+    }
+
+    .examples-section {
+      margin-top: 1.5rem;
+    }
+
+    .example-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    @media (min-width: 768px) {
+      .example-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .example-item {
+      background: #11111b;
+      border: 1px solid #1e1e2f;
+      border-left: 4px solid #3b82f6;
+      border-radius: 0 12px 12px 0;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      text-align: left;
+    }
+
+    .example-item:hover {
+      background: #161624;
+      border-left-color: #a78bfa;
+      transform: translateX(3px);
+    }
+
+    .example-badge {
+      display: inline-block;
+      align-self: flex-start;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 2px;
+    }
+
+    .badge-osint { background: #1e293b; color: #94a3b8; }
+    .badge-vuln { background: #451a03; color: #f59e0b; }
+    .badge-intel { background: #064e3b; color: #34d399; }
+    .badge-files { background: #1e1b4b; color: #c084fc; }
+
+    .example-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+
+    .example-query {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: #60a5fa;
+      word-break: break-all;
+      background: #07070a;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #1a1a2e;
+    }
+
+    /* Toast Notification */
+    .copied-msg {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: #10b981;
+      color: #ffffff;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      opacity: 0;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .copied-msg.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon"><i class="fa-solid fa-brain"></i></div>
+      <span class="logo-text">DorkBuilder</span>
+    </div>
+    <div class="tagline">Advanced Google Dork & OSINT Intelligence Generator</div>
+  </div>
+
+  <!-- Tab Selector -->
+  <div class="tabs-container">
+    <button class="tab-btn active" onclick="switchTab('all')" id="tab-all">
+      🌐 Semua Operator
+    </button>
+    <button class="tab-btn" onclick="switchTab('sec')" id="tab-sec">
+      🛡️ Keamanan & Penetrasi (Dorks)
+    </button>
+  </div>
+
+  <!-- Tab 1: Operator Umum -->
+  <div id="panel-all">
+    <div class="section-title">⚡ Operator Dasar & Pencarian Cepat</div>
+    <div class="operators-grid">
+      <div class="op-card" onclick="addOp('site:')">
+        <span class="op-name">site:</span>
+        <span class="op-desc">Membatasi hasil pada situs/domain tertentu</span>
+      </div>
+      <div class="op-card" onclick="addOp('intitle:')">
+        <span class="op-name">intitle:</span>
+        <span class="op-desc">Mencari istilah tertentu di dalam judul halaman</span>
+      </div>
+      <div class="op-card" onclick="addOp('inurl:')">
+        <span class="op-name">inurl:</span>
+        <span class="op-desc">Mencari istilah yang terkandung di dalam URL</span>
+      </div>
+      <div class="op-card" onclick="addOp('filetype:')">
+        <span class="op-name">filetype:</span>
+        <span class="op-desc">Menyaring ekstensi dokumen (PDF, XLS, dll)</span>
+      </div>
+      <div class="op-card" onclick="addOp('intext:')">
+        <span class="op-name">intext:</span>
+        <span class="op-desc">Mencari teks hanya di bagian body halaman</span>
+      </div>
+      <div class="op-card" onclick="addOp('define:')">
+        <span class="op-name">define:</span>
+        <span class="op-desc">Mencari kamus definisi instan dari istilah</span>
+      </div>
+      <div class="op-card" onclick="addOp('related:')">
+        <span class="op-name">related:</span>
+        <span class="op-desc">Mencari web yang memiliki konten sejenis</span>
+      </div>
+      <div class="op-card" onclick="addOp('cache:')">
+        <span class="op-name">cache:</span>
+        <span class="op-desc">Melihat snapshot halaman terakhir dari Google</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 2: Operator Cyber Security / Pentesting (Hidden on start) -->
+  <div id="panel-sec" style="display: none;">
+    <div class="section-title">💀 Operator Khusus OSINT & Pentesting</div>
+    <div class="operators-grid">
+      <div class="op-card" onclick="addOp('intitle:&quot;index of&quot;')">
+        <span class="op-name">intitle:"index of"</span>
+        <span class="op-desc">Mencari direktori folder yang terbuka publik</span>
+      </div>
+      <div class="op-card" onclick="addOp('inurl:admin')">
+        <span class="op-name">inurl:admin</span>
+        <span class="op-desc">Menargetkan pintu masuk login atau panel admin</span>
+      </div>
+      <div class="op-card" onclick="addOp('&quot;sql syntax error&quot;')">
+        <span class="op-name">"sql syntax error"</span>
+        <span class="op-desc">Mencari jejak galat database di halaman web</span>
+      </div>
+      <div class="op-card" onclick="addOp('inurl:wp-content')">
+        <span class="op-name">inurl:wp-content</span>
+        <span class="op-desc">Menemukan berkas terunggah pada WordPress</span>
+      </div>
+      <div class="op-card" onclick="addOp('ext:log OR ext:txt')">
+        <span class="op-name">ext:log OR ext:txt</span>
+        <span class="op-desc">Memburu berkas riwayat sistem atau log</span>
+      </div>
+      <div class="op-card" onclick="addOp('inurl:config OR ext:env')">
+        <span class="op-name">ext:env OR config</span>
+        <span class="op-desc">Menargetkan berkas kunci rahasia lingkungan</span>
+      </div>
+      <div class="op-card" onclick="addOp('&quot;choose file to upload&quot;')">
+        <span class="op-name">"upload file"</span>
+        <span class="op-desc">Mencari form input unggah file yang terekspos</span>
+      </div>
+      <div class="op-card" onclick="addOp('filetype:sql OR ext:backup')">
+        <span class="op-name">filetype:sql / backup</span>
+        <span class="op-desc">Mencari cadangan basis data yang tertinggal</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Builder Area -->
+  <div class="builder-section">
+    <div class="section-title" style="margin-bottom:1rem; color: #a78bfa;">🛠️ Form Penyusun Query (Query Builder)</div>
+
+    <div class="fields-grid">
+      <!-- Domain / Site -->
+      <div class="field-group">
+        <label><span class="badge">site:</span> Domain / Target</label>
+        <input type="text" id="f-site" placeholder="contoh: .go.id atau facebook.com" oninput="buildQuery()">
+      </div>
+
+      <!-- Judul Halaman -->
+      <div class="field-group">
+        <label><span class="badge">intitle:</span> Teks di Judul</label>
+        <input type="text" id="f-intitle" placeholder="contoh: index of / atau rahasia" oninput="buildQuery()">
+      </div>
+
+      <!-- Teks di URL -->
+      <div class="field-group">
+        <label><span class="badge">inurl:</span> Teks di URL</label>
+        <input type="text" id="f-inurl" placeholder="contoh: /phpmyadmin/ atau .env" oninput="buildQuery()">
+      </div>
+
+      <!-- Format Berkas -->
+      <div class="field-group">
+        <label><span class="badge">filetype: / ext:</span> Tipe Dokumen</label>
+        <select id="f-filetype" onchange="buildQuery()">
+          <option value="">— Semua Format —</option>
+          <option value="pdf">PDF (.pdf)</option>
+          <option value="xls">Excel (.xls, .xlsx)</option>
+          <option value="doc">Word (.doc, .docx)</option>
+          <option value="ppt">PowerPoint (.ppt, .pptx)</option>
+          <option value="sql">SQL Dump (.sql)</option>
+          <option value="log">Log File (.log)</option>
+          <option value="env">Environment (.env)</option>
+          <option value="txt">Text File (.txt)</option>
+          <option value="xml">XML (.xml)</option>
+          <option value="json">JSON (.json)</option>
+          <option value="zip">Archive (.zip, .rar, .tar.gz)</option>
+        </select>
+      </div>
+
+      <!-- Main Keyword -->
+      <div class="field-group full">
+        <label>🔑 Kata Kunci Utama / Frasa Eksak</label>
+        <input type="text" id="f-keywords" placeholder='Masukkan kata kunci utama Anda, gunakan kutip "untuk pencarian eksak"' oninput="buildQuery()">
+      </div>
+
+      <!-- Must & Not -->
+      <div class="field-group">
+        <label>➕ Kata Wajib Ada (OR / AND)</label>
+        <input type="text" id="f-must" placeholder="contoh: login, dashboard (pisahkan koma)" oninput="buildQuery()">
+      </div>
+      <div class="field-group">
+        <label>➖ Pengecualian Kata / Situs (-)</label>
+        <input type="text" id="f-not" placeholder="contoh: wikipedia.org, -wp-admin (pisahkan koma)" oninput="buildQuery()">
+      </div>
+
+      <!-- Teks di Body -->
+      <div class="field-group">
+        <label><span class="badge">intext:</span> Teks di Isi Halaman</label>
+        <input type="text" id="f-intext" placeholder="contoh: password atau DB_PASSWORD" oninput="buildQuery()">
+      </div>
+
+      <!-- Operator Tanggal -->
+      <div class="field-group">
+        <label>📅 Rentang Waktu (before / after)</label>
+        <div class="date-range-container">
+          <input type="date" id="f-after" onchange="buildQuery()" title="Sesudah tanggal">
+          <input type="date" id="f-before" onchange="buildQuery()" title="Sebelum tanggal">
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Opsional -->
+    <div class="section-title">🏷️ Opsi Logika Query</div>
+    <div class="checkbox-group" style="margin-bottom:1.5rem;">
+      <label class="check-tag" id="lbl-exact">
+        <input type="checkbox" id="ck-exact" onchange="toggleCheckClass('ck-exact', 'lbl-exact')"> Bungkus Kata Kunci ("")
+      </label>
+      <label class="check-tag" id="lbl-or">
+        <input type="checkbox" id="ck-or" onchange="toggleCheckClass('ck-or', 'lbl-or')"> Gunakan OR antar kata
+      </label>
+      <label class="check-tag" id="lbl-wild">
+        <input type="checkbox" id="ck-wild" onchange="toggleCheckClass('ck-wild', 'lbl-wild')"> Akhiri dengan Wildcard (*)
+      </label>
+    </div>
+
+    <!-- Output Query -->
+    <div class="result-box-container">
+      <div class="section-title">🔮 Hasil Query Anda</div>
+      <div id="result-box" class="result-box">
+        <div class="result-header">
+          <span>GOOGLE DORK QUERY</span>
+          <span style="font-family: monospace;">status: live</span>
+        </div>
+        <div id="query-display" class="result-placeholder">Mulai isi formulir atau pilih preset di bawah untuk merancang dork...</div>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="searchGoogle()">🔍 Luncurkan di Google ↗</button>
+      <button class="btn btn-copy" onclick="copyQuery()">📋 Salin Query</button>
+      <button class="btn btn-clear" onclick="clearAll()">✕ Bersihkan Semua</button>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Advanced Templates / Library -->
+  <div class="examples-section">
+    <div class="section-title" style="color: #60a5fa;">💡 Pustaka Kasus OSINT & Cyber Security Terpopuler</div>
+    <p style="font-size: 0.85rem; color: #64748b; margin-top: -6px; margin-bottom: 1.25rem;">
+      Klik salah satu taktik di bawah untuk memuat template intelijen pencarian secara instan.
+    </p>
+
+    <div class="example-grid">
+      <!-- OSINT Kampus -->
+      <div class="example-item" onclick="loadExample('site:ac.id filetype:pdf \"skripsi\" OR \"jurnal\"')">
+        <span class="example-badge badge-osint">Kampus & Riset</span>
+        <div class="example-title">Mencari PDF karya ilmiah / skripsi di kampus Indonesia</div>
+        <div class="example-query">site:ac.id filetype:pdf "skripsi" OR "jurnal"</div>
+      </div>
+
+      <!-- File Terbuka -->
+      <div class="example-item" onclick="loadExample('site:gov.id intitle:\"index of\" filetype:xlsx OR filetype:xls')">
+        <span class="example-badge badge-files">Dokumen Pemerintah</span>
+        <div class="example-title">Menemukan direktori index dari data Excel di institusi pemerintah</div>
+        <div class="example-query">site:gov.id intitle:"index of" filetype:xlsx OR filetype:xls</div>
+      </div>
+
+      <!-- Kunci Lingkungan -->
+      <div class="example-item" onclick="loadExample('filetype:env DB_PASSWORD OR DB_HOST -github.com -gitlab.com')">
+        <span class="example-badge badge-vuln">Keamanan / Pentest</span>
+        <div class="example-title">Kebocoran Kunci Rahasia Sistem Berkas Lingkungan (.env)</div>
+        <div class="example-query">filetype:env DB_PASSWORD OR DB_HOST -github.com -gitlab.com</div>
+      </div>
+
+      <!-- Backup Terbuka -->
+      <div class="example-item" onclick="loadExample('ext:sql OR ext:backup OR ext:dump \"backup\" -github.com')">
+        <span class="example-badge badge-vuln">Keamanan / Pentest</span>
+        <div class="example-title">Mencari cadangan berkas basis data (SQL Dump) yang terekspos</div>
+        <div class="example-query">ext:sql OR ext:backup OR ext:dump "backup" -github.com</div>
+      </div>
+
+      <!-- Log Keamanan -->
+      <div class="example-item" onclick="loadExample('inurl:log ext:log \"error\" OR \"exception\"')">
+        <span class="example-badge badge-vuln">Keamanan / Pentest</span>
+        <div class="example-title">Memburu berkas catatan galat sistem (Error Log) terbuka</div>
+        <div class="example-query">inurl:log ext:log "error" OR "exception"</div>
+      </div>
+
+      <!-- LinkedIn OSINT -->
+      <div class="example-item" onclick="loadExample('site:linkedin.com/in/ \"cyber security\" \"Jakarta\"')">
+        <span class="example-badge badge-intel">Talent OSINT</span>
+        <div class="example-title">Menargetkan profil profesional Keamanan Siber di area Jakarta</div>
+        <div class="example-query">site:linkedin.com/in/ "cyber security" "Jakarta"</div>
+      </div>
+
+      <!-- WordPress Config -->
+      <div class="example-item" onclick="loadExample('intitle:\"index of\" \"wp-config.php\"')">
+        <span class="example-badge badge-vuln">Keamanan / Pentest</span>
+        <div class="example-title">Konfigurasi penting WordPress yang tidak sengaja bocor</div>
+        <div class="example-query">intitle:"index of" "wp-config.php"</div>
+      </div>
+
+      <!-- Kamera Pengawas -->
+      <div class="example-item" onclick="loadExample('inurl:\"/view/view.shtml\" OR inurl:\"/view/index.shtml\"')">
+        <span class="example-badge badge-intel">IoT OSINT</span>
+        <div class="example-title">Mendeteksi antarmuka kamera pengawas pintar (IP Cam) publik</div>
+        <div class="example-query">inurl:"/view/view.shtml" OR inurl:"/view/index.shtml"</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Alert Custom & Toast -->
+<div class="custom-alert" id="custom-alert">Pemberitahuan muncul di sini</div>
+<div class="copied-msg" id="copied-msg">✓ Berhasil disalin ke papan klip!</div>
+
+<script>
+  let generatedQuery = '';
+
+  // Tab switcher
+  function switchTab(tab) {
+    const tabAll = document.getElementById('tab-all');
+    const tabSec = document.getElementById('tab-sec');
+    const panelAll = document.getElementById('panel-all');
+    const panelSec = document.getElementById('panel-sec');
+
+    if (tab === 'all') {
+      tabAll.classList.add('active');
+      tabSec.classList.remove('active');
+      panelAll.style.display = 'block';
+      panelSec.style.display = 'none';
+    } else {
+      tabAll.classList.remove('active');
+      tabSec.classList.add('active');
+      panelAll.style.display = 'none';
+      panelSec.style.display = 'block';
+    }
+  }
+
+  // Menambahkan operator cepat ke kotak kata kunci utama
+  function addOp(op) {
+    const kwInput = document.getElementById('f-keywords');
+    kwInput.value = (kwInput.value + ' ' + op).trim();
+    kwInput.focus();
+    buildQuery();
+    showAlert(`Menambahkan Operator: ${op}`);
+  }
+
+  // Sinkronisasi kelas tampilan checkbox label secara dinamis
+  function toggleCheckClass(checkId, labelId) {
+    const cb = document.getElementById(checkId);
+    const label = document.getElementById(labelId);
+    if (cb.checked) {
+      label.classList.add('active');
+    } else {
+      label.classList.remove('active');
+    }
+    buildQuery();
+  }
+
+  // Fungsi Pembangun Query yang sangat komprehensif
+  function buildQuery() {
+    const site = document.getElementById('f-site').value.trim();
+    const intitle = document.getElementById('f-intitle').value.trim();
+    const inurl = document.getElementById('f-inurl').value.trim();
+    const filetype = document.getElementById('f-filetype').value;
+    const keywords = document.getElementById('f-keywords').value.trim();
+    const must = document.getElementById('f-must').value.trim();
+    const notWord = document.getElementById('f-not').value.trim();
+    const intext = document.getElementById('f-intext').value.trim();
+    const dateAfter = document.getElementById('f-after').value;
+    const dateBefore = document.getElementById('f-before').value;
+
+    const exact = document.getElementById('ck-exact').checked;
+    const useOr = document.getElementById('ck-or').checked;
+    const wild = document.getElementById('ck-wild').checked;
+
+    let parts = [];
+
+    // Filter situs/domain
+    if (site) {
+      parts.push('site:' + site);
+    }
+
+    // Filter ekstensi/filetype
+    if (filetype) {
+      parts.push('filetype:' + filetype);
+    }
+
+    // Filter kata di judul halaman
+    if (intitle) {
+      parts.push('intitle:' + (intitle.includes(' ') && !intitle.startsWith('"') ? '"' + intitle + '"' : intitle));
+    }
+
+    // Filter kata di URL halaman
+    if (inurl) {
+      parts.push('inurl:' + (inurl.includes(' ') && !inurl.startsWith('"') ? '"' + inurl + '"' : inurl));
+    }
+
+    // Filter teks di body konten
+    if (intext) {
+      parts.push('intext:' + (intext.includes(' ') && !intext.startsWith('"') ? '"' + intext + '"' : intext));
+    }
+
+    // Filter tanggal setelah / sesudah (Modern Operator)
+    if (dateAfter) {
+      parts.push('after:' + dateAfter);
+    }
+    if (dateBefore) {
+      parts.push('before:' + dateBefore);
+    }
+
+    // Memproses Kata Kunci Utama
+    if (keywords) {
+      let processedKw = keywords;
+      
+      // Jika diset pencarian eksak dan belum ada tanda kutip ganda
+      if (exact && !processedKw.startsWith('"')) {
+        processedKw = '"' + processedKw + '"';
+      }
+      
+      // Menambahkan Wildcard di akhir kata
+      if (wild) {
+        processedKw = processedKw + ' *';
+      }
+      
+      // Konversi spasi menjadi logika OR jika diaktifkan
+      if (useOr && !processedKw.includes(' OR ')) {
+        processedKw = processedKw.split(/\s+/).join(' OR ');
+      }
+      
+      parts.push(processedKw);
+    }
+
+    // Menangani daftar kata yang harus ada (+)
+    if (must) {
+      must.split(',').forEach(word => {
+        const item = word.trim();
+        if (item) {
+          // Menambahkan tanda tambah (+) jika belum ada
+          parts.push(item.startsWith('+') ? item : '+' + item);
+        }
+      });
+    }
+
+    // Menangani daftar kata/situs yang dikecualikan (-)
+    if (notWord) {
+      notWord.split(',').forEach(word => {
+        const item = word.trim();
+        if (item) {
+          // Menambahkan tanda minus (-) jika belum ada
+          parts.push(item.startsWith('-') ? item : '-' + item);
+        }
+      });
+    }
+
+    // Menggabungkan semua bagian operator pencarian
+    const finalQuery = parts.join(' ').trim();
+    generatedQuery = finalQuery;
+
+    const displayBox = document.getElementById('query-display');
+    const resultBox = document.getElementById('result-box');
+
+    if (finalQuery) {
+      displayBox.innerHTML = escapeHtml(finalQuery);
+      displayBox.className = 'result-query';
+    } else {
+      displayBox.innerHTML = 'Mulai isi formulir atau pilih preset di bawah untuk merancang dork...';
+      displayBox.className = 'result-placeholder';
+    }
+  }
+
+  // Fungsi mengamankan HTML dari karakter ilegal
+  function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  // Penyelidikan langsung ke Google Search
+  function searchGoogle() {
+    if (!generatedQuery) {
+      showAlert('⚠️ Silakan buat atau pilih kriteria dork terlebih dahulu!', true);
+      return;
+    }
+    const url = 'https://www.google.com/search?q=' + encodeURIComponent(generatedQuery);
+    window.open(url, '_blank');
+  }
+
+  // Sistem Fallback Copy Clipboard (Lebih Stabil di lingkungan iFrame)
+  function copyQuery() {
+    if (!generatedQuery) {
+      showAlert('⚠️ Tidak ada query dork yang bisa disalin.', true);
+      return;
+    }
+    
+    // Gunakan cara teraman untuk menyalin teks (textarea tersembunyi)
+    const textarea = document.createElement('textarea');
+    textarea.value = generatedQuery;
+    textarea.style.position = 'fixed'; // Amankan dari scroll layar
+    document.body.appendChild(textarea);
+    textarea.select();
+    
+    try {
+      const successful = document.execCommand('copy');
+      if (successful) {
+        showToastNotification();
+      } else {
+        showAlert('Gagal menyalin query secara otomatis.', true);
+      }
+    } catch (err) {
+      showAlert('Terjadi galat saat menyalin ke papan klip.', true);
+    }
+    
+    document.body.removeChild(textarea);
+  }
+
+  // Reset semua input form ke kondisi semula
+  function clearAll() {
+    const inputsToClear = [
+      'f-site', 'f-intitle', 'f-inurl', 'f-intext', 
+      'f-keywords', 'f-must', 'f-not', 'f-after', 'f-before'
+    ];
+    
+    inputsToClear.forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    
+    document.getElementById('f-filetype').value = '';
+    
+    // Matikan semua opsi checkbox
+    const checkboxes = ['ck-exact', 'ck-or', 'ck-wild'];
+    checkboxes.forEach(id => {
+      document.getElementById(id).checked = false;
+    });
+    
+    // Bersihkan kelas visual aktif
+    const labelIds = ['lbl-exact', 'lbl-or', 'lbl-wild'];
+    labelIds.forEach(id => {
+      document.getElementById(id).classList.remove('active');
+    });
+
+    generatedQuery = '';
+    
+    const displayBox = document.getElementById('query-display');
+    displayBox.innerHTML = 'Mulai isi formulir atau pilih preset di bawah untuk merancang dork...';
+    displayBox.className = 'result-placeholder';
+    
+    showAlert('🧼 Semua form berhasil dibersihkan!');
+  }
+
+  // Mengisi form berdasarkan preset/contoh dorking yang diklik
+  function loadExample(query) {
+    clearAll();
+    
+    // Masukkan ke bagian keyword utama secara langsung untuk fleksibilitas edit manual
+    document.getElementById('f-keywords').value = query;
+    generatedQuery = query;
+    
+    const displayBox = document.getElementById('query-display');
+    displayBox.innerHTML = escapeHtml(query);
+    displayBox.className = 'result-query';
+    
+    // Auto Scroll halus ke area builder jika pengguna di layar seluler
+    document.querySelector('.builder-section').scrollIntoView({ behavior: 'smooth' });
+    showAlert('💡 Contoh Preset Dork Berhasil Dimuat!');
+  }
+
+  // Tampilan Toast Sukses Menyalin
+  function showToastNotification() {
+    const toast = document.getElementById('copied-msg');
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 2500);
+  }
+
+  // Custom alert cantik pengganti window.alert()
+  function showAlert(msg, isWarning = false) {
+    const alertBox = document.getElementById('custom-alert');
+    alertBox.innerHTML = msg;
+    
+    if (isWarning) {
+      alertBox.style.background = '#7f1d1d';
+      alertBox.style.borderColor = '#ef4444';
+      alertBox.style.color = '#fca5a5';
+    } else {
+      alertBox.style.background = '#1e1b4b';
+      alertBox.style.borderColor = '#4338ca';
+      alertBox.style.color = '#c084fc';
+    }
+    
+    alertBox.classList.add('show');
+    setTimeout(() => {
+      alertBox.classList.remove('show');
+    }, 3000);
+  }
+</script>
+</body>
+</html>
