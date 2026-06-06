@@ -1,396 +1,824 @@
-
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NetTools Hub — Koleksi Tools Internet Terbaik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+  :root {
+    --bg: #0b0c10;
+    --bg2: #13141a;
+    --bg3: #1a1c24;
+    --surface: #1e2029;
+    --surface2: #252733;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --accent: #6c63ff;
+    --accent2: #a78bfa;
+    --accent3: #38bdf8;
+    --accent4: #34d399;
+    --text: #f0f0f5;
+    --text2: #9899a8;
+    --text3: #5a5b6a;
+    --radius: 14px;
+    --radius-sm: 8px;
+    --radius-lg: 20px;
+    --glow: 0 0 40px rgba(108,99,255,0.15);
+  }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-.page {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--color-background-tertiary);
-  min-height: 100vh;
-  padding: 0 0 3rem;
-  color: var(--color-text-primary);
-}
+  html { scroll-behavior: smooth; }
 
-.hero {
-  padding: 2.5rem 1.5rem 2rem;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
+  body {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -40px; left: 50%;
-  transform: translateX(-50%);
-  width: 500px; height: 200px;
-  background: radial-gradient(ellipse, rgba(83,74,183,0.12) 0%, transparent 70%);
-  pointer-events: none;
-}
+  /* ── Noise overlay ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
 
-.hero-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-text-secondary);
-  background: var(--color-background-secondary);
-  border: 0.5px solid var(--color-border-tertiary);
-  border-radius: 20px;
-  padding: 5px 14px;
-  margin-bottom: 1.2rem;
-}
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
 
-.hero-eyebrow i { font-size: 13px; }
+  /* ── Layout ── */
+  .wrap { max-width: 1140px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
 
-h1 {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(26px, 5vw, 40px);
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.75rem;
-}
+  /* ── Topbar ── */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(11,12,16,0.82);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
 
-h1 span {
-  color: #534AB7;
-}
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    gap: 16px;
+  }
 
-.hero-sub {
-  font-size: 15px;
-  color: var(--color-text-secondary);
-  max-width: 420px;
-  margin: 0 auto 1.75rem;
-  line-height: 1.6;
-}
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
 
-.search-wrap {
-  display: flex;
-  align-items: center;
-  max-width: 420px;
-  margin: 0 auto;
-  background: var(--color-background-primary);
-  border: 0.5px solid var(--color-border-secondary);
-  border-radius: 12px;
-  padding: 0 14px;
-  gap: 8px;
-}
+  .logo-icon {
+    width: 34px; height: 34px;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    color: #fff;
+  }
 
-.search-wrap i { font-size: 16px; color: var(--color-text-tertiary); }
+  .logo-text {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
 
-.search-wrap input {
-  flex: 1;
-  border: none;
-  background: transparent;
-  padding: 12px 0;
-  font-size: 14px;
-  font-family: 'DM Sans', sans-serif;
-  color: var(--color-text-primary);
-  outline: none;
-}
+  .logo-text span { color: var(--accent2); }
 
-.search-wrap input::placeholder { color: var(--color-text-tertiary); }
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
-.stats-row {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  margin: 1.5rem 0 0;
-  flex-wrap: wrap;
-}
+  .tag-count {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text2);
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    padding: 4px 12px;
+    white-space: nowrap;
+  }
 
-.stat { font-size: 12px; color: var(--color-text-secondary); }
-.stat strong { font-weight: 600; color: var(--color-text-primary); font-size: 13px; }
+  /* ── Hero ── */
+  .hero {
+    padding: 72px 0 52px;
+    text-align: center;
+    position: relative;
+  }
 
-.section {
-  padding: 0 1rem;
-  margin-top: 1.5rem;
-}
+  /* Gradient blobs */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+  .blob-1 {
+    width: 500px; height: 300px;
+    background: rgba(108,99,255,0.18);
+    top: -60px; left: 50%;
+    transform: translateX(-50%);
+  }
+  .blob-2 {
+    width: 300px; height: 200px;
+    background: rgba(56,189,248,0.12);
+    top: 20px; left: 5%;
+  }
+  .blob-3 {
+    width: 300px; height: 200px;
+    background: rgba(52,211,153,0.1);
+    top: 0; right: 5%;
+  }
 
-.section-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 0.85rem;
-}
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    background: rgba(108,99,255,0.1);
+    border: 1px solid rgba(108,99,255,0.25);
+    border-radius: 20px;
+    padding: 5px 14px;
+    margin-bottom: 24px;
+    animation: fadeUp 0.5s ease both;
+  }
 
-.section-label {
-  font-family: 'Syne', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--color-text-secondary);
-}
+  .hero-badge i { font-size: 11px; }
 
-.dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
+  h1 {
+    font-family: 'Clash Display', sans-serif;
+    font-size: clamp(32px, 6vw, 62px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 18px;
+    animation: fadeUp 0.55s 0.05s ease both;
+  }
 
-.dot-purple { background: #534AB7; }
-.dot-teal { background: #0F6E56; }
-.dot-coral { background: #993C1D; }
-.dot-amber { background: #854F0B; }
-.dot-blue { background: #185FA5; }
-.dot-pink { background: #993556; }
+  h1 .grad {
+    background: linear-gradient(135deg, #a78bfa 0%, #38bdf8 50%, #34d399 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 
-.tools-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 10px;
-}
+  .hero-sub {
+    font-size: clamp(14px, 2vw, 17px);
+    color: var(--text2);
+    max-width: 500px;
+    margin: 0 auto 32px;
+    line-height: 1.65;
+    font-weight: 300;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
 
-.tool-card {
-  background: var(--color-background-primary);
-  border: 0.5px solid var(--color-border-tertiary);
-  border-radius: var(--border-radius-lg);
-  padding: 14px 12px;
-  cursor: pointer;
-  transition: border-color 0.15s, transform 0.15s;
-  text-decoration: none;
-  color: inherit;
-  display: block;
-  position: relative;
-  overflow: hidden;
-}
+  /* ── Search ── */
+  .search-box {
+    position: relative;
+    max-width: 500px;
+    margin: 0 auto 28px;
+    animation: fadeUp 0.65s 0.15s ease both;
+  }
 
-.tool-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 0.15s;
-  border-radius: inherit;
-}
+  .search-box i {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text3);
+    font-size: 15px;
+    pointer-events: none;
+  }
 
-.tool-card:hover { border-color: var(--color-border-secondary); transform: translateY(-2px); }
-.tool-card:active { transform: translateY(0) scale(0.98); }
+  .search-box input {
+    width: 100%;
+    height: 52px;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 14px;
+    padding: 0 52px 0 48px;
+    font-size: 15px;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
 
-.tool-icon {
-  width: 36px; height: 36px;
-  border-radius: 9px;
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 10px;
-  font-size: 18px;
-}
+  .search-box input::placeholder { color: var(--text3); }
+  .search-box input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(108,99,255,0.15);
+  }
 
-.icon-purple { background: #EEEDFE; color: #534AB7; }
-.icon-teal   { background: #E1F5EE; color: #0F6E56; }
-.icon-coral  { background: #FAECE7; color: #993C1D; }
-.icon-amber  { background: #FAEEDA; color: #854F0B; }
-.icon-blue   { background: #E6F1FB; color: #185FA5; }
-.icon-pink   { background: #FBEAF0; color: #993556; }
-.icon-green  { background: #EAF3DE; color: #3B6D11; }
-.icon-gray   { background: #F1EFE8; color: #5F5E5A; }
+  .search-kbd {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    color: var(--text3);
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 2px 7px;
+    font-family: 'Bricolage Grotesque', sans-serif;
+  }
 
-.tool-name {
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.3;
-  margin-bottom: 3px;
-}
+  /* ── Stats ── */
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    flex-wrap: wrap;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
 
-.tool-desc {
-  font-size: 11px;
-  color: var(--color-text-secondary);
-  line-height: 1.4;
-}
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    color: var(--text3);
+  }
 
-.badge-hot {
-  position: absolute;
-  top: 8px; right: 8px;
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  background: #FAECE7;
-  color: #993C1D;
-  border-radius: 4px;
-  padding: 2px 5px;
-}
+  .stat-item i { font-size: 13px; color: var(--accent2); }
+  .stat-item strong { color: var(--text2); font-weight: 500; }
 
-.badge-new {
-  position: absolute;
-  top: 8px; right: 8px;
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  background: #E1F5EE;
-  color: #0F6E56;
-  border-radius: 4px;
-  padding: 2px 5px;
-}
+  /* ── Filters ── */
+  .filters-section { padding: 0 0 10px; }
 
-.filter-row {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 2px;
-  margin-bottom: 1.2rem;
-  scrollbar-width: none;
-}
-.filter-row::-webkit-scrollbar { display: none; }
+  .filters-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    animation: fadeUp 0.7s 0.25s ease both;
+  }
+  .filters-scroll::-webkit-scrollbar { display: none; }
 
-.filter-btn {
-  flex-shrink: 0;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
-  font-family: 'DM Sans', sans-serif;
-  border: 0.5px solid var(--color-border-tertiary);
-  background: var(--color-background-primary);
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  transition: all 0.15s;
-}
+  .filter-btn {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.18s;
+    white-space: nowrap;
+    user-select: none;
+  }
 
-.filter-btn:hover { border-color: var(--color-border-secondary); color: var(--color-text-primary); }
-.filter-btn.active {
-  background: #534AB7;
-  border-color: #534AB7;
-  color: #fff;
-}
+  .filter-btn:hover {
+    border-color: var(--border2);
+    color: var(--text);
+    background: var(--surface2);
+  }
 
-.no-results {
-  text-align: center;
-  padding: 2rem;
-  color: var(--color-text-secondary);
-  font-size: 14px;
-  display: none;
-}
+  .filter-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(108,99,255,0.35);
+  }
+
+  .filter-btn .count {
+    font-size: 11px;
+    font-weight: 400;
+    opacity: 0.6;
+  }
+
+  /* ── Section label ── */
+  .section-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 28px 0 16px;
+  }
+
+  .section-title {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title::before {
+    content: '';
+    display: block;
+    width: 14px; height: 2px;
+    background: var(--accent);
+    border-radius: 1px;
+  }
+
+  .result-count {
+    font-size: 12px;
+    color: var(--text3);
+  }
+
+  /* ── Tools Grid ── */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 12px;
+    animation: fadeUp 0.75s 0.3s ease both;
+  }
+
+  .tool-card {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 15px 15px;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: transform 0.22s cubic-bezier(.23,1,.32,1),
+                border-color 0.22s,
+                box-shadow 0.22s,
+                background 0.22s;
+    overflow: hidden;
+  }
+
+  .tool-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--card-accent, transparent) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    border-radius: inherit;
+  }
+
+  .tool-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--border2);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4), var(--glow);
+    background: var(--surface2);
+  }
+
+  .tool-card:hover::before { opacity: 1; }
+  .tool-card:active { transform: translateY(-1px) scale(0.98); }
+
+  .tool-icon-wrap {
+    width: 42px; height: 42px;
+    border-radius: 11px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .tool-meta { position: relative; z-index: 1; }
+
+  .tool-name {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.25;
+    margin-bottom: 3px;
+    color: var(--text);
+  }
+
+  .tool-desc {
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.45;
+    font-weight: 300;
+  }
+
+  .tool-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .tool-cat-badge {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 5px;
+    background: var(--badge-bg, rgba(255,255,255,0.06));
+    color: var(--badge-color, var(--text3));
+  }
+
+  .tool-arrow {
+    font-size: 11px;
+    color: var(--text3);
+    opacity: 0;
+    transform: translate(-3px, 3px);
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .tool-card:hover .tool-arrow {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+
+  .badge-pill {
+    position: absolute;
+    top: 10px; right: 10px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 7px;
+    border-radius: 5px;
+    z-index: 2;
+  }
+
+  .badge-hot  { background: rgba(239,68,68,0.18); color: #f87171; }
+  .badge-new  { background: rgba(52,211,153,0.18); color: #34d399; }
+  .badge-pro  { background: rgba(251,191,36,0.18); color: #fbbf24; }
+
+  /* ── Color themes per category ── */
+  .card-ai      { --card-accent: rgba(108,99,255,0.08); }
+  .card-design  { --card-accent: rgba(236,72,153,0.08); }
+  .card-dev     { --card-accent: rgba(56,189,248,0.08); }
+  .card-seo     { --card-accent: rgba(251,191,36,0.08); }
+  .card-media   { --card-accent: rgba(239,68,68,0.08); }
+  .card-util    { --card-accent: rgba(52,211,153,0.08); }
+
+  .icon-ai     { background: rgba(108,99,255,0.15); color: #a78bfa; }
+  .icon-design { background: rgba(236,72,153,0.15); color: #f472b6; }
+  .icon-dev    { background: rgba(56,189,248,0.15); color: #38bdf8; }
+  .icon-seo    { background: rgba(251,191,36,0.15); color: #fbbf24; }
+  .icon-media  { background: rgba(239,68,68,0.15); color: #f87171; }
+  .icon-util   { background: rgba(52,211,153,0.15); color: #34d399; }
+
+  .badge-ai    { background: rgba(108,99,255,0.12); color: #a78bfa; }
+  .badge-design{ background: rgba(236,72,153,0.12); color: #f472b6; }
+  .badge-dev   { background: rgba(56,189,248,0.12); color: #38bdf8; }
+  .badge-seo   { background: rgba(251,191,36,0.12); color: #fbbf24; }
+  .badge-media { background: rgba(239,68,68,0.12); color: #f87171; }
+  .badge-util  { background: rgba(52,211,153,0.12); color: #34d399; }
+
+  /* ── No Results ── */
+  .no-results {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text3);
+  }
+  .no-results i { font-size: 36px; display: block; margin-bottom: 12px; }
+  .no-results p { font-size: 15px; }
+  .no-results small { font-size: 13px; display: block; margin-top: 6px; }
+
+  /* ── Footer ── */
+  footer {
+    margin-top: 64px;
+    border-top: 1px solid var(--border);
+    padding: 28px 0;
+    text-align: center;
+  }
+
+  footer p {
+    font-size: 13px;
+    color: var(--text3);
+    line-height: 1.6;
+  }
+
+  footer a { color: var(--accent2); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* ── Keyboard shortcut ── */
+  .kbhint {
+    font-size: 11px;
+    color: var(--text3);
+    text-align: center;
+    margin-top: 10px;
+    animation: fadeUp 0.75s 0.2s ease both;
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .tool-card {
+    animation: fadeUp 0.4s ease both;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .hero { padding: 48px 0 36px; }
+    .tools-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+    .topbar { height: 54px; }
+    .tag-count { display: none; }
+  }
+
+  @media (max-width: 480px) {
+    .tools-grid { grid-template-columns: 1fr 1fr; gap: 9px; }
+    h1 { font-size: 28px; }
+    .tool-card { padding: 14px 12px 12px; }
+    .tool-icon-wrap { width: 36px; height: 36px; font-size: 16px; border-radius: 9px; }
+    .tool-name { font-size: 13px; }
+    .tool-desc { font-size: 11px; }
+    .stats { gap: 16px; }
+  }
+
+  @media (max-width: 360px) {
+    .tools-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  }
 </style>
+</head>
+<body>
 
-<div class="page">
-  <h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Homepage kumpulan tools internet populer berbagai kategori</h2>
-
-  <div class="hero">
-    <div class="hero-eyebrow"><i class="ti ti-tools" aria-hidden="true"></i> Mr. BOB Toolkit</div>
-    <h1>Internet <span>Tools</span><br>Serba Bisa</h1>
-    <p class="hero-sub">Kumpulan tools online terbaik untuk produktivitas, desain, pengembangan, dan kehidupan digital.</p>
-    <div class="search-wrap">
-      <i class="ti ti-search" aria-hidden="true"></i>
-      <input type="text" id="searchInput" placeholder="Cari tools..." />
-    </div>
-    <div class="stats-row">
-      <div class="stat"><strong id="totalCount">36</strong> tools tersedia</div>
-      <div class="stat"><strong>6</strong> kategori</div>
-      <div class="stat"><strong>100%</strong> gratis</div>
+<header>
+  <div class="wrap">
+    <div class="topbar">
+      <a href="#" class="logo">
+        <div class="logo-icon"><i class="fa-solid fa-globe"></i></div>
+        <span class="logo-text">Net<span>Tools</span> Hub</span>
+      </a>
+      <div class="topbar-right">
+        <span class="tag-count" id="headerCount">36 tools tersedia</span>
+      </div>
     </div>
   </div>
+</header>
 
-  <div class="section">
-    <div class="filter-row" id="filterRow">
-      <button class="filter-btn active" data-cat="all">Semua</button>
-      <button class="filter-btn" data-cat="ai">🤖 AI & Produktivitas</button>
-      <button class="filter-btn" data-cat="design">🎨 Desain</button>
-      <button class="filter-btn" data-cat="dev">💻 Developer</button>
-      <button class="filter-btn" data-cat="seo">📈 SEO & Analitik</button>
-      <button class="filter-btn" data-cat="media">🎬 Media & Konten</button>
-      <button class="filter-btn" data-cat="util">🔧 Utilitas</button>
+<main>
+  <div class="wrap">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+
+      <div class="hero-badge">
+        <i class="fa-solid fa-bolt"></i>
+        Koleksi Tools Internet Pilihan
+      </div>
+
+      <h1>Satu Tempat,<br><span class="grad">Semua Tools</span></h1>
+
+      <p class="hero-sub">
+        Kumpulan tools online terbaik untuk AI, desain, developer, SEO, media, dan produktivitas harianmu.
+      </p>
+
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Cari tools... (contoh: Canva, ChatGPT)" autocomplete="off" />
+        <span class="search-kbd">/ Cari</span>
+      </div>
+
+      <div class="stats">
+        <div class="stat-item"><i class="fa-solid fa-box-open"></i><span><strong id="visibleCount">36</strong> tools</span></div>
+        <div class="stat-item"><i class="fa-solid fa-layer-group"></i><span><strong>6</strong> kategori</span></div>
+        <div class="stat-item"><i class="fa-solid fa-circle-check"></i><span><strong>100%</strong> gratis akses</span></div>
+      </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="filters-section">
+      <div class="filters-scroll" id="filterRow"></div>
+    </section>
+
+    <!-- Section bar -->
+    <div class="section-bar">
+      <span class="section-title" id="sectionTitle">Semua Tools</span>
+      <span class="result-count" id="resultCount">36 tools</span>
     </div>
 
+    <!-- Grid -->
     <div class="tools-grid" id="toolsGrid"></div>
-    <div class="no-results" id="noResults"><i class="ti ti-mood-sad" style="font-size:24px; display:block; margin-bottom:8px"></i>Tools tidak ditemukan</div>
+
+    <!-- No results -->
+    <div class="no-results" id="noResults">
+      <i class="fa-solid fa-face-sad-tear"></i>
+      <p>Tools tidak ditemukan</p>
+      <small>Coba kata kunci lain atau pilih kategori berbeda</small>
+    </div>
+
   </div>
-</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>
+      Dibuat dengan <i class="fa-solid fa-heart" style="color:#f87171; font-size:11px;"></i> oleh
+      <a href="#">Mr. BOB</a> &nbsp;·&nbsp;
+      Kunjungi juga
+      <a href="https://youtube.com" target="_blank" rel="noopener">YouTube</a>,
+      <a href="https://tiktok.com" target="_blank" rel="noopener">TikTok</a>,
+      <a href="https://shopee.co.id" target="_blank" rel="noopener">Shopee</a>
+    </p>
+  </div>
+</footer>
 
 <script>
-const tools = [
-  { name:"ChatGPT", desc:"AI chatbot serba bisa", icon:"ti-message-chatbot", color:"icon-purple", cat:"ai", url:"https://chat.openai.com", hot:true },
-  { name:"Claude AI", desc:"Asisten AI Anthropic", icon:"ti-sparkles", color:"icon-purple", cat:"ai", url:"https://claude.ai" },
-  { name:"Gemini", desc:"AI dari Google", icon:"ti-star", color:"icon-blue", cat:"ai", url:"https://gemini.google.com" },
-  { name:"Perplexity", desc:"Pencarian bertenaga AI", icon:"ti-search", color:"icon-teal", cat:"ai", url:"https://perplexity.ai", hot:true },
-  { name:"Notion AI", desc:"Workspace + AI menulis", icon:"ti-note", color:"icon-gray", cat:"ai", url:"https://notion.so" },
-  { name:"Gamma", desc:"Presentasi otomatis AI", icon:"ti-presentation", color:"icon-amber", cat:"ai", url:"https://gamma.app", isnew:true },
-
-  { name:"Canva", desc:"Desain grafis mudah", icon:"ti-palette", color:"icon-coral", cat:"design", url:"https://canva.com", hot:true },
-  { name:"Figma", desc:"Desain UI/UX kolaboratif", icon:"ti-vector", color:"icon-purple", cat:"design", url:"https://figma.com" },
-  { name:"Adobe Express", desc:"Edit foto & grafis", icon:"ti-photo", color:"icon-coral", cat:"design", url:"https://express.adobe.com" },
-  { name:"Remove.bg", desc:"Hapus background foto", icon:"ti-cut", color:"icon-teal", cat:"design", url:"https://remove.bg", hot:true },
-  { name:"Coolors", desc:"Generator palet warna", icon:"ti-droplet", color:"icon-pink", cat:"design", url:"https://coolors.co" },
-  { name:"Unsplash", desc:"Foto gratis berkualitas", icon:"ti-camera", color:"icon-gray", cat:"design", url:"https://unsplash.com" },
-
-  { name:"GitHub", desc:"Hosting kode & kolaborasi", icon:"ti-brand-github", color:"icon-gray", cat:"dev", url:"https://github.com" },
-  { name:"CodePen", desc:"Playground HTML/CSS/JS", icon:"ti-code", color:"icon-blue", cat:"dev", url:"https://codepen.io" },
-  { name:"Replit", desc:"IDE online multi-bahasa", icon:"ti-terminal", color:"icon-amber", cat:"dev", url:"https://replit.com" },
-  { name:"JSON Formatter", desc:"Format & validasi JSON", icon:"ti-brackets-curly", color:"icon-green", cat:"dev", url:"https://jsonformatter.curiousconcept.com" },
-  { name:"Regex101", desc:"Uji ekspresi reguler", icon:"ti-regex", color:"icon-purple", cat:"dev", url:"https://regex101.com" },
-  { name:"Vercel", desc:"Deploy web instan", icon:"ti-triangle", color:"icon-gray", cat:"dev", url:"https://vercel.com", isnew:true },
-
-  { name:"Google Analytics", desc:"Analitik traffic website", icon:"ti-chart-line", color:"icon-amber", cat:"seo", url:"https://analytics.google.com", hot:true },
-  { name:"Ahrefs", desc:"SEO & riset keyword", icon:"ti-chart-bar", color:"icon-blue", cat:"seo", url:"https://ahrefs.com" },
-  { name:"Semrush", desc:"All-in-one marketing SEO", icon:"ti-trending-up", color:"icon-coral", cat:"seo", url:"https://semrush.com" },
-  { name:"Google Search Console", desc:"Monitor performa search", icon:"ti-brand-google", color:"icon-blue", cat:"seo", url:"https://search.google.com/search-console" },
-  { name:"GTmetrix", desc:"Analisis kecepatan web", icon:"ti-speedboat", color:"icon-teal", cat:"seo", url:"https://gtmetrix.com" },
-  { name:"Ubersuggest", desc:"Riset kata kunci gratis", icon:"ti-bulb", color:"icon-amber", cat:"seo", url:"https://neilpatel.com/ubersuggest" },
-
-  { name:"YouTube Studio", desc:"Kelola channel YouTube", icon:"ti-brand-youtube", color:"icon-coral", cat:"media", url:"https://studio.youtube.com", hot:true },
-  { name:"Canva Video", desc:"Edit video online", icon:"ti-video", color:"icon-pink", cat:"media", url:"https://canva.com/video-editor" },
-  { name:"CapCut", desc:"Edit video & reels", icon:"ti-scissors", color:"icon-gray", cat:"media", url:"https://capcut.com", hot:true },
-  { name:"Descript", desc:"Edit video via transkrip", icon:"ti-microphone", color:"icon-purple", cat:"media", url:"https://descript.com", isnew:true },
-  { name:"Pexels", desc:"Video stok gratis", icon:"ti-movie", color:"icon-blue", cat:"media", url:"https://pexels.com" },
-  { name:"Epidemic Sound", desc:"Musik bebas hak cipta", icon:"ti-music", color:"icon-teal", cat:"media", url:"https://epidemicsound.com" },
-
-  { name:"Google Drive", desc:"Penyimpanan cloud Google", icon:"ti-brand-google-drive", color:"icon-blue", cat:"util", url:"https://drive.google.com", hot:true },
-  { name:"WeTransfer", desc:"Kirim file besar mudah", icon:"ti-upload", color:"icon-pink", cat:"util", url:"https://wetransfer.com" },
-  { name:"Notion", desc:"Catatan & manajemen tugas", icon:"ti-notebook", color:"icon-gray", cat:"util", url:"https://notion.so" },
-  { name:"Trello", desc:"Manajemen proyek Kanban", icon:"ti-layout-kanban", color:"icon-blue", cat:"util", url:"https://trello.com" },
-  { name:"TinyPNG", desc:"Kompresi gambar online", icon:"ti-photo-down", color:"icon-green", cat:"util", url:"https://tinypng.com", isnew:true },
-  { name:"I Love PDF", desc:"Semua tools PDF online", icon:"ti-file-type-pdf", color:"icon-coral", cat:"util", url:"https://ilovepdf.com" },
+const CATEGORIES = [
+  { id:'all',    label:'Semua',          icon:'fa-solid fa-border-all' },
+  { id:'ai',     label:'AI & Produktivitas', icon:'fa-solid fa-robot' },
+  { id:'design', label:'Desain',         icon:'fa-solid fa-palette' },
+  { id:'dev',    label:'Developer',      icon:'fa-solid fa-code' },
+  { id:'seo',    label:'SEO & Analitik', icon:'fa-solid fa-chart-line' },
+  { id:'media',  label:'Media & Konten', icon:'fa-solid fa-film' },
+  { id:'util',   label:'Utilitas',       icon:'fa-solid fa-wrench' },
 ];
 
-function renderTools(list) {
+const TOOLS = [
+  /* AI */
+  { name:'ChatGPT',        desc:'AI chatbot serba bisa dari OpenAI',    icon:'fa-solid fa-message',       cat:'ai',     url:'https://chat.openai.com',                    hot:true  },
+  { name:'Claude AI',      desc:'Asisten AI cerdas dari Anthropic',     icon:'fa-solid fa-sparkles',      cat:'ai',     url:'https://claude.ai'                                    },
+  { name:'Gemini',         desc:'AI generatif canggih dari Google',     icon:'fa-brands fa-google',       cat:'ai',     url:'https://gemini.google.com'                            },
+  { name:'Perplexity',     desc:'Mesin pencari bertenaga AI modern',    icon:'fa-solid fa-brain',         cat:'ai',     url:'https://perplexity.ai',                      hot:true  },
+  { name:'Gamma',          desc:'Buat presentasi & dokumen via AI',     icon:'fa-solid fa-display',       cat:'ai',     url:'https://gamma.app',                          isnew:true},
+  { name:'Notion AI',      desc:'Workspace tulis & manajemen + AI',     icon:'fa-solid fa-file-pen',      cat:'ai',     url:'https://notion.so'                                    },
+  { name:'Copy.ai',        desc:'Generator teks & copywriting AI',      icon:'fa-solid fa-pen-fancy',     cat:'ai',     url:'https://copy.ai'                                      },
+  { name:'ElevenLabs',     desc:'Sintesis suara & dubbing AI',          icon:'fa-solid fa-microphone',    cat:'ai',     url:'https://elevenlabs.io',                      isnew:true},
+
+  /* Design */
+  { name:'Canva',          desc:'Desain grafis online yang mudah',      icon:'fa-solid fa-wand-magic-sparkles', cat:'design', url:'https://canva.com',               hot:true  },
+  { name:'Figma',          desc:'Desain UI/UX kolaboratif real-time',   icon:'fa-brands fa-figma',        cat:'design', url:'https://figma.com'                                    },
+  { name:'Adobe Express',  desc:'Edit foto, video & grafis cepat',      icon:'fa-solid fa-a',             cat:'design', url:'https://express.adobe.com'                            },
+  { name:'Remove.bg',      desc:'Hapus background foto otomatis',       icon:'fa-solid fa-scissors',      cat:'design', url:'https://remove.bg',                          hot:true  },
+  { name:'Coolors',        desc:'Generator palet warna harmonis',       icon:'fa-solid fa-droplet',       cat:'design', url:'https://coolors.co'                                   },
+  { name:'Unsplash',       desc:'Ribuan foto stok gratis HD',           icon:'fa-solid fa-camera',        cat:'design', url:'https://unsplash.com'                                 },
+  { name:'Flaticon',       desc:'Jutaan ikon & stiker gratis',          icon:'fa-solid fa-icons',         cat:'design', url:'https://flaticon.com'                                 },
+  { name:'Spline',         desc:'Desain & animasi 3D di browser',       icon:'fa-solid fa-cube',          cat:'design', url:'https://spline.design',                      isnew:true},
+
+  /* Dev */
+  { name:'GitHub',         desc:'Hosting kode & kolaborasi dev',        icon:'fa-brands fa-github',       cat:'dev',    url:'https://github.com'                                   },
+  { name:'CodePen',        desc:'Playground HTML, CSS, JS online',      icon:'fa-brands fa-codepen',      cat:'dev',    url:'https://codepen.io'                                   },
+  { name:'Replit',         desc:'IDE cloud multi-bahasa pemrograman',   icon:'fa-solid fa-terminal',      cat:'dev',    url:'https://replit.com'                                   },
+  { name:'Vercel',         desc:'Deploy web & serverless instan',       icon:'fa-solid fa-triangle-exclamation', cat:'dev', url:'https://vercel.com',                  isnew:true},
+  { name:'JSON Formatter', desc:'Format & validasi data JSON online',   icon:'fa-solid fa-brackets-curly',cat:'dev',    url:'https://jsonformatter.org'                            },
+  { name:'Regex101',       desc:'Tester ekspresi reguler interaktif',   icon:'fa-solid fa-filter',        cat:'dev',    url:'https://regex101.com'                                 },
+
+  /* SEO */
+  { name:'Google Analytics',desc:'Analitik traffic & perilaku user',   icon:'fa-brands fa-google',       cat:'seo',    url:'https://analytics.google.com',               hot:true  },
+  { name:'Ahrefs',          desc:'Riset SEO, backlink & keyword',       icon:'fa-solid fa-chart-bar',     cat:'seo',    url:'https://ahrefs.com'                                   },
+  { name:'Semrush',         desc:'All-in-one platform marketing SEO',   icon:'fa-solid fa-arrow-trend-up',cat:'seo',    url:'https://semrush.com'                                  },
+  { name:'Search Console', desc:'Monitor performa site di Google',      icon:'fa-solid fa-magnifying-glass-chart',cat:'seo',url:'https://search.google.com/search-console'        },
+  { name:'GTmetrix',        desc:'Analisis & optimasi kecepatan web',   icon:'fa-solid fa-gauge-high',    cat:'seo',    url:'https://gtmetrix.com'                                 },
+  { name:'Ubersuggest',     desc:'Riset kata kunci & SEO gratis',       icon:'fa-solid fa-lightbulb',     cat:'seo',    url:'https://neilpatel.com/ubersuggest'                    },
+
+  /* Media */
+  { name:'YouTube Studio', desc:'Kelola & analitik channel YouTube',    icon:'fa-brands fa-youtube',      cat:'media',  url:'https://studio.youtube.com',                 hot:true  },
+  { name:'CapCut',          desc:'Edit video & reels kreatif',          icon:'fa-solid fa-film',          cat:'media',  url:'https://capcut.com',                         hot:true  },
+  { name:'Descript',        desc:'Edit video via transkrip teks',       icon:'fa-solid fa-closed-captioning', cat:'media', url:'https://descript.com',                isnew:true},
+  { name:'Pexels',          desc:'Video & foto stok gratis HD',         icon:'fa-solid fa-photo-film',    cat:'media',  url:'https://pexels.com'                                   },
+  { name:'Epidemic Sound', desc:'Musik bebas hak cipta premium',        icon:'fa-solid fa-music',         cat:'media',  url:'https://epidemicsound.com'                            },
+
+  /* Util */
+  { name:'Google Drive',   desc:'Penyimpanan & kolaborasi cloud',       icon:'fa-brands fa-google-drive', cat:'util',   url:'https://drive.google.com',                   hot:true  },
+  { name:'WeTransfer',      desc:'Kirim file besar hingga 2GB',         icon:'fa-solid fa-cloud-arrow-up',cat:'util',   url:'https://wetransfer.com'                               },
+  { name:'TinyPNG',         desc:'Kompresi gambar tanpa kehilangan kualitas',icon:'fa-solid fa-image',   cat:'util',   url:'https://tinypng.com',                        isnew:true},
+  { name:'I Love PDF',      desc:'Semua tools PDF dalam satu tempat',   icon:'fa-solid fa-file-pdf',      cat:'util',   url:'https://ilovepdf.com'                                 },
+  { name:'Trello',          desc:'Manajemen proyek dengan Kanban',       icon:'fa-brands fa-trello',       cat:'util',   url:'https://trello.com'                                   },
+  { name:'Bitwarden',       desc:'Manajer kata sandi open-source',      icon:'fa-solid fa-shield-halved', cat:'util',   url:'https://bitwarden.com'                                },
+];
+
+let activeCat = 'all';
+let searchQ = '';
+
+/* Build filter buttons */
+const filterRow = document.getElementById('filterRow');
+CATEGORIES.forEach(c => {
+  const count = c.id === 'all' ? TOOLS.length : TOOLS.filter(t => t.cat === c.id).length;
+  const btn = document.createElement('button');
+  btn.className = 'filter-btn' + (c.id === 'all' ? ' active' : '');
+  btn.dataset.cat = c.id;
+  btn.innerHTML = `<i class="${c.icon}" aria-hidden="true"></i>${c.label} <span class="count">${count}</span>`;
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeCat = c.id;
+    render();
+  });
+  filterRow.appendChild(btn);
+});
+
+function render() {
+  let list = TOOLS;
+  if (activeCat !== 'all') list = list.filter(t => t.cat === activeCat);
+  if (searchQ) {
+    const q = searchQ.toLowerCase();
+    list = list.filter(t => t.name.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q));
+  }
+
   const grid = document.getElementById('toolsGrid');
   const noRes = document.getElementById('noResults');
+  const vis = document.getElementById('visibleCount');
+  const resCount = document.getElementById('resultCount');
+  const secTitle = document.getElementById('sectionTitle');
+  const headerCount = document.getElementById('headerCount');
+
+  const cat = CATEGORIES.find(c => c.id === activeCat);
+  secTitle.textContent = cat ? cat.label : 'Semua';
+  resCount.textContent = list.length + ' tools';
+  vis.textContent = list.length;
+  headerCount.textContent = list.length + ' tools tersedia';
+
   if (!list.length) {
     grid.innerHTML = '';
     noRes.style.display = 'block';
     return;
   }
   noRes.style.display = 'none';
-  grid.innerHTML = list.map(t => `
-    <a class="tool-card" href="${t.url}" target="_blank" rel="noopener" data-cat="${t.cat}">
-      ${t.hot ? '<span class="badge-hot">Hot</span>' : ''}
-      ${t.isnew ? '<span class="badge-new">New</span>' : ''}
-      <div class="tool-icon ${t.color}"><i class="ti ${t.icon}" aria-hidden="true"></i></div>
-      <div class="tool-name">${t.name}</div>
-      <div class="tool-desc">${t.desc}</div>
-    </a>
-  `).join('');
+
+  grid.innerHTML = list.map((t, i) => {
+    const badge = t.hot ? '<span class="badge-pill badge-hot">Hot</span>'
+                : t.isnew ? '<span class="badge-pill badge-new">New</span>'
+                : '';
+    const catLabel = { ai:'AI', design:'Desain', dev:'Dev', seo:'SEO', media:'Media', util:'Util' }[t.cat] || t.cat;
+    const delay = Math.min(i * 28, 280);
+    return `
+    <a class="tool-card card-${t.cat}" href="${t.url}" target="_blank" rel="noopener noreferrer"
+       style="animation-delay:${delay}ms">
+      ${badge}
+      <div class="tool-icon-wrap icon-${t.cat}">
+        <i class="${t.icon}" aria-hidden="true"></i>
+      </div>
+      <div class="tool-meta">
+        <div class="tool-name">${t.name}</div>
+        <div class="tool-desc">${t.desc}</div>
+      </div>
+      <div class="tool-footer">
+        <span class="tool-cat-badge badge-${t.cat}">${catLabel}</span>
+        <i class="fa-solid fa-arrow-up-right-from-square tool-arrow" aria-hidden="true"></i>
+      </div>
+    </a>`;
+  }).join('');
 }
 
-let activeCat = 'all';
-let searchQ = '';
-
-function applyFilters() {
-  let list = tools;
-  if (activeCat !== 'all') list = list.filter(t => t.cat === activeCat);
-  if (searchQ) list = list.filter(t => t.name.toLowerCase().includes(searchQ) || t.desc.toLowerCase().includes(searchQ));
-  document.getElementById('totalCount').textContent = list.length;
-  renderTools(list);
-}
-
-document.getElementById('filterRow').addEventListener('click', e => {
-  const btn = e.target.closest('.filter-btn');
-  if (!btn) return;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  activeCat = btn.dataset.cat;
-  applyFilters();
+/* Search */
+const searchInput = document.getElementById('searchInput');
+searchInput.addEventListener('input', e => {
+  searchQ = e.target.value.trim();
+  render();
 });
 
-document.getElementById('searchInput').addEventListener('input', e => {
-  searchQ = e.target.value.toLowerCase().trim();
-  applyFilters();
+/* Keyboard shortcut "/" to focus search */
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== searchInput) {
+    e.preventDefault();
+    searchInput.focus();
+    searchInput.select();
+  }
+  if (e.key === 'Escape') {
+    searchInput.blur();
+    searchQ = '';
+    searchInput.value = '';
+    render();
+  }
 });
 
-renderTools(tools);
+render();
 </script>
+</body>
+</html>
