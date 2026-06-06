@@ -3,124 +3,494 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generator QR Code</title>
-    <!-- Tailwind CSS untuk tampilan yang modern dan rapi -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Library QRCode.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <!-- --- FAVICON (SVG Crown Emoji) --- -->
+    <title>296Tools - Generator QR Code</title>
+    <!-- Tailwind CSS (v3 CDN untuk kompabilitas murni) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- QR Code Styling Library (Premium features: Rounded corners, Logos, Custom Styles) -->
+    <script type="text/javascript" src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- --- FAVICON (SVG Crown Emoji) --- -->
     <link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
     
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .heading-font {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        /* Custom scrollbar untuk tampilan premium */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 font-sans">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
 
-    <div class="bg-white p-6 rounded-2xl shadow-lg max-w-md w-full">
-        <!-- Header -->
-        <div class="text-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-800">QR Code Generator</h1>
-            <p class="text-sm text-gray-500 mt-1">Masukkan teks atau URL untuk membuat QR Code secara instan</p>
+    <!-- Header / Navbar -->
+    <header class="border-b border-slate-900 bg-slate-950/80 backdrop-blur-md sticky top-0 z-50 px-4 py-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <div class="bg-gradient-to-tr from-indigo-500 to-violet-500 p-2 rounded-xl shadow-lg shadow-indigo-500/20">
+                    <i data-lucide="qr-code" class="w-6 h-6 text-white"></i>
+                </div>
+                <div>
+                    <span class="heading-font font-extrabold text-xl tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">296<span class="text-indigo-400">Tools</span></span>
+                    <span class="block text-[10px] text-slate-400 tracking-widest uppercase font-semibold">Premium Generator</span>
+                </div>
+            </div>
+            
         </div>
+    </header>
 
-        <!-- Input Section -->
-        <div class="mb-5">
-            <label for="text-input" class="block text-sm font-medium text-gray-700 mb-2">Teks atau URL</label>
-            <input type="text" id="text-input" placeholder="Contoh: https://google.com atau Halo Dunia!" 
-                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
-        </div>
+    <!-- Main Content Grid -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left Side: Customization Workspace (7 columns) -->
+        <section class="lg:col-span-7 space-y-6">
+            
+            <!-- Step 1: Input Data -->
+            <div class="bg-slate-900/50 border border-slate-900 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">1</div>
+                    <h2 class="heading-font font-bold text-lg text-white">Konten QR Code</h2>
+                </div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label for="qr-data" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Teks atau URL Website</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                                <i data-lucide="link" class="w-5 h-5"></i>
+                            </div>
+                            <input type="text" id="qr-data" placeholder="Masukkan URL tautan, alamat email, atau pesan rahasia..." 
+                                class="w-full pl-11 pr-4 py-3.5 bg-slate-950 border border-slate-800 rounded-xl focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition-all placeholder:text-slate-600 text-slate-100">
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <!-- QR Code Display (Tersembunyi di awal sebelum di-generate) -->
-        <div id="qr-container" class="hidden flex-col items-center justify-center p-6 bg-gray-50 rounded-xl border border-dashed border-gray-200 mb-5">
-            <div id="qrcode" class="bg-white p-3 rounded-lg shadow-sm"></div>
-            <p class="text-xs text-gray-400 mt-3 text-center">QR Code berhasil dibuat!</p>
-        </div>
+            <!-- Step 2: Styling Workspace -->
+            <div class="bg-slate-900/50 border border-slate-900 rounded-2xl p-6 shadow-xl backdrop-blur-sm space-y-6">
+                <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-sm">2</div>
+                        <h2 class="heading-font font-bold text-lg text-white">Desain & Kustomisasi</h2>
+                    </div>
+                    <button id="btn-reset" class="text-xs text-slate-400 hover:text-white flex items-center gap-1 transition-colors">
+                        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Atur Ulang
+                    </button>
+                </div>
 
-        <!-- Action Buttons -->
-        <div class="flex flex-col gap-3">
-            <button id="generate-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl shadow transition cursor-pointer">
-                Buat QR Code
-            </button>
-            <button id="download-btn" class="hidden w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-4 rounded-xl shadow transition cursor-pointer justify-center items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                </svg>
-                Unduh QR Code (PNG)
-            </button>
-        </div>
-    </div>
+                <!-- Palette Preset -->
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">Preset Tema Warna Premium</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                        <button type="button" onclick="applyPreset('#0f172a', '#ffffff', '#6366f1')" class="flex items-center gap-2 p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800/80 rounded-xl text-left transition-all">
+                            <span class="w-4 h-4 rounded-full bg-indigo-500 shrink-0"></span>
+                            <span class="text-xs font-medium text-slate-300 truncate">Classic Indigo</span>
+                        </button>
+                        <button type="button" onclick="applyPreset('#050505', '#ffffff', '#10b981')" class="flex items-center gap-2 p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800/80 rounded-xl text-left transition-all">
+                            <span class="w-4 h-4 rounded-full bg-emerald-500 shrink-0"></span>
+                            <span class="text-xs font-medium text-slate-300 truncate">Forest Green</span>
+                        </button>
+                        <button type="button" onclick="applyPreset('#0f172a', '#ffffff', '#f43f5e')" class="flex items-center gap-2 p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800/80 rounded-xl text-left transition-all">
+                            <span class="w-4 h-4 rounded-full bg-rose-500 shrink-0"></span>
+                            <span class="text-xs font-medium text-slate-300 truncate">Rose Sunset</span>
+                        </button>
+                        <button type="button" onclick="applyPreset('#000000', '#ffffff', '#000000')" class="flex items-center gap-2 p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800/80 rounded-xl text-left transition-all">
+                            <span class="w-4 h-4 rounded-full bg-white border border-slate-700 shrink-0"></span>
+                            <span class="text-xs font-medium text-slate-300 truncate">Pitch Black</span>
+                        </button>
+                    </div>
+                </div>
 
-    <!-- JavaScript Logic -->
+                <!-- Dynamic Color Pickers -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Warna QR (Dot & Corak)</label>
+                        <div class="flex items-center gap-3 bg-slate-950 border border-slate-800 p-2.5 rounded-xl">
+                            <input type="color" id="qr-color-picker" value="#6366f1" class="w-10 h-10 rounded-lg cursor-pointer bg-transparent border-0">
+                            <div>
+                                <span id="qr-color-text" class="text-xs font-mono font-medium text-slate-300">#6366f1</span>
+                                <span class="block text-[10px] text-slate-500">Ketuk untuk ubah warna</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Warna Latar Belakang</label>
+                        <div class="flex items-center gap-3 bg-slate-950 border border-slate-800 p-2.5 rounded-xl">
+                            <input type="color" id="bg-color-picker" value="#ffffff" class="w-10 h-10 rounded-lg cursor-pointer bg-transparent border-0">
+                            <div>
+                                <span id="bg-color-text" class="text-xs font-mono font-medium text-slate-300">#ffffff</span>
+                                <span class="block text-[10px] text-slate-500">Rekomendasi warna kontras</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QR Geometry Style Options -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="dots-type" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Gaya Corak Utama (Dots)</label>
+                        <select id="dots-type" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition-all text-sm text-slate-300">
+                            <option value="rounded" selected>Bulat (Rounded)</option>
+                            <option value="dots">Titik Murni (Dots)</option>
+                            <option value="classy">Elegan Dinamis (Classy)</option>
+                            <option value="classy-rounded">Elegan Bulat</option>
+                            <option value="square">Klasik Kotak (Square)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="corners-type" class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Gaya Bingkai Sudut (Corner)</label>
+                        <select id="corners-type" class="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition-all text-sm text-slate-300">
+                            <option value="extra-rounded" selected>Super Bulat (Extra Rounded)</option>
+                            <option value="dot">Titik Bulat (Dot)</option>
+                            <option value="square">Kotak Presisi (Square)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Upload Center Logo Section -->
+                <div class="border-t border-slate-800/60 pt-5">
+                    <div class="flex items-center justify-between mb-3">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Tambahkan Logo Tengah</label>
+                            <span class="text-[10px] text-slate-500 block">Unggah logo transparan PNG untuk hasil estetik</span>
+                        </div>
+                        <button id="remove-logo-btn" class="hidden text-xs text-rose-400 hover:text-rose-300 transition-colors flex items-center gap-1">
+                            <i data-lucide="trash-2" class="w-3 h-3"></i> Hapus Logo
+                        </button>
+                    </div>
+                    
+                    <div id="logo-dropzone" class="border border-dashed border-slate-800 hover:border-indigo-500/50 bg-slate-950 hover:bg-indigo-950/5 rounded-2xl p-5 text-center transition-all cursor-pointer relative">
+                        <input type="file" id="logo-upload" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                        <div class="flex flex-col items-center justify-center gap-2">
+                            <div class="p-2.5 rounded-full bg-slate-900 border border-slate-800 text-slate-400">
+                                <i data-lucide="image" class="w-5 h-5"></i>
+                            </div>
+                            <span class="text-sm font-medium text-slate-300" id="upload-status-text">Klik atau Tarik File Logo ke Sini</span>
+                            <span class="text-[10px] text-slate-500">Maksimal resolusi ideal: 500x500 piksel</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Side: Live Premium Preview Panel (5 columns) -->
+        <section class="lg:col-span-5 lg:sticky lg:top-24 space-y-6">
+            
+            <!-- Live Preview Card -->
+            <div class="bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-900 rounded-3xl p-6 shadow-2xl flex flex-col items-center relative overflow-hidden">
+                <div class="absolute -top-16 -right-16 w-36 h-36 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-16 -left-16 w-36 h-36 bg-violet-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div class="w-full flex items-center justify-between mb-6 border-b border-slate-800/40 pb-4">
+                    <span class="heading-font font-bold text-sm text-slate-400 tracking-wider uppercase">Live Preview</span>
+                    <span class="text-[10px] bg-indigo-500/10 text-indigo-400 px-2.5 py-1 rounded-full font-semibold border border-indigo-500/20">Instan</span>
+                </div>
+
+                <!-- Realistic Device Canvas Border -->
+                <div class="bg-slate-950 border border-slate-800 p-6 rounded-2xl shadow-inner relative flex items-center justify-center max-w-full aspect-square w-72 sm:w-80 group">
+                    <!-- Invisible QR Target Container -->
+                    <div id="canvas-container" class="transition-transform duration-300 group-hover:scale-[1.02]"></div>
+                </div>
+
+                <!-- Feedback Toast (Built-in custom alert replacement) -->
+                <div id="toast-message" class="opacity-0 translate-y-2 pointer-events-none transition-all duration-300 absolute bottom-24 bg-slate-900 border border-indigo-500/30 text-indigo-300 text-xs px-4 py-2.5 rounded-full flex items-center gap-2 shadow-lg">
+                    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+                    <span id="toast-text">Berhasil diubah secara instan!</span>
+                </div>
+
+                <!-- Export & Action Hub -->
+                <div class="w-full mt-6 space-y-3">
+                    <div class="flex gap-2.5">
+                        <div class="flex-grow">
+                            <label for="export-format" class="sr-only">Format</label>
+                            <select id="export-format" class="w-full h-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none transition-all text-xs font-semibold text-slate-300">
+                                <option value="png">Format PNG (.png)</option>
+                                <option value="svg">Format Vektor SVG (.svg)</option>
+                            </select>
+                        </div>
+                        <button id="btn-download" class="flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg shadow-indigo-500/10 hover:shadow-indigo-500/20 transition-all cursor-pointer text-sm">
+                            <i data-lucide="download" class="w-4 h-4"></i> Unduh
+                        </button>
+                    </div>
+                    
+                    <button id="btn-copy" class="w-full py-3 px-4 bg-slate-900 border border-slate-800 hover:bg-slate-850 text-slate-300 hover:text-white rounded-xl transition-all font-medium text-xs flex items-center justify-center gap-2">
+                        <i data-lucide="copy" class="w-4 h-4"></i> Salin Link QR Code
+                    </button>
+                </div>
+            </div>
+
+            <!-- Pro Tips / Info Panel -->
+            <div class="bg-slate-900/20 border border-slate-900/60 rounded-2xl p-5 flex items-start gap-4">
+                <div class="p-2 bg-amber-500/10 text-amber-500 rounded-lg shrink-0">
+                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold text-slate-200">Tips Keterbacaan Optimal</h4>
+                    <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                        Gunakan warna corak yang lebih gelap dibanding warna latar belakang. Pastikan kontras warna minimal berkisar 40% agar mudah dipindai oleh kamera semua ponsel.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-900 bg-slate-950 py-8 px-4 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>&copy; 2026 | 296GROUP.</p>
+       </div>
+    </footer>
+
+    <!-- App Engine Logic -->
     <script>
-        const textInput = document.getElementById('text-input');
-        const generateBtn = document.getElementById('generate-btn');
-        const downloadBtn = document.getElementById('download-btn');
-        const qrContainer = document.getElementById('qr-container');
-        const qrDiv = document.getElementById('qrcode');
+        // Inisialisasi visual Lucide Icons
+        lucide.createIcons();
 
-        // Inisialisasi object QRCode dari library
-        let qrCodeInstance = new QRCode(qrDiv, {
-            width: 200,
-            height: 200,
-            colorDark : "#000000",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.H
+        // Elemen-elemen DOM
+        const inputData = document.getElementById('qr-data');
+        const dotsTypeSelect = document.getElementById('dots-type');
+        const cornersTypeSelect = document.getElementById('corners-type');
+        const qrColorPicker = document.getElementById('qr-color-picker');
+        const qrColorText = document.getElementById('qr-color-text');
+        const bgColorPicker = document.getElementById('bg-color-picker');
+        const bgColorText = document.getElementById('bg-color-text');
+        const logoUpload = document.getElementById('logo-upload');
+        const logoDropzone = document.getElementById('logo-dropzone');
+        const uploadStatusText = document.getElementById('upload-status-text');
+        const removeLogoBtn = document.getElementById('remove-logo-btn');
+        const btnDownload = document.getElementById('btn-download');
+        const btnCopy = document.getElementById('btn-copy');
+        const btnReset = document.getElementById('btn-reset');
+        const exportFormat = document.getElementById('export-format');
+        const canvasContainer = document.getElementById('canvas-container');
+
+        let uploadedLogoBase64 = null;
+
+        // Pengaturan QR-Code Styling Dasar
+        const qrCodeSettings = {
+            width: 280,
+            height: 280,
+            type: "svg",
+            data: "https://qrstudio.app",
+            image: "",
+            dotsOptions: {
+                color: "#6366f1",
+                type: "rounded"
+            },
+            backgroundOptions: {
+                color: "#ffffff",
+            },
+            imageOptions: {
+                crossOrigin: "anonymous",
+                margin: 8,
+                imageSize: 0.4
+            },
+            cornersSquareOptions: {
+                type: "extra-rounded",
+                color: "#6366f1"
+            },
+            cornersDotOptions: {
+                type: "dot",
+                color: "#6366f1"
+            }
+        };
+
+        // Inisialisasi object QR Code Styling
+        const qrCode = new QRCodeStyling(qrCodeSettings);
+        
+        // Pasangkan hasil render ke container
+        qrCode.append(canvasContainer);
+
+        // Menampilkan pesan toast yang elegan
+        function showToast(message, isSuccess = true) {
+            const toast = document.getElementById('toast-message');
+            const toastText = document.getElementById('toast-text');
+            
+            toastText.textContent = message;
+            toast.classList.remove('opacity-0', 'translate-y-2', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2', 'pointer-events-none');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }, 3000);
+        }
+
+        // Jalankan pembaruan QR Code setiap kali input diubah (Real-Time)
+        function updateQRCode() {
+            const currentData = inputData.value.trim() || "https://qrstudio.app";
+            
+            // Konfigurasi dinamis
+            const updatedConfig = {
+                data: currentData,
+                image: uploadedLogoBase64 || "",
+                dotsOptions: {
+                    color: qrColorPicker.value,
+                    type: dotsTypeSelect.value
+                },
+                backgroundOptions: {
+                    color: bgColorPicker.value,
+                },
+                cornersSquareOptions: {
+                    type: cornersTypeSelect.value === 'extra-rounded' ? 'extra-rounded' : cornersTypeSelect.value === 'dot' ? 'dot' : 'square',
+                    color: qrColorPicker.value
+                },
+                cornersDotOptions: {
+                    type: cornersTypeSelect.value === 'dot' ? 'dot' : 'square',
+                    color: qrColorPicker.value
+                }
+            };
+
+            qrCode.update(updatedConfig);
+        }
+
+        // Listener Input Karakter
+        inputData.addEventListener('input', () => {
+            updateQRCode();
         });
 
-        // Fungsi untuk membuat QR Code
-        function generateQR() {
-            const inputValue = textInput.value.trim();
+        // Listener Gaya Dots & Sudut
+        dotsTypeSelect.addEventListener('change', updateQRCode);
+        cornersTypeSelect.addEventListener('change', updateQRCode);
 
-            if (!inputValue) {
-                alert('Silakan masukkan teks atau URL terlebih dahulu!');
+        // Listener Color Picker
+        qrColorPicker.addEventListener('input', (e) => {
+            qrColorText.textContent = e.target.value.toUpperCase();
+            updateQRCode();
+        });
+
+        bgColorPicker.addEventListener('input', (e) => {
+            bgColorText.textContent = e.target.value.toUpperCase();
+            updateQRCode();
+        });
+
+        // Fitur Menerapkan Preset Warna
+        window.applyPreset = function(bgColor, dotsColor, brandColor) {
+            bgColorPicker.value = bgColor;
+            bgColorText.textContent = bgColor.toUpperCase();
+            
+            qrColorPicker.value = brandColor;
+            qrColorText.textContent = brandColor.toUpperCase();
+
+            updateQRCode();
+            showToast("Tema preset berhasil diterapkan!");
+        };
+
+        // File/Logo Upload Handlers
+        logoUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Pastikan format gambar sesuai
+            if (!file.type.startsWith('image/')) {
+                showToast("Format file tidak didukung! Gunakan gambar.", false);
                 return;
             }
 
-            // Jalankan fungsi dari library untuk membuat QR
-            qrCodeInstance.makeCode(inputValue);
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                uploadedLogoBase64 = event.target.result;
+                uploadStatusText.textContent = `Logo: ${file.name.slice(0, 18)}...`;
+                removeLogoBtn.classList.remove('hidden');
+                updateQRCode();
+                showToast("Logo berhasil dipasangkan ke tengah!");
+            };
+            reader.readAsDataURL(file);
+        });
 
-            // Tampilkan container QR dan tombol unduh
-            qrContainer.classList.remove('hidden');
-            qrContainer.classList.add('flex');
-            downloadBtn.classList.remove('hidden');
-            downloadBtn.classList.add('flex');
-        }
+        // Hapus Logo Tengah
+        removeLogoBtn.addEventListener('click', () => {
+            uploadedLogoBase64 = null;
+            logoUpload.value = '';
+            uploadStatusText.textContent = "Klik atau Tarik File Logo ke Sini";
+            removeLogoBtn.classList.add('hidden');
+            updateQRCode();
+            showToast("Logo tengah dihapus.");
+        });
 
-        // Fungsi untuk mengunduh QR Code sebagai gambar PNG
-        function downloadQR() {
-            // Mengambil elemen gambar (img) di dalam div #qrcode yang dibuat oleh library
-            const qrImg = qrDiv.querySelector('img');
+        // Drag & Drop visual feedback
+        ['dragenter', 'dragover'].forEach(eventName => {
+            logoDropzone.addEventListener(eventName, () => {
+                logoDropzone.classList.add('border-indigo-500', 'bg-indigo-950/20');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            logoDropzone.addEventListener(eventName, () => {
+                logoDropzone.classList.remove('border-indigo-500', 'bg-indigo-950/20');
+            }, false);
+        });
+
+        // Fitur Unduh QR Code dalam PNG / SVG
+        btnDownload.addEventListener('click', () => {
+            const format = exportFormat.value;
+            const textToSave = inputData.value.trim() ? "qr-code" : "qr-studio-preview";
             
-            if (qrImg && qrImg.src) {
-                const link = document.createElement('a');
-                link.href = qrImg.src;
-                link.download = 'qrcode-' + Date.now() + '.png';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            } else {
-                // Kasus cadangan jika gambar di-render menggunakan elemen <canvas>
-                const qrCanvas = qrDiv.querySelector('canvas');
-                if (qrCanvas) {
-                    const link = document.createElement('a');
-                    link.href = qrCanvas.toDataURL("image/png");
-                    link.download = 'qrcode-' + Date.now() + '.png';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                } else {
-                    alert('Gagal mengunduh gambar. Silakan coba lagi.');
-                }
-            }
-        }
+            qrCode.download({
+                name: `${textToSave}-${Date.now()}`,
+                extension: format
+            }).then(() => {
+                showToast(`Unduhan ${format.toUpperCase()} dimulai!`);
+            }).catch(() => {
+                showToast("Gagal mengunduh gambar. Silakan coba lagi.", false);
+            });
+        });
 
-        // Event Listeners
-        generateBtn.addEventListener('click', generateQR);
-        downloadBtn.addEventListener('click', downloadQR);
-
-        // Supaya bisa generate saat menekan tombol 'Enter' di keyboard
-        textInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                generateQR();
+        // Salin Teks/URL Link dari Input ke Clipboard
+        btnCopy.addEventListener('click', () => {
+            const dataToCopy = inputData.value.trim();
+            if (!dataToCopy) {
+                showToast("Masukkan teks/URL terlebih dahulu untuk disalin!", false);
+                return;
             }
+
+            // Ganti metode klipboard modern dengan execCommand demi kompatibilitas penuh di iframe
+            const tempInput = document.createElement("input");
+            tempInput.value = dataToCopy;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            showToast("Tautan konten QR berhasil disalin!");
+        });
+
+        // Reset Formulir ke Konfigurasi Awal
+        btnReset.addEventListener('click', () => {
+            inputData.value = '';
+            dotsTypeSelect.value = 'rounded';
+            cornersTypeSelect.value = 'extra-rounded';
+            qrColorPicker.value = '#6366f1';
+            qrColorText.textContent = '#6366f1';
+            bgColorPicker.value = '#ffffff';
+            bgColorText.textContent = '#FFFFFF';
+            uploadedLogoBase64 = null;
+            logoUpload.value = '';
+            uploadStatusText.textContent = "Klik atau Tarik File Logo ke Sini";
+            removeLogoBtn.classList.add('hidden');
+            
+            updateQRCode();
+            showToast("Semua konfigurasi diatur ulang.");
         });
     </script>
 </body>
