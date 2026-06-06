@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator QR Code</title>
+    <!-- Tailwind CSS untuk tampilan yang modern dan rapi -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Library QRCode.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- --- FAVICON (SVG Crown Emoji) --- -->
+    <link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
+    
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 font-sans">
+
+    <div class="bg-white p-6 rounded-2xl shadow-lg max-w-md w-full">
+        <!-- Header -->
+        <div class="text-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">QR Code Generator</h1>
+            <p class="text-sm text-gray-500 mt-1">Masukkan teks atau URL untuk membuat QR Code secara instan</p>
+        </div>
+
+        <!-- Input Section -->
+        <div class="mb-5">
+            <label for="text-input" class="block text-sm font-medium text-gray-700 mb-2">Teks atau URL</label>
+            <input type="text" id="text-input" placeholder="Contoh: https://google.com atau Halo Dunia!" 
+                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+        </div>
+
+        <!-- QR Code Display (Tersembunyi di awal sebelum di-generate) -->
+        <div id="qr-container" class="hidden flex-col items-center justify-center p-6 bg-gray-50 rounded-xl border border-dashed border-gray-200 mb-5">
+            <div id="qrcode" class="bg-white p-3 rounded-lg shadow-sm"></div>
+            <p class="text-xs text-gray-400 mt-3 text-center">QR Code berhasil dibuat!</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col gap-3">
+            <button id="generate-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl shadow transition cursor-pointer">
+                Buat QR Code
+            </button>
+            <button id="download-btn" class="hidden w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-4 rounded-xl shadow transition cursor-pointer justify-center items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                </svg>
+                Unduh QR Code (PNG)
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        const textInput = document.getElementById('text-input');
+        const generateBtn = document.getElementById('generate-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        const qrContainer = document.getElementById('qr-container');
+        const qrDiv = document.getElementById('qrcode');
+
+        // Inisialisasi object QRCode dari library
+        let qrCodeInstance = new QRCode(qrDiv, {
+            width: 200,
+            height: 200,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+
+        // Fungsi untuk membuat QR Code
+        function generateQR() {
+            const inputValue = textInput.value.trim();
+
+            if (!inputValue) {
+                alert('Silakan masukkan teks atau URL terlebih dahulu!');
+                return;
+            }
+
+            // Jalankan fungsi dari library untuk membuat QR
+            qrCodeInstance.makeCode(inputValue);
+
+            // Tampilkan container QR dan tombol unduh
+            qrContainer.classList.remove('hidden');
+            qrContainer.classList.add('flex');
+            downloadBtn.classList.remove('hidden');
+            downloadBtn.classList.add('flex');
+        }
+
+        // Fungsi untuk mengunduh QR Code sebagai gambar PNG
+        function downloadQR() {
+            // Mengambil elemen gambar (img) di dalam div #qrcode yang dibuat oleh library
+            const qrImg = qrDiv.querySelector('img');
+            
+            if (qrImg && qrImg.src) {
+                const link = document.createElement('a');
+                link.href = qrImg.src;
+                link.download = 'qrcode-' + Date.now() + '.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                // Kasus cadangan jika gambar di-render menggunakan elemen <canvas>
+                const qrCanvas = qrDiv.querySelector('canvas');
+                if (qrCanvas) {
+                    const link = document.createElement('a');
+                    link.href = qrCanvas.toDataURL("image/png");
+                    link.download = 'qrcode-' + Date.now() + '.png';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } else {
+                    alert('Gagal mengunduh gambar. Silakan coba lagi.');
+                }
+            }
+        }
+
+        // Event Listeners
+        generateBtn.addEventListener('click', generateQR);
+        downloadBtn.addEventListener('click', downloadQR);
+
+        // Supaya bisa generate saat menekan tombol 'Enter' di keyboard
+        textInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                generateQR();
+            }
+        });
+    </script>
+</body>
+</html>
