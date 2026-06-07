@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>296Favicon Maker</title>
+  <!-- --- FAVICON (SVG Crown Emoji) --- -->
+<link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased">
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 backdrop-blur-md bg-white/90">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-indigo-200">
+                    <!-- Brand Custom SVG Logo representing favicon generation -->
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">296Favicon Maker</span>
+                    <span class="text-xs block text-slate-400 font-medium tracking-wide">STUDIO & COMPRESSOR</span>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="hidden sm:inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-indigo-550/10 text-indigo-600 bg-indigo-50 border border-indigo-100">
+                    ✨ 100% Client-Side Safe
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8">
+        <!-- Introduction Header Section -->
+        <div class="text-center sm:text-left">
+            <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">Studio Pembuat Favicon</h1>
+            <p class="mt-2 text-md text-slate-600 max-w-2xl">Buat favicon modern dari gambar, teks, atau emoji. Kompres ukuran file secara otomatis, dan unduh paket resolusi terlengkap dalam hitungan detik.</p>
+        </div>
+
+        <!-- Main Workspace Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Left Side Control Panel (Tabs & Settings) -->
+            <div class="lg:col-span-4 bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
+                <!-- Mode Selector Tab -->
+                <div class="flex p-1 bg-slate-100 rounded-xl">
+                    <button id="tabImg" class="flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 text-indigo-700 bg-white shadow-sm flex items-center justify-center space-x-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <span>Mode Gambar</span>
+                    </button>
+                    <button id="tabTxt" class="flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <span>Teks & Emoji</span>
+                    </button>
+                </div>
+
+                <!-- Tab content: Image Mode controls -->
+                <div id="panelImg" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Pilih File Gambar</label>
+                        <div id="dragDropArea" class="border-2 border-dashed border-slate-300 hover:border-indigo-500 bg-slate-50 hover:bg-slate-100/50 transition-colors duration-200 rounded-xl p-6 text-center cursor-pointer relative group">
+                            <input type="file" id="imageInput" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer">
+                            <svg class="w-10 h-10 mx-auto text-slate-400 group-hover:text-indigo-500 transition-colors duration-200 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                            <p class="text-xs font-semibold text-slate-700">Tarik gambar ke sini, atau <span class="text-indigo-600">pilih dari folder</span></p>
+                            <p class="text-[10px] text-slate-400 mt-1">Saran: Gunakan rasio aspek 1:1 berbentuk persegi</p>
+                        </div>
+                    </div>
+
+                    <!-- Fine-tune controls (Sliders) -->
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center bg-slate-100/80 px-3 py-1.5 rounded-lg">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Alat Editor Gambar</span>
+                            <button id="resetImageFilters" class="text-xs font-semibold text-indigo-600 hover:underline">Reset</button>
+                        </div>
+
+                        <!-- Zoom slider -->
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-600 font-medium mb-1">
+                                <span>Perbesar (Zoom)</span>
+                                <span id="valZoom">100%</span>
+                            </div>
+                            <input id="sliderZoom" type="range" min="10" max="200" value="100" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                        </div>
+
+                        <!-- Rotation -->
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-600 font-medium mb-1">
+                                <span>Putar (Rotasi)</span>
+                                <span id="valRotate">0°</span>
+                            </div>
+                            <input id="sliderRotate" type="range" min="0" max="360" value="0" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                        </div>
+
+                        <!-- Shift X -->
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-600 font-medium mb-1">
+                                <span>Geser Horizontal (X)</span>
+                                <span id="valShiftX">0 px</span>
+                            </div>
+                            <input id="sliderShiftX" type="range" min="-100" max="100" value="0" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                        </div>
+
+                        <!-- Shift Y -->
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-600 font-medium mb-1">
+                                <span>Geser Vertikal (Y)</span>
+                                <span id="valShiftY">0 px</span>
+                            </div>
+                            <input id="sliderShiftY" type="range" min="-100" max="100" value="0" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                        </div>
+
+                        <!-- Contrast Slider -->
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-600 font-medium mb-1">
+                                <span>Kontras</span>
+                                <span id="valContrast">100%</span>
+                            </div>
+                            <input id="sliderContrast" type="range" min="50" max="150" value="100" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                        </div>
+
+                        <!-- Brightness Slider -->
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-600 font-medium mb-1">
+                                <span>Kecerahan</span>
+                                <span id="valBrightness">100%</span>
+                            </div>
+                            <input id="sliderBrightness" type="range" min="50" max="150" value="100" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                        </div>
+
+                        <!-- Flip Option -->
+                        <div class="flex space-x-2">
+                            <button id="btnFlipH" class="flex-1 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium border border-slate-200 transition-colors">Balik Horizontal</button>
+                            <button id="btnFlipV" class="flex-1 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium border border-slate-200 transition-colors">Balik Vertikal</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab content: Text & Emoji controls -->
+                <div id="panelTxt" class="space-y-6 hidden">
+                    <!-- Text/Emoji Input -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Ketik Teks / Emoji</label>
+                        <input type="text" id="emojiTextInput" placeholder="😀 atau F" maxlength="4" value="🚀" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-slate-800 font-medium transition-all outline-none">
+                    </div>
+
+                    <!-- Shape options -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Bentuk Bingkai</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button id="shapeSquare" class="py-2 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-lg text-xs font-bold">Square</button>
+                            <button id="shapeRounded" class="py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium">Rounded</button>
+                            <button id="shapeCircle" class="py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium">Circle</button>
+                        </div>
+                    </div>
+
+                    <!-- Colors -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Teks & Ikon</label>
+                            <div class="flex items-center space-x-2">
+                                <input type="color" id="textColorPicker" value="#ffffff" class="w-10 h-10 border border-slate-200 rounded-lg cursor-pointer bg-white">
+                                <span class="text-xs text-slate-500 font-mono" id="textColorHex">#FFFFFF</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Warna Latar</label>
+                            <div class="flex items-center space-x-2">
+                                <input type="color" id="bgColorPicker" value="#4f46e5" class="w-10 h-10 border border-slate-200 rounded-lg cursor-pointer bg-white">
+                                <span class="text-xs text-slate-500 font-mono" id="bgColorHex">#4F46E5</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Font size & adjustment controls -->
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-600 font-medium mb-1">
+                                <span>Ukuran Font/Ikon</span>
+                                <span id="valFontSize">60%</span>
+                            </div>
+                            <input id="sliderFontSize" type="range" min="20" max="100" value="60" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs text-slate-600 font-medium mb-1">
+                                <span>Kelengkungan Sudut (Rounded)</span>
+                                <span id="valCornerRadius">25%</span>
+                            </div>
+                            <input id="sliderCornerRadius" type="range" min="0" max="50" value="25" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Gaya Font</label>
+                            <select id="fontFamilySelector" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 focus:ring-1 focus:ring-indigo-500 outline-none">
+                                <option value="system-ui" selected>System Default</option>
+                                <option value="serif">Serif Elegant</option>
+                                <option value="monospace">Monospace Coding</option>
+                                <option value="cursive">Cursive Creative</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Middle Workspace Canvas View & Browser mockup -->
+            <div class="lg:col-span-5 space-y-8 flex flex-col items-center">
+                <!-- Main canvas workspace card -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 w-full flex flex-col items-center">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4 self-start">Kanvas Master (512 x 512 px)</span>
+                    
+                    <div class="relative bg-slate-100 border border-slate-200 rounded-xl p-8 flex items-center justify-center shadow-inner overflow-hidden max-w-[320px] w-full aspect-square" id="checkerboardContainer" style="background-image: radial-gradient(#e2e8f0 1.5px, transparent 1.5px), radial-gradient(#e2e8f0 1.5px, #f8fafc 1.5px); background-size: 20px 20px; background-position: 0 0, 10px 10px;">
+                        <!-- Master Canvas (Hidden, used to generate assets but preview is synced below) -->
+                        <canvas id="masterCanvas" width="512" height="512" class="hidden"></canvas>
+                        <!-- Live Canvas Preview image element -->
+                        <img id="masterCanvasPreview" class="w-full max-w-[256px] h-auto rounded-lg shadow-md border border-slate-200 object-contain" alt="Favicon Master Preview">
+                    </div>
+
+                    <p class="text-[11px] text-slate-400 text-center mt-3">Pratinjau real-time resolusi master 512px sebelum dikompres.</p>
+                </div>
+
+                <!-- Live Browser tab preview mockup -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 w-full">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4 block">Visualisasi Browser Tab Mockup</span>
+
+                    <!-- Mockup Tab Light Mode -->
+                    <div class="bg-slate-100 rounded-xl overflow-hidden border border-slate-200 shadow-sm mb-4">
+                        <div class="flex items-center space-x-1 px-3 py-1.5 bg-slate-200 border-b border-slate-300">
+                            <div class="w-2.5 h-2.5 rounded-full bg-red-400"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-green-400"></div>
+                        </div>
+                        <div class="p-2 flex items-center bg-slate-100">
+                            <!-- Tab Content -->
+                            <div class="flex items-center space-x-2 bg-white px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 max-w-[200px] truncate shadow-sm">
+                                <img id="mockupFaviconLight" class="w-4.5 h-4.5 object-contain" src="" alt="Favicon Mini">
+                                <span class="truncate">Situs Keren Saya</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mockup Tab Dark Mode -->
+                    <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-800 shadow-sm">
+                        <div class="flex items-center space-x-1 px-3 py-1.5 bg-slate-950 border-b border-slate-800">
+                            <div class="w-2.5 h-2.5 rounded-full bg-red-400"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-green-400"></div>
+                        </div>
+                        <div class="p-2 flex items-center bg-slate-900">
+                            <!-- Tab Content -->
+                            <div class="flex items-center space-x-2 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 text-xs font-semibold text-slate-300 max-w-[200px] truncate shadow-sm">
+                                <img id="mockupFaviconDark" class="w-4.5 h-4.5 object-contain" src="" alt="Favicon Mini">
+                                <span class="truncate">Situs Keren Saya</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side Control Panel (Export Center) -->
+            <div class="lg:col-span-4 bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-900">Pusat Ekspor & Kompresi</h2>
+                    <p class="text-xs text-slate-500 mt-1">Atur dimensi aset yang ingin Anda dapatkan di dalam file zip Anda.</p>
+                </div>
+
+                <!-- Checkboxes for export sizes -->
+                <div class="space-y-3">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Dimensi Resolusi</span>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <label class="flex items-center space-x-3 p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl cursor-pointer text-xs font-semibold transition-colors duration-200">
+                            <input type="checkbox" id="size16" checked class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500">
+                            <span>16 x 16 px (Favicon Tab)</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl cursor-pointer text-xs font-semibold transition-colors duration-200">
+                            <input type="checkbox" id="size32" checked class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500">
+                            <span>32 x 32 px (Standard)</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl cursor-pointer text-xs font-semibold transition-colors duration-200">
+                            <input type="checkbox" id="size48" checked class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500">
+                            <span>48 x 48 px (Desktop)</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl cursor-pointer text-xs font-semibold transition-colors duration-200">
+                            <input type="checkbox" id="size96" checked class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500">
+                            <span>96 x 96 px (High-DPI)</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl cursor-pointer text-xs font-semibold transition-colors duration-200">
+                            <input type="checkbox" id="size192" checked class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500">
+                            <span>192 x 192 px (Android)</span>
+                        </label>
+                        <label class="flex items-center space-x-3 p-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl cursor-pointer text-xs font-semibold transition-colors duration-200">
+                            <input type="checkbox" id="size512" checked class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500">
+                            <span>512 x 512 px (PWA Icon)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Custom formats -->
+                <div class="space-y-3">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Pilihan Output Tambahan</span>
+                    <label class="flex items-center space-x-3 p-3 bg-indigo-50/50 hover:bg-indigo-50 border border-indigo-100 rounded-xl cursor-pointer text-xs font-semibold transition-colors duration-200">
+                        <input type="checkbox" id="formatIco" checked class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500">
+                        <div class="flex-1">
+                            <span>Sertakan file asli .ico (Multisize)</span>
+                            <span class="block text-[10px] text-slate-400 font-normal">Menggabungkan resolusi 16px, 32px, 48px dalam satu file .ico</span>
+                        </div>
+                    </label>
+                </div>
+
+                <hr class="border-slate-100">
+
+                <!-- Real-time Compression Summary -->
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Hasil Optimasi Kompresi</span>
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-slate-500">Ukuran Masukan Asli:</span>
+                        <span id="labelOrigSize" class="font-semibold text-slate-700">-</span>
+                    </div>
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-slate-500">Estimasi Paket Ekspor:</span>
+                        <span id="labelCompSize" class="font-bold text-indigo-600">-</span>
+                    </div>
+                    <div class="flex justify-between items-center text-xs border-t border-slate-200/60 pt-2">
+                        <span class="text-slate-500">Tingkat Kompresi:</span>
+                        <span id="labelSavings" class="font-bold text-emerald-600">Sangat Ringan</span>
+                    </div>
+                </div>
+
+                <!-- Downloader Button Actions -->
+                <div class="space-y-2">
+                    <button id="downloadZipBtn" class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-bold shadow-md shadow-indigo-200 transition-all duration-200 flex items-center justify-center space-x-2">
+                        <!-- SVG Download icon -->
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        <span>Unduh Semua (.zip)</span>
+                    </button>
+                    <button id="downloadMasterBtn" class="w-full py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold border border-slate-200 transition-all duration-200 flex items-center justify-center space-x-2">
+                        <span>Unduh Format Master (512px .png)</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-12 py-6 text-center text-xs text-slate-400 font-medium">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>© 2026 Favicon Maker & Compressor. Dirancang secara elegan, responsif, dan simpel.</p>
+        </div>
+    </footer>
+
+    <!-- Custom Toast Notification System -->
+    <div id="toastContainer" class="fixed top-20 right-4 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+    <!-- JSZip Library from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <!-- Core App Logic -->
+    <script>
+        // Global variables/State tracking
+        let activeTab = 'image'; // 'image' or 'text'
+        let currentImage = null; // Store Image object
+        let imageOriginalSize = 0; // track original file size
+
+        // Image Modification Parameters
+        let filterZoom = 100;
+        let filterRotate = 0;
+        let filterShiftX = 0;
+        let filterShiftY = 0;
+        let filterContrast = 100;
+        let filterBrightness = 100;
+        let filterFlipH = false;
+        let filterFlipV = false;
+
+        // Text & Emoji Parameters
+        let txtEmojiString = "🚀";
+        let textBgShape = "square"; // square, rounded, circle
+        let textColor = "#ffffff";
+        let textBgColor = "#4f46e5";
+        let textFontSize = 60;
+        let textCornerRadius = 25;
+        let textFontFamily = "system-ui";
+
+        // DOM elements
+        const tabImg = document.getElementById('tabImg');
+        const tabTxt = document.getElementById('tabTxt');
+        const panelImg = document.getElementById('panelImg');
+        const panelTxt = document.getElementById('panelTxt');
+
+        const dragDropArea = document.getElementById('dragDropArea');
+        const imageInput = document.getElementById('imageInput');
+
+        // Slider Elements & values
+        const sliderZoom = document.getElementById('sliderZoom');
+        const valZoom = document.getElementById('valZoom');
+        const sliderRotate = document.getElementById('sliderRotate');
+        const valRotate = document.getElementById('valRotate');
+        const sliderShiftX = document.getElementById('sliderShiftX');
+        const valShiftX = document.getElementById('valShiftX');
+        const sliderShiftY = document.getElementById('sliderShiftY');
+        const valShiftY = document.getElementById('valShiftY');
+        const sliderContrast = document.getElementById('sliderContrast');
+        const valContrast = document.getElementById('valContrast');
+        const sliderBrightness = document.getElementById('sliderBrightness');
+        const valBrightness = document.getElementById('valBrightness');
+        const btnFlipH = document.getElementById('btnFlipH');
+        const btnFlipV = document.getElementById('btnFlipV');
+        const resetFiltersBtn = document.getElementById('resetImageFilters');
+
+        // Text input elements
+        const emojiTextInput = document.getElementById('emojiTextInput');
+        const shapeSquare = document.getElementById('shapeSquare');
+        const shapeRounded = document.getElementById('shapeRounded');
+        const shapeCircle = document.getElementById('shapeCircle');
+        const textColorPicker = document.getElementById('textColorPicker');
+        const textColorHex = document.getElementById('textColorHex');
+        const bgColorPicker = document.getElementById('bgColorPicker');
+        const bgColorHex = document.getElementById('bgColorHex');
+        const sliderFontSize = document.getElementById('sliderFontSize');
+        const valFontSize = document.getElementById('valFontSize');
+        const sliderCornerRadius = document.getElementById('sliderCornerRadius');
+        const valCornerRadius = document.getElementById('valCornerRadius');
+        const fontFamilySelector = document.getElementById('fontFamilySelector');
+
+        // Export Center elements
+        const masterCanvas = document.getElementById('masterCanvas');
+        const masterCanvasPreview = document.getElementById('masterCanvasPreview');
+        const mockupFaviconLight = document.getElementById('mockupFaviconLight');
+        const mockupFaviconDark = document.getElementById('mockupFaviconDark');
+        const labelOrigSize = document.getElementById('labelOrigSize');
+        const labelCompSize = document.getElementById('labelCompSize');
+
+        const chk16 = document.getElementById('size16');
+        const chk32 = document.getElementById('size32');
+        const chk48 = document.getElementById('size48');
+        const chk96 = document.getElementById('size96');
+        const chk192 = document.getElementById('size192');
+        const chk512 = document.getElementById('size512');
+        const chkIco = document.getElementById('formatIco');
+
+        const downloadZipBtn = document.getElementById('downloadZipBtn');
+        const downloadMasterBtn = document.getElementById('downloadMasterBtn');
+
+        // Premium alert replacement
+        function showNotification(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            toast.className = `flex items-center space-x-3 p-4 rounded-xl shadow-lg border text-xs font-semibold pointer-events-auto transition-all duration-300 transform translate-x-12 opacity-0 ${
+                type === 'success' 
+                ? 'bg-emerald-50 border-emerald-100 text-emerald-800' 
+                : 'bg-red-50 border-red-100 text-red-800'
+            }`;
+
+            const icon = type === 'success' 
+                ? `<svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`
+                : `<svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>`;
+
+            toast.innerHTML = `${icon}<span>${message}</span>`;
+            container.appendChild(toast);
+
+            // Animate In
+            setTimeout(() => {
+                toast.classList.remove('translate-x-12', 'opacity-0');
+            }, 10);
+
+            // Animate Out & Destroy
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-x-12');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Tab switching events
+        tabImg.addEventListener('click', () => {
+            activeTab = 'image';
+            tabImg.className = "flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 text-indigo-700 bg-white shadow-sm flex items-center justify-center space-x-2";
+            tabTxt.className = "flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-2";
+            panelImg.classList.remove('hidden');
+            panelTxt.classList.add('hidden');
+            renderFavicon();
+        });
+
+        tabTxt.addEventListener('click', () => {
+            activeTab = 'text';
+            tabTxt.className = "flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 text-indigo-700 bg-white shadow-sm flex items-center justify-center space-x-2";
+            tabImg.className = "flex-1 py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-2";
+            panelTxt.classList.remove('hidden');
+            panelImg.classList.add('hidden');
+            renderFavicon();
+        });
+
+        // Drag and drop event listeners
+        dragDropArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dragDropArea.classList.add('border-indigo-500', 'bg-slate-100');
+        });
+
+        dragDropArea.addEventListener('dragleave', () => {
+            dragDropArea.classList.remove('border-indigo-500', 'bg-slate-100');
+        });
+
+        dragDropArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dragDropArea.classList.remove('border-indigo-500', 'bg-slate-100');
+            if (e.dataTransfer.files.length > 0) {
+                handleUploadedFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        imageInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleUploadedFile(e.target.files[0]);
+            }
+        });
+
+        // Parse and inspect uploaded files
+        function handleUploadedFile(file) {
+            if (!file.type.startsWith('image/')) {
+                showNotification('Mohon pilih file bertipe gambar valid.', 'error');
+                return;
+            }
+
+            imageOriginalSize = file.size;
+            labelOrigSize.textContent = formatBytes(imageOriginalSize);
+
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function(event) {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = function() {
+                    currentImage = img;
+                    resetImageParams();
+                    showNotification('Gambar berhasil diunggah.');
+                };
+                img.onerror = function() {
+                    showNotification('Terjadi kesalahan memuat file gambar.', 'error');
+                };
+            };
+        }
+
+        // Slider value synchronization & trigger updates
+        sliderZoom.addEventListener('input', (e) => {
+            filterZoom = parseInt(e.target.value);
+            valZoom.textContent = `${filterZoom}%`;
+            renderFavicon();
+        });
+
+        sliderRotate.addEventListener('input', (e) => {
+            filterRotate = parseInt(e.target.value);
+            valRotate.textContent = `${filterRotate}°`;
+            renderFavicon();
+        });
+
+        sliderShiftX.addEventListener('input', (e) => {
+            filterShiftX = parseInt(e.target.value);
+            valShiftX.textContent = `${filterShiftX} px`;
+            renderFavicon();
+        });
+
+        sliderShiftY.addEventListener('input', (e) => {
+            filterShiftY = parseInt(e.target.value);
+            valShiftY.textContent = `${filterShiftY} px`;
+            renderFavicon();
+        });
+
+        sliderContrast.addEventListener('input', (e) => {
+            filterContrast = parseInt(e.target.value);
+            valContrast.textContent = `${filterContrast}%`;
+            renderFavicon();
+        });
+
+        sliderBrightness.addEventListener('input', (e) => {
+            filterBrightness = parseInt(e.target.value);
+            valBrightness.textContent = `${filterBrightness}%`;
+            renderFavicon();
+        });
+
+        btnFlipH.addEventListener('click', () => {
+            filterFlipH = !filterFlipH;
+            btnFlipH.classList.toggle('bg-indigo-50', filterFlipH);
+            btnFlipH.classList.toggle('text-indigo-600', filterFlipH);
+            renderFavicon();
+        });
+
+        btnFlipV.addEventListener('click', () => {
+            filterFlipV = !filterFlipV;
+            btnFlipV.classList.toggle('bg-indigo-50', filterFlipV);
+            btnFlipV.classList.toggle('text-indigo-600', filterFlipV);
+            renderFavicon();
+        });
+
+        resetFiltersBtn.addEventListener('click', () => {
+            resetImageParams();
+            showNotification('Filter gambar dikembalikan ke awal.');
+        });
+
+        function resetImageParams() {
+            filterZoom = 100;
+            filterRotate = 0;
+            filterShiftX = 0;
+            filterShiftY = 0;
+            filterContrast = 100;
+            filterBrightness = 100;
+            filterFlipH = false;
+            filterFlipV = false;
+
+            sliderZoom.value = 100;
+            valZoom.textContent = '100%';
+            sliderRotate.value = 0;
+            valRotate.textContent = '0°';
+            sliderShiftX.value = 0;
+            valShiftX.textContent = '0 px';
+            sliderShiftY.value = 0;
+            valShiftY.textContent = '0 px';
+            sliderContrast.value = 100;
+            valContrast.textContent = '100%';
+            sliderBrightness.value = 100;
+            valBrightness.textContent = '100%';
+
+            btnFlipH.className = "flex-1 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium border border-slate-200 transition-colors";
+            btnFlipV.className = "flex-1 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium border border-slate-200 transition-colors";
+
+            renderFavicon();
+        }
+
+        // Text & Emoji generator listeners
+        emojiTextInput.addEventListener('input', (e) => {
+            txtEmojiString = e.target.value;
+            renderFavicon();
+        });
+
+        textColorPicker.addEventListener('input', (e) => {
+            textColor = e.target.value;
+            textColorHex.textContent = textColor.toUpperCase();
+            renderFavicon();
+        });
+
+        bgColorPicker.addEventListener('input', (e) => {
+            textBgColor = e.target.value;
+            bgColorHex.textContent = textBgColor.toUpperCase();
+            renderFavicon();
+        });
+
+        sliderFontSize.addEventListener('input', (e) => {
+            textFontSize = parseInt(e.target.value);
+            valFontSize.textContent = `${textFontSize}%`;
+            renderFavicon();
+        });
+
+        sliderCornerRadius.addEventListener('input', (e) => {
+            textCornerRadius = parseInt(e.target.value);
+            valCornerRadius.textContent = `${textCornerRadius}%`;
+            renderFavicon();
+        });
+
+        fontFamilySelector.addEventListener('change', (e) => {
+            textFontFamily = e.target.value;
+            renderFavicon();
+        });
+
+        // Shape Button styling switches
+        function setShapeButtonStyles(activeShape) {
+            textBgShape = activeShape;
+            const buttons = [
+                { el: shapeSquare, name: 'square' },
+                { el: shapeRounded, name: 'rounded' },
+                { el: shapeCircle, name: 'circle' }
+            ];
+            
+            buttons.forEach(btn => {
+                if (btn.name === activeShape) {
+                    btn.el.className = "py-2 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-lg text-xs font-bold";
+                } else {
+                    btn.el.className = "py-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-lg text-xs font-medium";
+                }
+            });
+            renderFavicon();
+        }
+
+        shapeSquare.addEventListener('click', () => setShapeButtonStyles('square'));
+        shapeRounded.addEventListener('click', () => setShapeButtonStyles('rounded'));
+        shapeCircle.addEventListener('click', () => setShapeButtonStyles('circle'));
+
+        // Core rendering engine inside HTML5 Canvas
+        function renderFavicon() {
+            const ctx = masterCanvas.getContext('2d');
+            ctx.clearRect(0, 0, 512, 512);
+
+            if (activeTab === 'image') {
+                if (!currentImage) {
+                    // Draw a placeholder when no image is loaded
+                    ctx.save();
+                    ctx.fillStyle = "#e2e8f0";
+                    ctx.beginPath();
+                    ctx.roundRect(0, 0, 512, 512, 60);
+                    ctx.fill();
+
+                    ctx.fillStyle = "#64748b";
+                    ctx.font = "bold 26px 'Inter', sans-serif";
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText("Seret / Pilih Gambar", 256, 256);
+                    ctx.restore();
+                } else {
+                    ctx.save();
+                    
+                    // Apply Contrast & Brightness filters
+                    ctx.filter = `contrast(${filterContrast}%) brightness(${filterBrightness}%)`;
+
+                    // Create canvas clipping if rounded or circle is standard
+                    // (But generally user can upload transparent PNG)
+                    
+                    // Move to center to apply transforms (Scale, rotate, translate)
+                    ctx.translate(256 + filterShiftX, 256 + filterShiftY);
+                    ctx.rotate((filterRotate * Math.PI) / 180);
+
+                    // Scale
+                    let scaleX = filterZoom / 100;
+                    let scaleY = filterZoom / 100;
+                    if (filterFlipH) scaleX *= -1;
+                    if (filterFlipV) scaleY *= -1;
+                    ctx.scale(scaleX, scaleY);
+
+                    // Draw image at center
+                    ctx.drawImage(currentImage, -256, -256, 512, 512);
+                    ctx.restore();
+                }
+            } else {
+                // Text/Emoji rendering
+                ctx.save();
+                
+                // Draw background shapes
+                ctx.fillStyle = textBgColor;
+                ctx.beginPath();
+
+                if (textBgShape === 'square') {
+                    ctx.rect(0, 0, 512, 512);
+                } else if (textBgShape === 'rounded') {
+                    // Calculate custom corner radius in pixels based on slider percentage
+                    const maxRadius = 256;
+                    const radius = (textCornerRadius / 100) * maxRadius;
+                    ctx.roundRect(0, 0, 512, 512, radius);
+                } else if (textBgShape === 'circle') {
+                    ctx.arc(256, 256, 256, 0, 2 * Math.PI);
+                }
+                ctx.fill();
+
+                // Draw Text / Emoji content
+                ctx.fillStyle = textColor;
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+
+                // Base proportional font size
+                const baseSize = 512 * (textFontSize / 100);
+                
+                // Adjust typography properties
+                if (textFontFamily === "monospace") {
+                    ctx.font = `bold ${baseSize}px 'Courier New', monospace`;
+                } else if (textFontFamily === "serif") {
+                    ctx.font = `bold ${baseSize}px 'Georgia', serif`;
+                } else if (textFontFamily === "cursive") {
+                    ctx.font = `bold ${baseSize}px 'Brush Script MT', cursive`;
+                } else {
+                    ctx.font = `bold ${baseSize}px 'Inter', system-ui, sans-serif`;
+                }
+
+                ctx.fillText(txtEmojiString, 256, 256);
+                ctx.restore();
+            }
+
+            // Sync visual previews
+            const dataUrl = masterCanvas.toDataURL('image/png');
+            masterCanvasPreview.src = dataUrl;
+            mockupFaviconLight.src = dataUrl;
+            mockupFaviconDark.src = dataUrl;
+
+            // Recalculate and update compression stats
+            updateCompressionStats();
+        }
+
+        // Calculate dynamic estimations for file size
+        function updateCompressionStats() {
+            let selectedSizeCount = 0;
+            let estTotalBytes = 0;
+
+            const sizes = [
+                { active: chk16.checked, val: 16 },
+                { active: chk32.checked, val: 32 },
+                { active: chk48.checked, val: 48 },
+                { active: chk96.checked, val: 96 },
+                { active: chk192.checked, val: 192 },
+                { active: chk512.checked, val: 512 }
+            ];
+
+            sizes.forEach(sz => {
+                if (sz.active) {
+                    selectedSizeCount++;
+                    // Estimate compressed PNG size per dimensions
+                    if (sz.val <= 32) estTotalBytes += 1200; // ~1.2KB
+                    else if (sz.val <= 96) estTotalBytes += 4000; // ~4KB
+                    else estTotalBytes += 18000; // ~18KB
+                }
+            });
+
+            if (chkIco.checked) {
+                // Multi-resolution ICO holds 16, 32, 48
+                estTotalBytes += 15000; // ~15KB
+            }
+
+            if (selectedSizeCount === 0 && !chkIco.checked) {
+                labelCompSize.textContent = "0 Bytes";
+                return;
+            }
+
+            labelCompSize.textContent = formatBytes(estTotalBytes);
+        }
+
+        // Helper: Convert size formats
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Generate resized Canvas instance dynamically
+        function getResizedCanvas(targetSize) {
+            const canvas = document.createElement('canvas');
+            canvas.width = targetSize;
+            canvas.height = targetSize;
+            const ctx = canvas.getContext('2d');
+            
+            // Enable high interpolation resampling
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+
+            // Draw master canvas directly scaled down
+            ctx.drawImage(masterCanvas, 0, 0, targetSize, targetSize);
+            return canvas;
+        }
+
+        // Genuine Multi-resolution ICO Generator in pure JavaScript Client Side!
+        // No external API required. Standard compliance binary structure.
+        async function generateMultiSizeIco(canvasList) {
+            const pngBlobs = await Promise.all(canvasList.map(canvas => {
+                return new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+            }));
+
+            const pngBuffers = await Promise.all(pngBlobs.map(blob => {
+                return new Promise(resolve => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(new Uint8Array(reader.result));
+                    reader.readAsArrayBuffer(blob);
+                });
+            }));
+
+            const numImages = canvasList.length;
+            const headerSize = 6;
+            const dirSize = 16 * numImages;
+
+            let totalSize = headerSize + dirSize;
+            pngBuffers.forEach(buf => totalSize += buf.length);
+
+            const icoBuffer = new Uint8Array(totalSize);
+            const view = new DataView(icoBuffer.buffer);
+
+            // 1. Write File Header
+            view.setUint16(0, 0, true); // Reserved
+            view.setUint16(2, 1, true); // Type: 1 = ICO
+            view.setUint16(4, numImages, true); // Number of images
+
+            let currentOffset = headerSize + dirSize;
+
+            // 2. Write Directory Entry & Content Data
+            for (let i = 0; i < numImages; i++) {
+                const canvas = canvasList[i];
+                const pngData = pngBuffers[i];
+                const dirOffset = headerSize + (i * 16);
+
+                const width = canvas.width >= 256 ? 0 : canvas.width;
+                const height = canvas.height >= 256 ? 0 : canvas.height;
+
+                view.setUint8(dirOffset, width);
+                view.setUint8(dirOffset + 1, height);
+                view.setUint8(dirOffset + 2, 0); // Color palette colors (0 = no palette)
+                view.setUint8(dirOffset + 3, 0); // Reserved
+                view.setUint16(dirOffset + 4, 1, true); // Color planes
+                view.setUint16(dirOffset + 6, 32, true); // Bits per pixel (RGBA = 32bpp)
+                view.setUint32(dirOffset + 8, pngData.length, true); // Raw png size in bytes
+                view.setUint32(dirOffset + 12, currentOffset, true); // Location offset
+
+                icoBuffer.set(pngData, currentOffset);
+                currentOffset += pngData.length;
+            }
+
+            return new Blob([icoBuffer], {type: 'image/x-icon'});
+        }
+
+        // Packaging sizes with JSZip and downloading
+        downloadZipBtn.addEventListener('click', async () => {
+            const zip = new JSZip();
+            const checkedSizes = [];
+
+            if (chk16.checked) checkedSizes.push(16);
+            if (chk32.checked) checkedSizes.push(32);
+            if (chk48.checked) checkedSizes.push(48);
+            if (chk96.checked) checkedSizes.push(96);
+            if (chk192.checked) checkedSizes.push(192);
+            if (chk512.checked) checkedSizes.push(512);
+
+            if (checkedSizes.length === 0 && !chkIco.checked) {
+                showNotification('Silakan pilih setidaknya satu dimensi ekspor atau format .ico!', 'error');
+                return;
+            }
+
+            try {
+                // Generate and bundle separate PNGs
+                for (let size of checkedSizes) {
+                    const tempCanvas = getResizedCanvas(size);
+                    const dataUrl = tempCanvas.toDataURL('image/png');
+                    const base64Data = dataUrl.split(',')[1];
+                    zip.file(`favicon-${size}x${size}.png`, base64Data, {base64: true});
+                }
+
+                // Generate and bundle multi-resolution .ico (includes standard sizes 16, 32, 48)
+                if (chkIco.checked) {
+                    const canvas16 = getResizedCanvas(16);
+                    const canvas32 = getResizedCanvas(32);
+                    const canvas48 = getResizedCanvas(48);
+                    const icoBlob = await generateMultiSizeIco([canvas16, canvas32, canvas48]);
+                    zip.file('favicon.ico', icoBlob);
+                }
+
+                // Generate and trigger download
+                zip.generateAsync({type: 'blob'}).then((content) => {
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(content);
+                    link.download = "favicon_package.zip";
+                    link.click();
+                    showNotification('Paket ZIP berhasil diunduh.');
+                });
+
+            } catch (err) {
+                console.error(err);
+                showNotification('Terjadi kegagalan saat membuat file ZIP.', 'error');
+            }
+        });
+
+        // Download Single Master file
+        downloadMasterBtn.addEventListener('click', () => {
+            const dataUrl = masterCanvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.href = dataUrl;
+            link.download = "favicon-master-512x512.png";
+            link.click();
+            showNotification('Master Favicon (512px) berhasil diunduh.');
+        });
+
+        // Watch sizing elements to dynamically recalculate compression statistics
+        const checkBoxes = [chk16, chk32, chk48, chk96, chk192, chk512, chkIco];
+        checkBoxes.forEach(chk => {
+            chk.addEventListener('change', updateCompressionStats);
+        });
+
+        // Initialize App on Window load
+        window.onload = function() {
+            renderFavicon();
+        };
+    </script>
+</body>
+</html>
