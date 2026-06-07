@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator HPP & Penentu Harga Jual - Anti Boncos</title>
+  <!-- --- FAVICON (SVG Crown Emoji) --- -->
+<link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for better appearance */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen">
+
+    <!-- Header / Navigation -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-emerald-500 text-white p-2 rounded-lg shadow-md shadow-emerald-200">
+                    <i data-lucide="calculator" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-slate-900 leading-none">SmartHPP</h1>
+                    <p class="text-xs text-slate-500">Kalkulator HPP & Harga Jual Anti Boncos</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <button onclick="resetAll()" class="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all">
+                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                    <span>Reset Data</span>
+                </button>
+                <button onclick="window.print()" class="flex items-center space-x-1 px-3 py-1.5 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-all shadow-sm">
+                    <i data-lucide="printer" class="w-4 h-4"></i>
+                    <span>Cetak Laporan</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Info Banner Edukatif -->
+        <div class="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-6 text-white mb-8 shadow-lg relative overflow-hidden">
+            <div class="absolute right-0 top-0 translate-x-10 -translate-y-10 opacity-10 pointer-events-none">
+                <i data-lucide="trending-up" class="w-72 h-72"></i>
+            </div>
+            <div class="relative z-10 max-w-3xl">
+                <span class="bg-emerald-400/30 text-emerald-100 text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">Tips Bisnis</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold mt-3 mb-2">Kenapa Banyak Bisnis "Boncos" Meskipun Rame?</h2>
+                <p class="text-emerald-50 text-sm sm:text-base leading-relaxed">
+                    Seringkali pelaku usaha hanya menghitung harga bahan baku, tanpa memasukkan biaya overhead (kemasan, listrik, depresiasi alat), tenaga kerja diri sendiri, dan biaya admin marketplace. Gunakan kalkulator ini untuk merinci semua biaya hingga rupiah terkecil!
+                </p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Left Side: Inputs (8 Columns) -->
+            <div class="lg:col-span-8 space-y-8">
+                
+                <!-- STEP 1: Informasi Produk dasar -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="bg-blue-100 text-blue-600 p-2 rounded-lg">
+                            <i data-lucide="box" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900">1. Identitas Produk & Target Batch</h3>
+                            <p class="text-xs text-slate-500">Tentukan nama produk dan berapa jumlah produk yang dihasilkan sekali produksi.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1.5">Nama Produk</label>
+                            <input type="text" id="productName" value="Roti Manis Cokelat" class="w-full px-3.5 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1.5 flex items-center justify-between">
+                                <span>Jumlah Output per Batch (Porsi/Pcs)</span>
+                                <span class="group relative text-slate-400 hover:text-slate-600 cursor-pointer">
+                                    <i data-lucide="help-circle" class="w-4 h-4"></i>
+                                    <span class="absolute bottom-full right-0 mb-2 hidden group-hover:block bg-slate-800 text-white text-xs p-2 rounded shadow-lg w-56 z-50 font-normal">
+                                        Jumlah barang jadi yang dihasilkan dari bahan-bahan yang diinputkan di bawah ini.
+                                    </span>
+                                </span>
+                            </label>
+                            <input type="number" id="batchOutput" value="20" min="1" oninput="calculateAll()" class="w-full px-3.5 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-sm font-semibold text-slate-900">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 2: Biaya Bahan Baku (Direct Materials) -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center space-x-3">
+                            <div class="bg-amber-100 text-amber-600 p-2 rounded-lg">
+                                <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900">2. Biaya Bahan Baku & Kemasan</h3>
+                                <p class="text-xs text-slate-500">Hitung pemakaian bahan baku secara riil yang masuk ke dalam produk.</p>
+                            </div>
+                        </div>
+                        <button onclick="addMaterialRow()" class="flex items-center space-x-1 px-3 py-1.5 text-xs font-semibold text-emerald-600 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-all">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            <span>Tambah Bahan</span>
+                        </button>
+                    </div>
+
+                    <!-- Table Bahan Baku -->
+                    <div class="overflow-x-auto -mx-6">
+                        <div class="inline-block min-w-full align-middle px-6">
+                            <table class="min-w-full divide-y divide-slate-200 text-sm">
+                                <thead class="bg-slate-50">
+                                    <tr>
+                                        <th scope="col" class="py-3 px-2 text-left font-semibold text-slate-600">Nama Bahan</th>
+                                        <th scope="col" class="py-3 px-2 text-left font-semibold text-slate-600 w-28">Beli (Rp)</th>
+                                        <th scope="col" class="py-3 px-2 text-left font-semibold text-slate-600 w-24">Isi Kemasan</th>
+                                        <th scope="col" class="py-3 px-2 text-left font-semibold text-slate-600 w-20">Satuan</th>
+                                        <th scope="col" class="py-3 px-2 text-left font-semibold text-slate-600 w-24">Dipakai</th>
+                                        <th scope="col" class="py-3 px-2 text-right font-semibold text-slate-600 w-28">Total (Rp)</th>
+                                        <th scope="col" class="py-3 px-2 text-center w-12"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="materialTableBody" class="divide-y divide-slate-100">
+                                    <!-- Row template di-generate oleh JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Total Bahan Baku -->
+                    <div class="flex justify-between items-center mt-4 pt-4 border-t border-slate-200">
+                        <span class="text-sm font-semibold text-slate-700">Total Biaya Bahan Baku per Batch:</span>
+                        <span id="totalMaterialCostText" class="text-base font-bold text-slate-900">Rp 0</span>
+                    </div>
+                </div>
+
+                <!-- STEP 3: Biaya Tenaga Kerja (Direct Labor) -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center space-x-3">
+                            <div class="bg-purple-100 text-purple-600 p-2 rounded-lg">
+                                <i data-lucide="users" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900">3. Biaya Tenaga Kerja (Upah Kerja)</h3>
+                                <p class="text-xs text-slate-500">Meskipun dikerjakan sendiri, tenaga kerja Anda wajib dihargai agar tidak boncos waktu!</p>
+                            </div>
+                        </div>
+                        <button onclick="addLaborRow()" class="flex items-center space-x-1 px-3 py-1.5 text-xs font-semibold text-purple-600 bg-purple-50 hover:bg-purple-100 rounded-lg transition-all">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            <span>Tambah Tenaga Kerja</span>
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto -mx-6">
+                        <div class="inline-block min-w-full align-middle px-6">
+                            <table class="min-w-full divide-y divide-slate-200 text-sm">
+                                <thead class="bg-slate-50">
+                                    <tr>
+                                        <th class="py-3 px-2 text-left font-semibold text-slate-600">Pekerjaan/Karyawan</th>
+                                        <th class="py-3 px-2 text-left font-semibold text-slate-600 w-36">Tarif Upah (Rp/Jam)</th>
+                                        <th class="py-3 px-2 text-left font-semibold text-slate-600 w-28">Lama Kerja (Jam)</th>
+                                        <th class="py-3 px-2 text-right font-semibold text-slate-600 w-36">Total Biaya (Rp)</th>
+                                        <th class="py-3 px-2 text-center w-12"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="laborTableBody" class="divide-y divide-slate-100">
+                                    <!-- Row template di-generate oleh JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center mt-4 pt-4 border-t border-slate-200">
+                        <span class="text-sm font-semibold text-slate-700">Total Biaya Tenaga Kerja per Batch:</span>
+                        <span id="totalLaborCostText" class="text-base font-bold text-slate-900">Rp 0</span>
+                    </div>
+                </div>
+
+                <!-- STEP 4: Biaya Overhead & Operasional (Overhead) -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center space-x-3">
+                            <div class="bg-cyan-100 text-cyan-600 p-2 rounded-lg">
+                                <i data-lucide="zap" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900">4. Biaya Overhead (Listrik, Gas, Penyusutan Alat, dll)</h3>
+                                <p class="text-xs text-slate-500">Biaya tidak langsung tapi esensial agar alat produksi tetap bisa berjalan.</p>
+                            </div>
+                        </div>
+                        <button onclick="addOverheadRow()" class="flex items-center space-x-1 px-3 py-1.5 text-xs font-semibold text-cyan-600 bg-cyan-50 hover:bg-cyan-100 rounded-lg transition-all">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            <span>Tambah Overhead</span>
+                        </button>
+                    </div>
+
+                    <div class="overflow-x-auto -mx-6">
+                        <div class="inline-block min-w-full align-middle px-6">
+                            <table class="min-w-full divide-y divide-slate-200 text-sm">
+                                <thead class="bg-slate-50">
+                                    <tr>
+                                        <th class="py-3 px-2 text-left font-semibold text-slate-600">Jenis Overhead</th>
+                                        <th class="py-3 px-2 text-left font-semibold text-slate-600 w-36">Total Biaya Bulanan (Rp)</th>
+                                        <th class="py-3 px-2 text-left font-semibold text-slate-600 w-28">Estimasi Alokasi (Jam)</th>
+                                        <th class="py-3 px-2 text-right font-semibold text-slate-600 w-36 font-semibold">Alokasi per Batch (Rp)</th>
+                                        <th class="py-3 px-2 text-center w-12"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="overheadTableBody" class="divide-y divide-slate-100">
+                                    <!-- Row template di-generate oleh JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center mt-4 pt-4 border-t border-slate-200">
+                        <div>
+                            <span class="text-sm font-semibold text-slate-700 block">Total Biaya Overhead per Batch:</span>
+                            <span class="text-xs text-slate-400">Dihitung otomatis: (Biaya Bulanan / 160 jam kerja standar) * Alokasi Jam</span>
+                        </div>
+                        <span id="totalOverheadCostText" class="text-base font-bold text-slate-900">Rp 0</span>
+                    </div>
+                </div>
+
+                <!-- STEP 5: Biaya Non-Produksi & Komisi Marketplace (Potensi Utama Penyebab Boncos) -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="bg-rose-100 text-rose-600 p-2 rounded-lg">
+                            <i data-lucide="percent" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900">5. Biaya Marketplace & Pemasaran (Wajib Diisi!)</h3>
+                            <p class="text-xs text-slate-500">Banyak seller boncos karena lupa menghitung biaya admin Shopee/TikTok Shop dan biaya iklan.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1.5 flex items-center justify-between">
+                                <span>Persentase Biaya Admin Marketplace (%)</span>
+                                <span class="group relative text-slate-400 hover:text-slate-600 cursor-pointer">
+                                    <i data-lucide="help-circle" class="w-4 h-4"></i>
+                                    <span class="absolute bottom-full right-0 mb-2 hidden group-hover:block bg-slate-800 text-white text-xs p-2 rounded shadow-lg w-64 z-50 font-normal">
+                                        Contoh: Shopee/TikTok Shop mengenakan admin fee sekitar 4% - 10% tergantung kategori produk dan status star/mall.
+                                    </span>
+                                </span>
+                            </label>
+                            <div class="relative">
+                                <input type="number" id="marketplaceFee" value="6" step="0.1" min="0" oninput="calculateAll()" class="w-full pl-3.5 pr-12 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-sm font-semibold text-slate-900">
+                                <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400 font-semibold text-sm">%</div>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1.5 flex items-center justify-between">
+                                <span>Biaya Iklan & Marketing per Produk (Rp)</span>
+                                <span class="group relative text-slate-400 hover:text-slate-600 cursor-pointer">
+                                    <i data-lucide="help-circle" class="w-4 h-4"></i>
+                                    <span class="absolute bottom-full right-0 mb-2 hidden group-hover:block bg-slate-800 text-white text-xs p-2 rounded shadow-lg w-64 z-50 font-normal">
+                                        Budget iklan yang dibebankan untuk terjualnya 1 unit produk. Misal Anda anggarkan Rp 2.000 dari harga jual untuk promosi/iklan.
+                                    </span>
+                                </span>
+                            </label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500 text-sm font-medium">Rp</span>
+                                <input type="number" id="marketingCost" value="1500" min="0" oninput="calculateAll()" class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-sm font-semibold text-slate-900">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Side: Sticky Summary, Recommendations & Danger Check (4 Columns) -->
+            <div class="lg:col-span-4 space-y-6">
+                
+                <div class="sticky top-24 space-y-6">
+                    
+                    <!-- KOTAK UTAMA: RINGKASAN HPP -->
+                    <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
+                        <div class="bg-slate-900 text-white p-5">
+                            <h3 class="text-sm font-semibold tracking-wider text-slate-400 uppercase">Ringkasan HPP Produk</h3>
+                            <h2 id="summaryProductName" class="text-xl font-bold text-white mt-1 truncate">Roti Manis Cokelat</h2>
+                        </div>
+                        
+                        <div class="p-5 space-y-4">
+                            
+                            <!-- HPP 1 Batch -->
+                            <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                                <span class="text-sm text-slate-500">HPP 1 Batch (<span id="summaryBatchSize">20</span> pcs)</span>
+                                <span id="hppBatchText" class="text-base font-bold text-slate-900">Rp 0</span>
+                            </div>
+
+                            <!-- HPP per Satuan / Pcs -->
+                            <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-4 flex items-center justify-between">
+                                <div>
+                                    <span class="text-xs font-semibold text-emerald-800 block uppercase tracking-wider">HPP per Unit / Pcs</span>
+                                    <span class="text-xs text-emerald-600">Modal dasar produksi per barang</span>
+                                </div>
+                                <span id="hppUnitText" class="text-2xl font-extrabold text-emerald-700">Rp 0</span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- KOTAK SIMULASI HARGA JUAL -->
+                    <div class="bg-white rounded-xl shadow-md border border-slate-200 p-5 space-y-5">
+                        <h3 class="text-md font-bold text-slate-900 flex items-center space-x-2">
+                            <i data-lucide="coins" class="text-emerald-500 w-5 h-5"></i>
+                            <span>Atur Strategi Harga Jual</span>
+                        </h3>
+
+                        <!-- Pilihan Metode -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">Metode Penentuan Harga</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button type="button" id="btnMethodMargin" onclick="switchPricingMethod('margin')" class="px-3 py-2 text-xs font-bold rounded-lg border text-center transition-all bg-emerald-600 text-white border-emerald-600">
+                                    Target Profit Margin
+                                </button>
+                                <button type="button" id="btnMethodMarkup" onclick="switchPricingMethod('markup')" class="px-3 py-2 text-xs font-bold rounded-lg border text-center transition-all bg-white text-slate-600 border-slate-300 hover:bg-slate-50">
+                                    Target Markup %
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Input Nilai Target % -->
+                        <div>
+                            <div class="flex justify-between items-center mb-1.5">
+                                <label id="pricingInputLabel" class="block text-sm font-semibold text-slate-700">Target Profit Margin (%)</label>
+                                <span class="group relative text-slate-400 hover:text-slate-600 cursor-pointer">
+                                    <i data-lucide="help-circle" class="w-4.5 h-4.5"></i>
+                                    <span id="pricingHelpText" class="absolute bottom-full right-0 mb-2 hidden group-hover:block bg-slate-800 text-white text-xs p-2.5 rounded shadow-lg w-64 z-50 font-normal leading-relaxed">
+                                        Margin dihitung dari Harga Jual. Rumus: HPP / (1 - Margin%). Ini adalah standar bisnis profesional agar tidak salah hitung untung rugi.
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="relative">
+                                <input type="number" id="targetPercentage" value="40" min="0" max="99" oninput="calculateAll()" class="w-full pl-3.5 pr-12 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-sm font-bold text-slate-900">
+                                <div class="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400 font-semibold text-sm">%</div>
+                            </div>
+                        </div>
+
+                        <!-- Manual Override Harga Jual -->
+                        <div class="border-t border-slate-100 pt-4">
+                            <div class="flex justify-between items-center mb-1.5">
+                                <label class="block text-sm font-semibold text-slate-700">Cek Harga Jual Impian Anda (Rp)</label>
+                                <span class="group relative text-slate-400 hover:text-slate-600 cursor-pointer">
+                                    <i data-lucide="help-circle" class="w-4.5 h-4.5"></i>
+                                    <span class="absolute bottom-full right-0 mb-2 hidden group-hover:block bg-slate-800 text-white text-xs p-2.5 rounded shadow-lg w-64 z-50 font-normal leading-relaxed">
+                                        Masukkan harga jual yang ingin Anda pasang di pasar. Kami akan menganalisis apakah harga ini aman (profit) atau justru bikin rugi (boncos).
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500 text-sm font-medium">Rp</span>
+                                <input type="number" id="customSellingPrice" placeholder="Masukkan harga jual..." oninput="onCustomPriceInput()" class="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all text-sm font-bold text-slate-900">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- HASIL ANALISIS REKOMENDASI DAN AMBANG BATAS BONCOS -->
+                    <div id="dangerBanner" class="rounded-xl border p-5 transition-all duration-300 shadow-md">
+                        <div class="flex items-start space-x-3">
+                            <div id="dangerIconBg" class="p-2 rounded-lg text-white">
+                                <!-- Icon Dynamic -->
+                                <i id="dangerIcon" data-lucide="shield-check" class="w-6 h-6"></i>
+                            </div>
+                            <div class="flex-1">
+                                <h4 id="dangerTitle" class="text-base font-bold text-slate-900">Kondisi Aman!</h4>
+                                <p id="dangerDesc" class="text-xs text-slate-600 mt-1 leading-relaxed">Persentase profit bersih Anda sudah berada di batas aman setelah dipotong admin marketplace & marketing.</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-4 border-t border-slate-150 space-y-2.5 text-xs">
+                            <div class="flex justify-between">
+                                <span class="text-slate-500">Harga Jual Rekomendasi:</span>
+                                <span id="recSellingPrice" class="font-bold text-slate-900">Rp 0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-500">Potongan Admin Marketplace:</span>
+                                <span id="calcMarketplaceFee" class="font-bold text-slate-900">Rp 0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-500">Modal HPP + Promo:</span>
+                                <span id="calcTotalHppPlusPromo" class="font-bold text-slate-900">Rp 0</span>
+                            </div>
+                            <div class="flex justify-between border-t border-dashed border-slate-200 pt-2 text-sm">
+                                <span class="font-semibold text-slate-700">Bersih Masuk Kantong (Nett Profit):</span>
+                                <span id="netProfitText" class="font-bold text-emerald-600">Rp 0</span>
+                            </div>
+                            <div class="flex justify-between text-[11px] text-slate-400">
+                                <span>Persentase Nett Profit Bersih:</span>
+                                <span id="netProfitPercentageText" class="font-semibold text-slate-600">0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-16 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm text-slate-500">
+            <p class="font-semibold text-slate-700">SmartHPP — Alat Bantu UMKM Indonesia Naik Kelas</p>
+            <p class="mt-1 text-xs">Semua formula kalkulasi sesuai standar akuntansi biaya modern yang telah disederhanakan untuk bisnis praktis.</p>
+        </div>
+    </footer>
+
+    <!-- Notification Modal / Alert pengganti browser alert -->
+    <div id="customAlert" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-xl shadow-xl max-w-sm w-full mx-4 p-6 border border-slate-100 transform scale-95 transition-transform duration-300" id="customAlertContent">
+            <div class="flex items-center space-x-3 text-rose-600 mb-4">
+                <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+                <h4 class="text-lg font-bold text-slate-900">Perhatian!</h4>
+            </div>
+            <p id="alertMessage" class="text-sm text-slate-600 leading-relaxed">Pesan error di sini.</p>
+            <button onclick="closeAlert()" class="mt-5 w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-2 rounded-lg text-sm transition-all">
+                Saya Mengerti
+            </button>
+        </div>
+    </div>
+
+    <!-- Script Utama Kalkulator -->
+    <script>
+        // State management
+        let pricingMethod = 'margin'; // 'margin' or 'markup'
+        let hasCustomPrice = false;
+
+        // Dataset Default untuk Contoh Pengisian Awal
+        const initialMaterials = [
+            { name: 'Tepung Terigu Cakra', buyPrice: 15000, packSize: 1000, unit: 'gr', usage: 500 },
+            { name: 'Mentega Wijsman', buyPrice: 90000, packSize: 454, unit: 'gr', usage: 100 },
+            { name: 'Cokelat Batang (Filling)', buyPrice: 45000, packSize: 500, unit: 'gr', usage: 150 },
+            { name: 'Ragi & Pelembut', buyPrice: 8000, packSize: 100, unit: 'gr', usage: 15 },
+            { name: 'Kotak Kemasan Box Premium', buyPrice: 25000, packSize: 10, unit: 'pcs', usage: 2 } // asumsi 2 box muat 10 roti per box
+        ];
+
+        const initialLabors = [
+            { task: 'Pembuat Adonan (Chef)', hourlyRate: 15000, hours: 2 },
+            { task: 'Packing & Quality Control', hourlyRate: 10000, hours: 1 }
+        ];
+
+        const initialOverheads = [
+            { name: 'Listrik & Gas Oven', monthlyCost: 400000, allocationHours: 3 },
+            { name: 'Sewa Tempat & Penyusutan Oven', monthlyCost: 800000, allocationHours: 3 }
+        ];
+
+        // Jalankan saat halaman siap
+        window.onload = function() {
+            lucide.createIcons();
+            
+            // Masukkan data awal
+            initData();
+            calculateAll();
+        }
+
+        // Inisialisasi baris tabel
+        function initData() {
+            const matBody = document.getElementById('materialTableBody');
+            matBody.innerHTML = '';
+            initialMaterials.forEach(m => addMaterialRow(m));
+
+            const labBody = document.getElementById('laborTableBody');
+            labBody.innerHTML = '';
+            initialLabors.forEach(l => addLaborRow(l));
+
+            const overBody = document.getElementById('overheadTableBody');
+            overBody.innerHTML = '';
+            initialOverheads.forEach(o => addOverheadRow(o));
+        }
+
+        // RESET ALL
+        function resetAll() {
+            document.getElementById('productName').value = 'Produk Baru Anda';
+            document.getElementById('batchOutput').value = '10';
+            document.getElementById('marketplaceFee').value = '0';
+            document.getElementById('marketingCost').value = '0';
+            document.getElementById('targetPercentage').value = '30';
+            document.getElementById('customSellingPrice').value = '';
+            hasCustomPrice = false;
+
+            document.getElementById('materialTableBody').innerHTML = '';
+            document.getElementById('laborTableBody').innerHTML = '';
+            document.getElementById('overheadTableBody').innerHTML = '';
+            
+            addMaterialRow({ name: '', buyPrice: 0, packSize: 1, unit: 'gr', usage: 0 });
+            addLaborRow({ task: '', hourlyRate: 0, hours: 0 });
+            addOverheadRow({ name: '', monthlyCost: 0, allocationHours: 0 });
+
+            calculateAll();
+        }
+
+        // Custom Modal Alert (Anti Browser Alert)
+        function showAlert(msg) {
+            const alertBox = document.getElementById('customAlert');
+            const alertContent = document.getElementById('customAlertContent');
+            document.getElementById('alertMessage').innerText = msg;
+            
+            alertBox.classList.remove('hidden');
+            setTimeout(() => {
+                alertBox.classList.remove('opacity-0');
+                alertContent.classList.remove('scale-95');
+            }, 50);
+        }
+
+        function closeAlert() {
+            const alertBox = document.getElementById('customAlert');
+            const alertContent = document.getElementById('customAlertContent');
+            alertBox.classList.add('opacity-0');
+            alertContent.classList.add('scale-95');
+            setTimeout(() => {
+                alertBox.classList.add('hidden');
+            }, 300);
+        }
+
+        // FORMULA & DYNAMIC ROW ADDITIONS
+        function addMaterialRow(data = { name: '', buyPrice: '', packSize: '', unit: 'gr', usage: '' }) {
+            const tbody = document.getElementById('materialTableBody');
+            const rowId = 'mat_' + Date.now() + Math.random().toString(36).substr(2, 5);
+            
+            const tr = document.createElement('tr');
+            tr.id = rowId;
+            tr.className = 'group hover:bg-slate-50 transition-colors';
+            
+            tr.innerHTML = `
+                <td class="py-2.5 px-2">
+                    <input type="text" placeholder="Gula Pasir" value="${data.name}" class="w-full bg-transparent border-b border-transparent group-hover:border-slate-200 focus:border-emerald-500 focus:outline-none py-1 text-sm font-medium text-slate-800">
+                </td>
+                <td class="py-2.5 px-2">
+                    <input type="number" placeholder="0" value="${data.buyPrice}" oninput="calculateRowMaterial('${rowId}')" class="mat-buy w-full bg-transparent border-b border-transparent group-hover:border-slate-200 focus:border-emerald-500 focus:outline-none py-1 text-sm text-slate-900 font-semibold">
+                </td>
+                <td class="py-2.5 px-2">
+                    <input type="number" placeholder="0" value="${data.packSize}" oninput="calculateRowMaterial('${rowId}')" class="mat-pack w-full bg-transparent border-b border-transparent group-hover:border-slate-200 focus:border-emerald-500 focus:outline-none py-1 text-sm text-slate-600">
+                </td>
+                <td class="py-2.5 px-2">
+                    <select onchange="calculateAll()" class="mat-unit w-full bg-transparent border-b border-transparent group-hover:border-slate-200 focus:border-emerald-500 focus:outline-none py-1 text-sm text-slate-500">
+                        <option value="gr" ${data.unit === 'gr' ? 'selected' : ''}>gr</option>
+                        <option value="kg" ${data.unit === 'kg' ? 'selected' : ''}>kg</option>
+                        <option value="ml" ${data.unit === 'ml' ? 'selected' : ''}>ml</option>
+                        <option value="liter" ${data.unit === 'liter' ? 'selected' : ''}>liter</option>
+                        <option value="pcs" ${data.unit === 'pcs' ? 'selected' : ''}>pcs</option>
+                        <option value="lembar" ${data.unit === 'lembar' ? 'selected' : ''}>lembar</option>
+                    </select>
+                </td>
+                <td class="py-2.5 px-2">
+                    <input type="number" placeholder="0" value="${data.usage}" oninput="calculateRowMaterial('${rowId}')" class="mat-usage w-full bg-transparent border-b border-transparent group-hover:border-slate-200 focus:border-emerald-500 focus:outline-none py-1 text-sm font-semibold text-slate-900">
+                </td>
+                <td class="py-2.5 px-2 text-right">
+                    <span class="mat-row-total text-sm font-bold text-slate-900">Rp 0</span>
+                </td>
+                <td class="py-2.5 px-2 text-center">
+                    <button onclick="deleteRow('${rowId}')" class="text-slate-300 hover:text-rose-600 p-1 rounded transition-all">
+                        <i data-lucide="trash" class="w-4 h-4"></i>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+            lucide.createIcons();
+            calculateRowMaterial(rowId);
+        }
+
+        function calculateRowMaterial(rowId) {
+            const row = document.getElementById(rowId);
+            const buy = parseFloat(row.querySelector('.mat-buy').value) || 0;
+            const pack = parseFloat(row.querySelector('.mat-pack').value) || 0;
+            const usage = parseFloat(row.querySelector('.mat-usage').value) || 0;
+            
+            let total = 0;
+            if (pack > 0) {
+                total = (buy / pack) * usage;
+            }
+            
+            row.querySelector('.mat-row-total').innerText = formatRupiah(total);
+            row.querySelector('.mat-row-total').dataset.val = total;
+            calculateAll();
+        }
+
+        function addLaborRow(data = { task: '', hourlyRate: '', hours: '' }) {
+            const tbody = document.getElementById('laborTableBody');
+            const rowId = 'lab_' + Date.now() + Math.random().toString(36).substr(2, 5);
+            
+            const tr = document.createElement('tr');
+            tr.id = rowId;
+            tr.className = 'group hover:bg-slate-50 transition-colors';
+            
+            tr.innerHTML = `
+                <td class="py-2.5 px-2">
+                    <input type="text" placeholder="Membuat adonan" value="${data.task}" class="w-full bg-transparent border-b border-transparent group-hover:border-slate-200 focus:border-emerald-500 focus:outline-none py-1 text-sm font-medium text-slate-800">
+                </td>
+                <td class="py-2.5 px-2">
+                    <input type="number" placeholder="0" value="${data.hourlyRate}" oninput="calculateRowLabor('${rowId}')" class="lab-rate w-full bg-transparent border-b border-transparent group-hover:border-slate-200 focus:border-emerald-500 focus:outline-none py-1 text-sm text-slate-900 font-semibold">
+                </td>
+                <td class="py-2.5 px-2">
+                    <input type="number" placeholder="0" value="${data.hours}" oninput="calculateRowLabor('${rowId}')" class="lab-hours w-full bg-transparent border-b border-transparent group-hover:border-slate-200 focus:border-emerald-500 focus:outline-none py-1 text-sm text-slate-600 font-semibold">
+                </td>
+                <td class="py-2.5 px-2 text-right">
+                    <span class="lab-row-total text-sm font-bold text-slate-900">Rp 0</span>
+                </td>
+                <td class="py-2.5 px-2 text-center">
+                    <button onclick="deleteRow('${rowId}')" class="text-slate-300 hover:text-rose-600 p-1 rounded transition-all">
+                        <i data-lucide="trash" class="w-4 h-4"></i>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+            lucide.createIcons();
+            calculateRowLabor(rowId);
+        }
+
+        function calculateRowLabor(rowId) {
+            const row = document.getElementById(rowId);
+            const rate = parseFloat(row.querySelector('.lab-rate').value) || 0;
+            const hours = parseFloat(row.querySelector('.lab-hours').value) || 0;
+            
+            const total = rate * hours;
+            row.querySelector('.lab-row-total').innerText = formatRupiah(total);
+            row.querySelector('.lab-row-total').dataset.val = total;
+            calculateAll();
+        }
+
+        function addOverheadRow(data = { name: '', monthlyCost: '', allocationHours: '' }) {
+            const tbody = document.getElementById('overheadTableBody');
+            const rowId = 'over_' + Date.now() + Math.random().toString(36).substr(2, 5);
+            
+            const tr = document.createElement('tr');
+            tr.id = rowId;
+            tr.className = 'group hover:bg-slate-50 transition-colors';
+            
+            tr.innerHTML = `
+                <td class="py-2.5 px-2">
+                    <input type="text" placeholder="Sewa ruko/bulan" value="${data.name}" class="w-full bg-transparent border-b border-transparent group-hover:border-slate-200 focus:border-emerald-500 focus:outline-none py-1 text-sm font-medium text-slate-800">
+                </td>
+                <td class="py-2.5 px-2">
+                    <input type="number" placeholder="0" value="${data.monthlyCost}" oninput="calculateRowOverhead('${rowId}')" class="over-monthly w-full bg-transparent border-b border-transparent group-hover:border-slate-200 focus:border-emerald-500 focus:outline-none py-1 text-sm text-slate-900 font-semibold">
+                </td>
+                <td class="py-2.5 px-2">
+                    <input type="number" placeholder="0" value="${data.allocationHours}" oninput="calculateRowOverhead('${rowId}')" class="over-alloc w-full bg-transparent border-b border-transparent group-hover:border-slate-200 focus:border-emerald-500 focus:outline-none py-1 text-sm text-slate-600 font-semibold">
+                </td>
+                <td class="py-2.5 px-2 text-right">
+                    <span class="over-row-total text-sm font-bold text-slate-900">Rp 0</span>
+                </td>
+                <td class="py-2.5 px-2 text-center">
+                    <button onclick="deleteRow('${rowId}')" class="text-slate-300 hover:text-rose-600 p-1 rounded transition-all">
+                        <i data-lucide="trash" class="w-4 h-4"></i>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+            lucide.createIcons();
+            calculateRowOverhead(rowId);
+        }
+
+        function calculateRowOverhead(rowId) {
+            const row = document.getElementById(rowId);
+            const monthly = parseFloat(row.querySelector('.over-monthly').value) || 0;
+            const alloc = parseFloat(row.querySelector('.over-alloc').value) || 0;
+            
+            // Menggunakan estimasi standar 160 jam kerja aktif bulanan untuk menghitung kontribusi per jam overhead
+            const total = (monthly / 160) * alloc;
+            
+            row.querySelector('.over-row-total').innerText = formatRupiah(total);
+            row.querySelector('.over-row-total').dataset.val = total;
+            calculateAll();
+        }
+
+        function deleteRow(rowId) {
+            const row = document.getElementById(rowId);
+            row.remove();
+            calculateAll();
+        }
+
+        // SWAP METODE HARGA JUAL
+        function switchPricingMethod(method) {
+            pricingMethod = method;
+            
+            const btnMargin = document.getElementById('btnMethodMargin');
+            const btnMarkup = document.getElementById('btnMethodMarkup');
+            const inputLabel = document.getElementById('pricingInputLabel');
+            const helpText = document.getElementById('pricingHelpText');
+            const targetInput = document.getElementById('targetPercentage');
+
+            if (method === 'margin') {
+                btnMargin.className = "px-3 py-2 text-xs font-bold rounded-lg border text-center transition-all bg-emerald-600 text-white border-emerald-600";
+                btnMarkup.className = "px-3 py-2 text-xs font-bold rounded-lg border text-center transition-all bg-white text-slate-600 border-slate-300 hover:bg-slate-50";
+                inputLabel.innerText = "Target Profit Margin (%)";
+                helpText.innerHTML = "Margin dihitung dari Harga Jual. Rumus: HPP / (1 - Margin%). Ini adalah standar bisnis profesional agar tidak salah hitung untung rugi.";
+                targetInput.value = "40";
+            } else {
+                btnMarkup.className = "px-3 py-2 text-xs font-bold rounded-lg border text-center transition-all bg-emerald-600 text-white border-emerald-600";
+                btnMargin.className = "px-3 py-2 text-xs font-bold rounded-lg border text-center transition-all bg-white text-slate-600 border-slate-300 hover:bg-slate-50";
+                inputLabel.innerText = "Target Markup (%)";
+                helpText.innerHTML = "Markup adalah tambahan persentase yang ditambahkan dari harga HPP dasar. Rumus: HPP * (1 + Markup%).";
+                targetInput.value = "70";
+            }
+            
+            if(!hasCustomPrice) {
+                document.getElementById('customSellingPrice').value = '';
+            }
+            calculateAll();
+        }
+
+        function onCustomPriceInput() {
+            const val = document.getElementById('customSellingPrice').value;
+            if (val !== "" && parseFloat(val) > 0) {
+                hasCustomPrice = true;
+            } else {
+                hasCustomPrice = false;
+            }
+            calculateAll();
+        }
+
+        // HITUNG SEMUA TOTAL (Core Engine)
+        function calculateAll() {
+            // Update nama produk di ringkasan
+            const prodName = document.getElementById('productName').value;
+            document.getElementById('summaryProductName').innerText = prodName || 'Produk Tanpa Nama';
+
+            // Ambil batch output
+            let batchOutput = parseFloat(document.getElementById('batchOutput').value) || 1;
+            if (batchOutput < 1) batchOutput = 1;
+            document.getElementById('summaryBatchSize').innerText = batchOutput;
+
+            // 1. Total Bahan Baku
+            let totalMaterial = 0;
+            document.querySelectorAll('#materialTableBody .mat-row-total').forEach(el => {
+                totalMaterial += parseFloat(el.dataset.val) || 0;
+            });
+            document.getElementById('totalMaterialCostText').innerText = formatRupiah(totalMaterial);
+
+            // 2. Total Tenaga Kerja
+            let totalLabor = 0;
+            document.querySelectorAll('#laborTableBody .lab-row-total').forEach(el => {
+                totalLabor += parseFloat(el.dataset.val) || 0;
+            });
+            document.getElementById('totalLaborCostText').innerText = formatRupiah(totalLabor);
+
+            // 3. Total Overhead
+            let totalOverhead = 0;
+            document.querySelectorAll('#overheadTableBody .over-row-total').forEach(el => {
+                totalOverhead += parseFloat(el.dataset.val) || 0;
+            });
+            document.getElementById('totalOverheadCostText').innerText = formatRupiah(totalOverhead);
+
+            // Perhitungan HPP Utama
+            const totalHppBatch = totalMaterial + totalLabor + totalOverhead;
+            const hppUnit = totalHppBatch / batchOutput;
+
+            document.getElementById('hppBatchText').innerText = formatRupiah(totalHppBatch);
+            document.getElementById('hppUnitText').innerText = formatRupiah(hppUnit);
+
+            // Perhitungan Formula Harga Jual Berdasarkan Teori
+            const targetPct = parseFloat(document.getElementById('targetPercentage').value) || 0;
+            let recommendedPrice = 0;
+
+            if (pricingMethod === 'margin') {
+                if (targetPct >= 100) {
+                    recommendedPrice = hppUnit * 10; // safety fallback agar tidak pembagian nol
+                } else {
+                    recommendedPrice = hppUnit / (1 - (targetPct / 100));
+                }
+            } else {
+                // Markup
+                recommendedPrice = hppUnit * (1 + (targetPct / 100));
+            }
+
+            // Atur default recommended price sebagai isian jika belum kustom
+            document.getElementById('recSellingPrice').innerText = formatRupiah(recommendedPrice);
+
+            // Harga jual akhir yang dipakai untuk diuji (Kustom atau Rekomendasi)
+            let actualPrice = recommendedPrice;
+            if (hasCustomPrice) {
+                actualPrice = parseFloat(document.getElementById('customSellingPrice').value) || 0;
+            } else {
+                document.getElementById('customSellingPrice').placeholder = Math.round(recommendedPrice);
+            }
+
+            // Hitung Variabel Biaya Luar Produksi (Marketplace & Promo)
+            const mktFeePercent = parseFloat(document.getElementById('marketplaceFee').value) || 0;
+            const marketingCost = parseFloat(document.getElementById('marketingCost').value) || 0;
+
+            const calculatedMktFee = (mktFeePercent / 100) * actualPrice;
+            document.getElementById('calcMarketplaceFee').innerText = formatRupiah(calculatedMktFee);
+
+            const totalCostUnit = hppUnit + calculatedMktFee + marketingCost;
+            document.getElementById('calcTotalHppPlusPromo').innerText = formatRupiah(totalCostUnit);
+
+            // Profit Bersih
+            const netProfit = actualPrice - totalCostUnit;
+            const netProfitPercentage = actualPrice > 0 ? (netProfit / actualPrice) * 100 : 0;
+
+            document.getElementById('netProfitText').innerText = formatRupiah(netProfit);
+            document.getElementById('netProfitPercentageText').innerText = netProfitPercentage.toFixed(1) + "%";
+
+            // EVALUASI KONDISI AMAN ATAU BONCOS
+            const banner = document.getElementById('dangerBanner');
+            const bannerIconBg = document.getElementById('dangerIconBg');
+            const bannerIcon = document.getElementById('dangerIcon');
+            const bannerTitle = document.getElementById('dangerTitle');
+            const bannerDesc = document.getElementById('dangerDesc');
+            const profitText = document.getElementById('netProfitText');
+
+            if (netProfit <= 0) {
+                // Kondisi RUGI/BONCOS
+                banner.className = "rounded-xl border border-rose-200 bg-rose-50/70 p-5 transition-all duration-300 shadow-md shadow-rose-50";
+                bannerIconBg.className = "p-2 rounded-lg text-white bg-rose-500 shadow-sm";
+                bannerIcon.setAttribute('data-lucide', 'alert-octagon');
+                bannerTitle.className = "text-base font-bold text-rose-900";
+                bannerTitle.innerText = "Awas, Anda BONCOS!";
+                bannerDesc.innerText = "Harga jual Anda saat ini tidak sanggup menutupi total biaya HPP, biaya admin, dan pemasaran. Segera naikkan harga jual atau kurangi pengeluaran!";
+                profitText.className = "font-bold text-rose-600";
+            } else if (netProfitPercentage < 15) {
+                // Kondisi Margin Tipis Sekali (Resiko Tinggi)
+                banner.className = "rounded-xl border border-amber-200 bg-amber-50/70 p-5 transition-all duration-300 shadow-md shadow-amber-50";
+                bannerIconBg.className = "p-2 rounded-lg text-white bg-amber-500 shadow-sm";
+                bannerIcon.setAttribute('data-lucide', 'alert-triangle');
+                bannerTitle.className = "text-base font-bold text-amber-950";
+                bannerTitle.innerText = "Rentan Tipis (Margin < 15%)";
+                bannerDesc.innerText = "Sangat rawan jika terjadi lonjakan harga bahan baku mendadak atau barang cacat (retur). Usahakan menargetkan margin bersih di atas 20% agar lebih aman.";
+                profitText.className = "font-bold text-amber-700";
+            } else {
+                // Kondisi Aman Sehat
+                banner.className = "rounded-xl border border-emerald-200 bg-emerald-50/60 p-5 transition-all duration-300 shadow-md shadow-emerald-50";
+                bannerIconBg.className = "p-2 rounded-lg text-white bg-emerald-500 shadow-sm";
+                bannerIcon.setAttribute('data-lucide', 'shield-check');
+                bannerTitle.className = "text-base font-bold text-emerald-950";
+                bannerTitle.innerText = "Sangat Aman & Sehat!";
+                bannerDesc.innerText = "Harga jual sudah ideal untuk menghasilkan profit bersih berkelanjutan bagi bisnis Anda setelah dipotong semua biaya tersembunyi.";
+                profitText.className = "font-bold text-emerald-700";
+            }
+
+            // Re-render Lucide Icons yang diganti dinamis
+            lucide.createIcons();
+        }
+
+        // FORMAT RUPIAH
+        function formatRupiah(number) {
+            return 'Rp ' + Math.round(number).toLocaleString('id-ID');
+        }
+    </script>
+</body>
+</html>
