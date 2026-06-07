@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>296Konverter File Pintar - Word, PDF, Teks & Gambar</title>
+    <!-- Tailwind CSS untuk desain premium -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons untuk ikon modern -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Mammoth.js untuk membaca file Word (.docx) secara lokal -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <!-- html2pdf.js untuk mengonversi HTML/Konten ke PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- jsPDF untuk manipulasi PDF dan gambar -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- PDF.js untuk mengekstrak teks dari PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+    </script>
+    <!-- --- FAVICON (SVG Crown Emoji) --- -->
+    <link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
+    
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+        }
+        .drag-over {
+            border-color: #4f46e5;
+            background-color: #f5f3ff;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
+
+    <!-- Navigasi / Header -->
+    <header class="bg-white shadow-sm border-b border-slate-100">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="p-2 gradient-bg rounded-lg text-white">
+                    <i data-lucide="file-transform" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-slate-900 tracking-tight">Konverter File Pintar</h1>
+                    <p class="text-xs text-slate-500">Ubah format dokumen Anda secara aman</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Pemrosesan Lokal (100% Privat)
+            </div>
+        </div>
+    </header>
+
+    <!-- Konten Utama -->
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-10">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <!-- Bagian Kiri: Kontrol & Unggah -->
+            <div class="md:col-span-2 space-y-6">
+                <!-- Dropzone Unggah -->
+                <div id="dropzone" class="bg-white border-2 border-dashed border-slate-200 rounded-2xl p-8 text-center cursor-pointer transition-all hover:border-indigo-400 group relative">
+                    <input type="file" id="fileInput" class="hidden" accept=".docx,.pdf,.png,.jpg,.jpeg,.txt">
+                    <div class="flex flex-col items-center justify-center space-y-4">
+                        <div class="p-4 bg-indigo-50 rounded-full text-indigo-600 group-hover:scale-110 transition-transform">
+                            <i data-lucide="upload-cloud" class="w-10 h-10"></i>
+                        </div>
+                        <div>
+                            <p class="text-base font-semibold text-slate-700">Seret & lepas file Anda di sini</p>
+                            <p class="text-xs text-slate-400 mt-1">atau klik untuk memilih file dari perangkat Anda</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2 justify-center pt-2">
+                            <span class="px-2.5 py-1 text-xs bg-slate-100 text-slate-600 rounded-md font-medium">.DOCX</span>
+                            <span class="px-2.5 py-1 text-xs bg-slate-100 text-slate-600 rounded-md font-medium">.PDF</span>
+                            <span class="px-2.5 py-1 text-xs bg-slate-100 text-slate-600 rounded-md font-medium">.TXT</span>
+                            <span class="px-2.5 py-1 text-xs bg-slate-100 text-slate-600 rounded-md font-medium">.PNG / .JPG</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detail File & Pilihan Konversi (Hanya terlihat jika ada file) -->
+                <div id="converterPanel" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hidden space-y-6">
+                    <div class="flex items-start justify-between p-4 bg-slate-50 rounded-xl">
+                        <div class="flex items-center gap-3">
+                            <div class="p-3 bg-indigo-100 text-indigo-600 rounded-lg" id="fileIconContainer">
+                                <i data-lucide="file-text" class="w-6 h-6" id="fileIcon"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-slate-800 text-sm md:text-base truncate max-w-xs md:max-w-md" id="fileName">Nama File.docx</h3>
+                                <p class="text-xs text-slate-500 mt-0.5" id="fileSize">0 KB</p>
+                            </div>
+                        </div>
+                        <button id="removeFileBtn" class="text-slate-400 hover:text-red-500 transition-colors p-1 rounded-lg hover:bg-slate-100">
+                            <i data-lucide="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+
+                    <!-- Pilihan Target Format -->
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">Pilih Format Tujuan:</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="formatOptions">
+                            <!-- Diisi dinamis menggunakan JS sesuai dengan tipe file input -->
+                        </div>
+                    </div>
+
+                    <!-- Tombol Aksi -->
+                    <div class="pt-2">
+                        <button id="convertBtn" class="w-full py-3.5 px-4 text-white font-medium rounded-xl gradient-bg hover:opacity-95 transition-opacity flex items-center justify-center gap-2 shadow-lg shadow-indigo-100 disabled:opacity-50">
+                            <i data-lucide="refresh-cw" class="w-5 h-5" id="btnIcon"></i>
+                            <span id="btnText">Konversi Sekarang</span>
+                        </button>
+                    </div>
+
+                    <!-- Indikator Status / Progress -->
+                    <div id="statusBox" class="hidden p-4 rounded-xl text-sm flex items-center gap-3">
+                        <div class="animate-spin text-indigo-600 hidden" id="spinner">
+                            <i data-lucide="loader-2" class="w-5 h-5"></i>
+                        </div>
+                        <span id="statusText" class="font-medium">Memproses dokumen...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bagian Kanan: Panduan & Kelebihan -->
+            <div class="space-y-6">
+                <!-- Kotak Info Privasi -->
+                <div class="bg-gradient-to-br from-slate-900 to-indigo-950 text-white rounded-2xl p-6 shadow-xl relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 opacity-10 text-white">
+                        <i data-lucide="shield-check" class="w-40 h-40"></i>
+                    </div>
+                    <div class="relative z-10 space-y-4">
+                        <div class="p-2.5 bg-white/10 rounded-xl w-fit text-cyan-300">
+                            <i data-lucide="shield-check" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-lg font-bold">Privasi Dijamin 100%</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Semua dokumen Anda diproses langsung di dalam peramban (browser) Anda sendiri menggunakan teknologi JavaScript modern. Dokumen Anda tidak akan pernah dikirim ke server luar mana pun.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Kartu Daftar Keunggulan -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 space-y-4">
+                    <h4 class="font-bold text-slate-800 text-sm uppercase tracking-wider">Kemampuan Sistem</h4>
+                    <ul class="space-y-3">
+                        <li class="flex items-start gap-3 text-sm text-slate-600">
+                            <span class="p-1 bg-indigo-50 text-indigo-600 rounded-md mt-0.5">
+                                <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                            </span>
+                            <span><strong>Word (.docx) ke PDF:</strong> Mempertahankan tata letak teks dan format paragraf.</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-slate-600">
+                            <span class="p-1 bg-indigo-50 text-indigo-600 rounded-md mt-0.5">
+                                <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                            </span>
+                            <span><strong>Gambar ke PDF:</strong> Gabungkan gambar (PNG/JPG) secara langsung menjadi dokumen PDF.</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-slate-600">
+                            <span class="p-1 bg-indigo-50 text-indigo-600 rounded-md mt-0.5">
+                                <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                            </span>
+                            <span><strong>PDF ke Teks:</strong> Ekstrak teks dari file PDF agar mudah disalin.</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-slate-600">
+                            <span class="p-1 bg-indigo-50 text-indigo-600 rounded-md mt-0.5">
+                                <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                            </span>
+                            <span><strong>Teks ke PDF:</strong> Ubah file catatan ringkas (.txt) ke format PDF resmi.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Bagian Pratinjau / Preview Sandboxing (Tersembunyi) -->
+        <div id="previewSandbox" class="hidden bg-white rounded-2xl p-8 mt-8 shadow-sm border border-slate-100">
+            <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <i data-lucide="eye" class="w-5 h-5 text-indigo-600"></i> Pratinjau Dokumen
+            </h3>
+            <div id="sandboxContent" class="border border-slate-200 p-6 rounded-xl bg-white max-h-[500px] overflow-y-auto prose prose-slate max-w-none text-slate-700">
+                <!-- Konten HTML hasil konversi akan diletakkan di sini sebelum dijadikan PDF -->
+            </div>
+        </div>
+
+        <!-- Notifikasi Pesan Kustom -->
+        <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3.5 rounded-xl shadow-xl flex items-center gap-3 transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none">
+            <div id="toastIcon" class="text-indigo-400">
+                <i data-lucide="info" class="w-5 h-5"></i>
+            </div>
+            <span id="toastMessage" class="text-sm font-medium">Mohon tunggu sebentar...</span>
+        </div>
+    </main>
+
+    <!-- Kaki Halaman / Footer -->
+    <footer class="bg-white border-t border-slate-100 py-6 text-center text-xs text-slate-400 mt-12">
+        <div class="max-w-6xl mx-auto px-4">
+            <p>&copy; 2026 Konverter File Pintar. Semua pemrosesan dilakukan sepenuhnya secara lokal pada perangkat Anda.</p>
+        </div>
+    </footer>
+
+    <!-- Logika Pemrograman Aplikasi -->
+    <script>
+        // Mengaktifkan Ikon Lucide
+        lucide.createIcons();
+
+        // Elemen-elemen DOM
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('fileInput');
+        const converterPanel = document.getElementById('converterPanel');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        const fileIcon = document.getElementById('fileIcon');
+        const fileIconContainer = document.getElementById('fileIconContainer');
+        const formatOptionsContainer = document.getElementById('formatOptions');
+        const convertBtn = document.getElementById('convertBtn');
+        const btnIcon = document.getElementById('btnIcon');
+        const btnText = document.getElementById('btnText');
+        const removeFileBtn = document.getElementById('removeFileBtn');
+        const statusBox = document.getElementById('statusBox');
+        const statusText = document.getElementById('statusText');
+        const spinner = document.getElementById('spinner');
+        const previewSandbox = document.getElementById('previewSandbox');
+        const sandboxContent = document.getElementById('sandboxContent');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+
+        let uploadedFile = null;
+        let selectedFormat = null;
+
+        // Daftar Gaya sesuai Format File
+        const fileStyleMap = {
+            'docx': { icon: 'file-text', color: 'bg-blue-100', text: 'text-blue-600' },
+            'pdf': { icon: 'file', color: 'bg-red-100', text: 'text-red-600' },
+            'txt': { icon: 'file-text', color: 'bg-slate-100', text: 'text-slate-600' },
+            'image': { icon: 'image', color: 'bg-emerald-100', text: 'text-emerald-600' }
+        };
+
+        // Event Listeners untuk Dropzone
+        dropzone.addEventListener('click', () => fileInput.click());
+        
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('drag-over');
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('drag-over');
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('drag-over');
+            if (e.dataTransfer.files.length > 0) {
+                handleFileSelection(e.dataTransfer.files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileSelection(e.target.files[0]);
+            }
+        });
+
+        removeFileBtn.addEventListener('click', () => {
+            resetApp();
+        });
+
+        // Manajemen Pemilihan File
+        function handleFileSelection(file) {
+            uploadedFile = file;
+            const ext = file.name.split('.').pop().toLowerCase();
+            const sizeInKb = (file.size / 1024).toFixed(1);
+            
+            fileName.textContent = file.name;
+            fileSize.textContent = `${sizeInKb} KB`;
+
+            // Identifikasi tipe format file untuk tampilan Ikon
+            let fileType = 'txt';
+            if (ext === 'docx') fileType = 'docx';
+            else if (ext === 'pdf') fileType = 'pdf';
+            else if (['png', 'jpg', 'jpeg', 'webp'].includes(ext)) fileType = 'image';
+
+            // Memperbarui gaya UI Ikon File
+            const style = fileStyleMap[fileType];
+            fileIconContainer.className = `p-3 rounded-lg ${style.color} ${style.text}`;
+            fileIcon.setAttribute('data-lucide', style.icon);
+            lucide.createIcons();
+
+            // Sediakan Pilihan Format Tujuan berdasarkan File Input
+            setupConversionOptions(fileType, ext);
+
+            // Tampilkan panel konverter dan sembunyikan dropzone
+            dropzone.classList.add('hidden');
+            converterPanel.classList.remove('hidden');
+            previewSandbox.classList.add('hidden');
+        }
+
+        // Menyediakan pilihan format berdasarkan input
+        function setupConversionOptions(type, ext) {
+            formatOptionsContainer.innerHTML = '';
+            let options = [];
+
+            if (type === 'docx') {
+                options = [{ id: 'pdf', label: 'Ubah ke PDF (.pdf)', icon: 'file' }];
+            } else if (type === 'pdf') {
+                options = [
+                    { id: 'txt', label: 'Ekstrak Teks (.txt)', icon: 'file-text' }
+                ];
+            } else if (type === 'image') {
+                options = [{ id: 'pdf', label: 'Ubah ke PDF (.pdf)', icon: 'file' }];
+            } else if (type === 'txt') {
+                options = [{ id: 'pdf', label: 'Ubah ke PDF (.pdf)', icon: 'file' }];
+            }
+
+            options.forEach((opt, idx) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = `flex items-center gap-3 p-4 rounded-xl border text-left font-medium text-sm transition-all ${
+                    idx === 0 
+                    ? 'border-indigo-600 bg-indigo-50 text-indigo-700 shadow-sm' 
+                    : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                }`;
+                button.innerHTML = `
+                    <div class="p-1.5 rounded-md ${idx === 0 ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-500'}">
+                        <i data-lucide="${opt.icon}" class="w-4 h-4"></i>
+                    </div>
+                    <span>${opt.label}</span>
+                `;
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('#formatOptions button').forEach(btn => {
+                        btn.className = 'flex items-center gap-3 p-4 rounded-xl border text-left font-medium text-sm transition-all border-slate-200 text-slate-600 hover:bg-slate-50';
+                        const badge = btn.querySelector('div');
+                        badge.className = 'p-1.5 rounded-md bg-slate-100 text-slate-500';
+                    });
+                    button.className = 'flex items-center gap-3 p-4 rounded-xl border text-left font-medium text-sm transition-all border-indigo-600 bg-indigo-50 text-indigo-700 shadow-sm';
+                    const badge = button.querySelector('div');
+                    badge.className = 'p-1.5 rounded-md bg-indigo-600 text-white';
+                    selectedFormat = opt.id;
+                });
+
+                formatOptionsContainer.appendChild(button);
+            });
+
+            // Set default pilihan pertama
+            if (options.length > 0) {
+                selectedFormat = options[0].id;
+            }
+            lucide.createIcons();
+        }
+
+        // Pengaturan Tombol Ubah File
+        convertBtn.addEventListener('click', async () => {
+            if (!uploadedFile) return;
+
+            showStatus('Sedang mengonversi file Anda...', 'loading');
+            convertBtn.disabled = true;
+
+            try {
+                const ext = uploadedFile.name.split('.').pop().toLowerCase();
+                
+                if (ext === 'docx' && selectedFormat === 'pdf') {
+                    await convertDocxToPdf(uploadedFile);
+                } else if (ext === 'pdf' && selectedFormat === 'txt') {
+                    await extractPdfToText(uploadedFile);
+                } else if (['png', 'jpg', 'jpeg', 'webp'].includes(ext) && selectedFormat === 'pdf') {
+                    await convertImageToPdf(uploadedFile);
+                } else if (ext === 'txt' && selectedFormat === 'pdf') {
+                    await convertTxtToPdf(uploadedFile);
+                } else {
+                    throw new Error('Kombinasi format konversi tidak didukung.');
+                }
+            } catch (error) {
+                console.error(error);
+                showStatus(`Gagal konversi: ${error.message}`, 'error');
+                showToast(`Gagal mengonversi file: ${error.message}`, true);
+            } finally {
+                convertBtn.disabled = false;
+            }
+        });
+
+        // 1. Fungsi DOCX ke PDF
+        async function convertDocxToPdf(file) {
+            showStatus('Membaca file Word (.docx)...', 'loading');
+            const arrayBuffer = await file.arrayBuffer();
+            
+            // Menggunakan Mammoth.js untuk mengonversi docx ke HTML secara lokal
+            const result = await mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
+            const htmlContent = result.value;
+
+            if (!htmlContent || htmlContent.trim() === '') {
+                throw new Error("Dokumen Word kosong atau tidak dapat diekstrak.");
+            }
+
+            showStatus('Memformat halaman dokumen...', 'loading');
+            // Tampilkan konten dalam Sandbox
+            previewSandbox.classList.remove('hidden');
+            sandboxContent.innerHTML = htmlContent;
+
+            // Mulai pembuatan file PDF
+            showStatus('Sedang membuat file PDF...', 'loading');
+            const opt = {
+                margin:       1,
+                filename:     file.name.replace(/\.[^/.]+$/, "") + ".pdf",
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            await html2pdf().from(sandboxContent).set(opt).save();
+            showStatus('Berhasil diunduh!', 'success');
+            showToast('File Word berhasil dikonversi ke PDF!');
+        }
+
+        // 2. Fungsi Gambar ke PDF
+        async function convertImageToPdf(file) {
+            showStatus('Membaca gambar...', 'loading');
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const imgData = e.target.result;
+                const { jsPDF } = window.jspdf;
+                
+                // Buat gambar sementara untuk mendapatkan resolusi asli
+                const img = new Image();
+                img.src = imgData;
+                img.onload = function() {
+                    const doc = new jsPDF({
+                        orientation: img.width > img.height ? 'l' : 'p',
+                        unit: 'px',
+                        format: [img.width, img.height]
+                    });
+                    
+                    doc.addImage(imgData, 'JPEG', 0, 0, img.width, img.height);
+                    doc.save(file.name.replace(/\.[^/.]+$/, "") + ".pdf");
+                    
+                    showStatus('Berhasil diunduh!', 'success');
+                    showToast('Gambar berhasil dikonversi ke PDF!');
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // 3. Fungsi Teks (.txt) ke PDF
+        async function convertTxtToPdf(file) {
+            showStatus('Membaca file Teks...', 'loading');
+            const text = await file.text();
+            
+            // Format teks dalam bentuk HTML pre-wrap agar mempertahankan tata letak asli
+            const htmlFormatted = `<pre style="white-space: pre-wrap; font-family: sans-serif; font-size: 14px; line-height: 1.6;">${escapeHtml(text)}</pre>`;
+            
+            previewSandbox.classList.remove('hidden');
+            sandboxContent.innerHTML = htmlFormatted;
+
+            showStatus('Sedang membuat file PDF...', 'loading');
+            const opt = {
+                margin:       1,
+                filename:     file.name.replace(/\.[^/.]+$/, "") + ".pdf",
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            await html2pdf().from(sandboxContent).set(opt).save();
+            showStatus('Berhasil diunduh!', 'success');
+            showToast('Teks berhasil dikonversi ke PDF!');
+        }
+
+        // 4. Fungsi PDF ke Teks (Ekstraksi)
+        async function extractPdfToText(file) {
+            showStatus('Menganalisis file PDF...', 'loading');
+            const arrayBuffer = await file.arrayBuffer();
+            
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            let fullText = '';
+
+            for (let i = 1; i <= pdf.numPages; i++) {
+                showStatus(`Mengekstrak teks halaman ${i} dari ${pdf.numPages}...`, 'loading');
+                const page = await pdf.getPage(i);
+                const tokenizedText = await page.getTextContent();
+                const pageText = tokenizedText.items.map(token => token.str).join(' ');
+                fullText += `--- Halaman ${i} ---\n` + pageText + '\n\n';
+            }
+
+            if (!fullText.trim()) {
+                throw new Error("Gagal mengekstrak teks. PDF mungkin berbasis gambar saja (memerlukan OCR).");
+            }
+
+            // Tampilkan hasil teks dalam sandbox
+            previewSandbox.classList.remove('hidden');
+            sandboxContent.innerHTML = `
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded">Hasil Teks yang Diekstrak</span>
+                </div>
+                <pre class="whitespace-pre-wrap font-mono text-sm bg-slate-50 p-4 rounded-lg border border-slate-200">${escapeHtml(fullText)}</pre>
+            `;
+
+            // Unduh sebagai file .txt
+            const blob = new Blob([fullText], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = file.name.replace(/\.[^/.]+$/, "") + "_Ekstrak.txt";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showStatus('Berhasil diunduh!', 'success');
+            showToast('Teks dari PDF berhasil diekstrak!');
+        }
+
+        // Fungsi Pendukung untuk Mencegah Serangan XSS / Escape HTML
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Pengaturan Status
+        function showStatus(msg, type) {
+            statusBox.classList.remove('hidden', 'bg-indigo-50', 'text-indigo-800', 'bg-emerald-50', 'text-emerald-800', 'bg-rose-50', 'text-rose-800');
+            spinner.classList.add('hidden');
+
+            if (type === 'loading') {
+                statusBox.classList.add('bg-indigo-50', 'text-indigo-800');
+                spinner.classList.remove('hidden');
+            } else if (type === 'success') {
+                statusBox.classList.add('bg-emerald-50', 'text-emerald-800');
+            } else if (type === 'error') {
+                statusBox.classList.add('bg-rose-50', 'text-rose-800');
+            }
+
+            statusText.textContent = msg;
+        }
+
+        // Tampilkan Toast Notification
+        function showToast(message, isError = false) {
+            toastMessage.textContent = message;
+            
+            const toastIcon = document.getElementById('toastIcon');
+            if (isError) {
+                toastIcon.innerHTML = `<i data-lucide="alert-triangle" class="w-5 h-5 text-red-500"></i>`;
+            } else {
+                toastIcon.innerHTML = `<i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>`;
+            }
+            lucide.createIcons();
+
+            toast.classList.remove('opacity-0', 'translate-y-20', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-20', 'pointer-events-none');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }, 4000);
+        }
+
+        // Reset Aplikasi ke Keadaan Awal
+        function resetApp() {
+            uploadedFile = null;
+            selectedFormat = null;
+            fileInput.value = '';
+            
+            dropzone.classList.remove('hidden');
+            converterPanel.classList.add('hidden');
+            statusBox.classList.add('hidden');
+            previewSandbox.classList.add('hidden');
+            sandboxContent.innerHTML = '';
+        }
+    </script>
+</body>
+</html>
