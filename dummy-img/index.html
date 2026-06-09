@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembuat Gambar Dummy Interaktif</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons for clean UI symbols -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for preset list */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header / Nav -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 text-white p-2 rounded-lg shadow-md shadow-indigo-100">
+                    <i data-lucide="image" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-slate-900 leading-none">DummyImg</h1>
+                    <span class="text-xs text-slate-500">Pembuat Gambar Dummy Pro</span>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2 text-sm text-slate-500">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                    <span class="w-1.5 h-1.5 mr-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                    Versi Fitur Lengkap
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <div class="text-center max-w-3xl mx-auto mb-8">
+            <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight sm:text-4xl">
+                Pembuat Gambar Dummy & Placeholder
+            </h2>
+            <p class="mt-3 text-lg text-slate-600">
+                Buat gambar placeholder kustom dengan warna solid atau gunakan latar belakang gambar sendiri & koleksi foto sampel gratis.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Controls Column (Left) -->
+            <section class="lg:col-span-5 bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-slate-900 flex items-center gap-2">
+                        <i data-lucide="sliders" class="w-5 h-5 text-indigo-600"></i>
+                        Pengaturan Gambar
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-1">Sesuaikan dimensi, warna, gambar, teks, dan format gambar Anda.</p>
+                </div>
+
+                <hr class="border-slate-100" />
+
+                <!-- Dimensions & Aspect Ratio -->
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-sm font-semibold text-slate-700">Dimensi (Piksel)</label>
+                        <button id="btn-lock" class="text-xs flex items-center gap-1 px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-600 transition">
+                            <i data-lucide="lock" class="w-3.5 h-3.5" id="lock-icon"></i>
+                            <span id="lock-text">Kunci Rasio (1:1)</span>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <span class="text-xs text-slate-400 block mb-1">Lebar (px)</span>
+                            <div class="relative">
+                                <input type="number" id="img-width" value="600" min="10" max="4000" 
+                                    class="w-full pl-3 pr-8 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-medium">
+                                <span class="absolute right-3 top-2.5 text-xs text-slate-400">W</span>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="text-xs text-slate-400 block mb-1">Tinggi (px)</span>
+                            <div class="relative">
+                                <input type="number" id="img-height" value="600" min="10" max="4000" 
+                                    class="w-full pl-3 pr-8 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm font-medium">
+                                <span class="absolute right-3 top-2.5 text-xs text-slate-400">H</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preset Sizes -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700">Preset Ukuran Populer</label>
+                    <div class="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto custom-scrollbar p-1 border border-slate-100 rounded-lg bg-slate-50">
+                        <button type="button" onclick="applyPreset(1200, 630)" class="px-2 py-1 text-xs bg-white hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 rounded-md transition text-slate-700">FB Shared (1200x630)</button>
+                        <button type="button" onclick="applyPreset(1080, 1080)" class="px-2 py-1 text-xs bg-white hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 rounded-md transition text-slate-700">IG Post (1080x1080)</button>
+                        <button type="button" onclick="applyPreset(1080, 1920)" class="px-2 py-1 text-xs bg-white hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 rounded-md transition text-slate-700">IG Story (1080x1920)</button>
+                        <button type="button" onclick="applyPreset(1280, 720)" class="px-2 py-1 text-xs bg-white hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 rounded-md transition text-slate-700">YT Thumbnail (1280x720)</button>
+                        <button type="button" onclick="applyPreset(1920, 1080)" class="px-2 py-1 text-xs bg-white hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 rounded-md transition text-slate-700">Full HD (1920x1080)</button>
+                        <button type="button" onclick="applyPreset(728, 90)" class="px-2 py-1 text-xs bg-white hover:bg-indigo-50 border border-slate-200 hover:border-indigo-200 rounded-md transition text-slate-700">Leaderboard (728x90)</button>
+                    </div>
+                </div>
+
+                <!-- Background Style Type (Tab) -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700">Tipe Latar Belakang</label>
+                    <div class="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-lg">
+                        <button type="button" id="tab-solid" class="py-1.5 text-xs font-semibold rounded-md bg-white text-indigo-700 shadow-sm transition">Warna Solid</button>
+                        <button type="button" id="tab-image" class="py-1.5 text-xs font-semibold rounded-md text-slate-600 hover:text-slate-900 transition">Gambar / Foto</button>
+                    </div>
+                </div>
+
+                <!-- SECTION: SOLID COLOR CONTROLS -->
+                <div id="section-solid-controls" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="block text-sm font-semibold text-slate-700">Latar Belakang</label>
+                            <div class="flex items-center space-x-2">
+                                <input type="color" id="color-bg" value="#cccccc" class="w-10 h-10 border-0 p-0 rounded-lg cursor-pointer bg-transparent">
+                                <input type="text" id="color-bg-hex" value="#CCCCCC" uppercase maxlength="7" 
+                                    class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-sm text-center font-mono uppercase focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-sm font-semibold text-slate-700">Warna Teks</label>
+                            <div class="flex items-center space-x-2">
+                                <input type="color" id="color-text" value="#333333" class="w-10 h-10 border-0 p-0 rounded-lg cursor-pointer bg-transparent">
+                                <input type="text" id="color-text-hex" value="#333333" uppercase maxlength="7" 
+                                    class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-sm text-center font-mono uppercase focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Custom Color Presets -->
+                    <div class="space-y-2">
+                        <span class="block text-xs text-slate-500 font-medium">Rekomendasi Kombinasi Warna</span>
+                        <div class="grid grid-cols-5 gap-2">
+                            <button type="button" onclick="applyColors('#cccccc', '#333333')" class="h-8 rounded-lg border border-slate-200 flex items-center justify-center text-xs font-mono bg-[#cccccc] text-[#333333] hover:scale-105 transition shadow-sm" title="Abu & Gelap">Classic</button>
+                            <button type="button" onclick="applyColors('#3b82f6', '#ffffff')" class="h-8 rounded-lg flex items-center justify-center text-xs font-mono bg-blue-500 text-white hover:scale-105 transition shadow-sm" title="Biru & Putih">Blue</button>
+                            <button type="button" onclick="applyColors('#10b981', '#ffffff')" class="h-8 rounded-lg flex items-center justify-center text-xs font-mono bg-emerald-500 text-white hover:scale-105 transition shadow-sm" title="Hijau & Putih">Green</button>
+                            <button type="button" onclick="applyColors('#1e293b', '#f8fafc')" class="h-8 rounded-lg flex items-center justify-center text-xs font-mono bg-slate-800 text-slate-50 hover:scale-105 transition shadow-sm" title="Slate & Putih">Dark</button>
+                            <button type="button" onclick="applyColors('#f43f5e', '#ffffff')" class="h-8 rounded-lg flex items-center justify-center text-xs font-mono bg-rose-500 text-white hover:scale-105 transition shadow-sm" title="Rose & Putih">Rose</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION: IMAGE BACKGROUND CONTROLS -->
+                <div id="section-image-controls" class="space-y-4 hidden">
+                    
+                    <!-- File Upload Area -->
+                    <div class="space-y-2">
+                        <label class="block text-sm font-semibold text-slate-700">Unggah Gambar Latar</label>
+                        <div id="dropzone" class="border-2 border-dashed border-slate-300 rounded-xl p-4 text-center cursor-pointer hover:border-indigo-500 hover:bg-indigo-50/30 transition">
+                            <input type="file" id="file-upload" accept="image/*" class="hidden">
+                            <div class="flex flex-col items-center space-y-1 text-slate-500">
+                                <i data-lucide="upload-cloud" class="w-8 h-8 text-indigo-500"></i>
+                                <p class="text-xs font-semibold text-indigo-600 hover:text-indigo-700">Klik atau seret gambar ke sini</p>
+                                <p class="text-[10px]">Mendukung PNG, JPG, WEBP</p>
+                            </div>
+                        </div>
+                        <!-- Active Image Info & Remove Button -->
+                        <div id="active-image-bar" class="hidden flex items-center justify-between p-2 bg-indigo-50 border border-indigo-100 rounded-lg text-xs">
+                            <span class="text-indigo-800 font-medium truncate max-w-[200px]" id="active-image-name">gambar.jpg</span>
+                            <button type="button" id="btn-remove-image" class="text-rose-600 hover:text-rose-800 font-semibold flex items-center gap-1">
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Hapus
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Database / Sample Images Grid -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label class="block text-sm font-semibold text-slate-700">Galeri Contoh Gambar</label>
+                            <span class="text-[10px] text-slate-400">Klik untuk menerapkan</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <!-- Tech/Abstract -->
+                            <button type="button" onclick="applySampleImage('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80', 'Abstract Wave')" class="relative h-14 rounded-lg overflow-hidden border border-slate-200 group hover:border-indigo-500 transition">
+                                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=120&q=80" alt="Abstract Wave" class="w-full h-full object-cover">
+                                <span class="absolute bottom-0 inset-x-0 text-[9px] bg-black/60 text-white truncate px-1">Abstrak</span>
+                            </button>
+                            <!-- Nature -->
+                            <button type="button" onclick="applySampleImage('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80', 'Beach')" class="relative h-14 rounded-lg overflow-hidden border border-slate-200 group hover:border-indigo-500 transition">
+                                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=120&q=80" alt="Beach" class="w-full h-full object-cover">
+                                <span class="absolute bottom-0 inset-x-0 text-[9px] bg-black/60 text-white truncate px-1">Pantai</span>
+                            </button>
+                            <!-- Workspace -->
+                            <button type="button" onclick="applySampleImage('https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?auto=format&fit=crop&w=400&q=80', 'Workspace')" class="relative h-14 rounded-lg overflow-hidden border border-slate-200 group hover:border-indigo-500 transition">
+                                <img src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?auto=format&fit=crop&w=120&q=80" alt="Workspace" class="w-full h-full object-cover">
+                                <span class="absolute bottom-0 inset-x-0 text-[9px] bg-black/60 text-white truncate px-1">Kerja</span>
+                            </button>
+                            <!-- Dark Tech -->
+                            <button type="button" onclick="applySampleImage('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=400&q=80', 'Matrix Tech')" class="relative h-14 rounded-lg overflow-hidden border border-slate-200 group hover:border-indigo-500 transition">
+                                <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=120&q=80" alt="Matrix Tech" class="w-full h-full object-cover">
+                                <span class="absolute bottom-0 inset-x-0 text-[9px] bg-black/60 text-white truncate px-1">Teknologi</span>
+                            </button>
+                            <!-- Minimalist Texture -->
+                            <button type="button" onclick="applySampleImage('https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=400&q=80', 'Gradient Texture')" class="relative h-14 rounded-lg overflow-hidden border border-slate-200 group hover:border-indigo-500 transition">
+                                <img src="https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=120&q=80" alt="Gradient Texture" class="w-full h-full object-cover">
+                                <span class="absolute bottom-0 inset-x-0 text-[9px] bg-black/60 text-white truncate px-1">Gradasi</span>
+                            </button>
+                            <!-- City -->
+                            <button type="button" onclick="applySampleImage('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=400&q=80', 'Cityscape')" class="relative h-14 rounded-lg overflow-hidden border border-slate-200 group hover:border-indigo-500 transition">
+                                <img src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=120&q=80" alt="Cityscape" class="w-full h-full object-cover">
+                                <span class="absolute bottom-0 inset-x-0 text-[9px] bg-black/60 text-white truncate px-1">Kota</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Image Settings (Fit & Opacity) -->
+                    <div class="grid grid-cols-2 gap-3 pt-2">
+                        <div>
+                            <span class="text-xs text-slate-500 block mb-1">Kesesuaian (Fit)</span>
+                            <select id="image-fit" class="w-full px-2 py-1.5 border border-slate-300 rounded-lg text-xs bg-white">
+                                <option value="cover">Cover (Menuhkan)</option>
+                                <option value="contain">Contain (Muat)</option>
+                                <option value="stretch">Stretch (Regang)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <span class="text-xs text-slate-500 block mb-1">Opasitas Gambar (<span id="opacity-val">80</span>%)</span>
+                            <input type="range" id="image-opacity" min="0" max="100" value="80" 
+                                class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600 mt-2">
+                        </div>
+                    </div>
+
+                    <!-- Warna Teks khusus tab gambar -->
+                    <div class="space-y-2 pt-1">
+                        <label class="block text-sm font-semibold text-slate-700">Warna Teks Overlay</label>
+                        <div class="flex items-center space-x-2">
+                            <input type="color" id="color-img-text" value="#ffffff" class="w-10 h-10 border-0 p-0 rounded-lg cursor-pointer bg-transparent">
+                            <input type="text" id="color-img-text-hex" value="#FFFFFF" uppercase maxlength="7" 
+                                class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg text-sm text-center font-mono uppercase focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom Text Settings -->
+                <div class="space-y-3">
+                    <label class="block text-sm font-semibold text-slate-700">Teks Gambar</label>
+                    <input type="text" id="img-text" placeholder="Gunakan ukuran (Default)" 
+                        class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                    <p class="text-xs text-slate-400">Kosongkan kolom ini untuk otomatis menampilkan ukuran gambar (contoh: 600 x 600).</p>
+                    
+                    <div class="grid grid-cols-2 gap-3 pt-1">
+                        <div>
+                            <span class="text-xs text-slate-400 block mb-1">Ukuran Font (px)</span>
+                            <input type="number" id="font-size" value="0" min="0" max="200" 
+                                class="w-full px-3 py-1.5 border border-slate-300 rounded-lg text-sm">
+                            <span class="text-[10px] text-slate-400">Isi "0" untuk ukuran otomatis</span>
+                        </div>
+                        <div>
+                            <span class="text-xs text-slate-400 block mb-1">Gaya Huruf</span>
+                            <div class="flex gap-1">
+                                <button type="button" id="btn-bold" class="flex-1 py-1.5 text-xs font-bold border border-slate-300 rounded-lg bg-white hover:bg-slate-50 transition">B</button>
+                                <button type="button" id="btn-italic" class="flex-1 py-1.5 text-xs italic border border-slate-300 rounded-lg bg-white hover:bg-slate-50 transition">I</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Font Family -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700">Gaya Font / Tipografi</label>
+                    <select id="font-family" class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="sans-serif">Sans-Serif (Standard)</option>
+                        <option value="serif">Serif (Klasik/Buku)</option>
+                        <option value="monospace">Monospace (Kode)</option>
+                        <option value="cursive">Cursive (Tulisan Tangan)</option>
+                        <option value="system-ui">System UI</option>
+                    </select>
+                </div>
+
+                <!-- Image Format -->
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700">Format File Keluaran</label>
+                    <div class="grid grid-cols-4 gap-2">
+                        <label class="flex flex-col items-center justify-center border border-slate-200 rounded-lg p-2 bg-slate-50 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition">
+                            <input type="radio" name="img-format" value="png" checked class="sr-only">
+                            <span class="text-xs font-bold text-slate-700">PNG</span>
+                        </label>
+                        <label class="flex flex-col items-center justify-center border border-slate-200 rounded-lg p-2 bg-slate-50 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition">
+                            <input type="radio" name="img-format" value="jpeg" class="sr-only">
+                            <span class="text-xs font-bold text-slate-700">JPG</span>
+                        </label>
+                        <label class="flex flex-col items-center justify-center border border-slate-200 rounded-lg p-2 bg-slate-50 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition">
+                            <input type="radio" name="img-format" value="webp" class="sr-only">
+                            <span class="text-xs font-bold text-slate-700">WEBP</span>
+                        </label>
+                        <label class="flex flex-col items-center justify-center border border-slate-200 rounded-lg p-2 bg-slate-50 cursor-pointer hover:bg-indigo-50 hover:border-indigo-300 transition">
+                            <input type="radio" name="img-format" value="svg" class="sr-only">
+                            <span class="text-xs font-bold text-slate-700">SVG</span>
+                        </label>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Preview & Actions Column (Right) -->
+            <section class="lg:col-span-7 flex flex-col space-y-6">
+                
+                <!-- Live Preview Card -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col h-full justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-slate-900 flex items-center gap-2">
+                                <i data-lucide="eye" class="w-5 h-5 text-indigo-600"></i>
+                                Pratinjau Gambar
+                            </h3>
+                            <span id="dimension-badge" class="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs font-semibold rounded-full">
+                                600 x 600 px
+                            </span>
+                        </div>
+                        
+                        <!-- Preview Box Container -->
+                        <div class="bg-slate-100 rounded-xl border border-slate-200 overflow-hidden flex items-center justify-center min-h-[350px] relative p-4 group">
+                            <!-- Background Pattern/Grid -->
+                            <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(#4f46e5 1px, transparent 1px); background-size: 16px 16px;"></div>
+                            
+                            <!-- Dynamic Canvas Display / Wrapper for SVG -->
+                            <div id="preview-wrapper" class="relative max-w-full max-h-[450px] overflow-auto flex items-center justify-center shadow-lg transition duration-200">
+                                <canvas id="generator-canvas" class="max-w-full h-auto rounded-lg" style="display: block;"></canvas>
+                                <div id="svg-preview-container" class="hidden max-w-full h-auto"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="mt-6 space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <button id="btn-download" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-indigo-100 flex items-center justify-center gap-2 transition duration-200">
+                                <i data-lucide="download" class="w-5 h-5"></i>
+                                Unduh Gambar
+                            </button>
+                            <button id="btn-copy" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-2 transition duration-200">
+                                <i data-lucide="copy" class="w-5 h-5" id="copy-icon"></i>
+                                <span id="copy-text">Salin Gambar</span>
+                            </button>
+                        </div>
+                        
+                        <!-- Notification Toast Box inside container -->
+                        <div id="toast-message" class="hidden p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg text-sm flex items-center gap-2 animate-fade-in">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+                            <span id="toast-text">Berhasil menyalin gambar ke papan klip!</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Help Card / FAQ -->
+                <div class="bg-indigo-950 text-white rounded-2xl p-6 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-800 rounded-full blur-3xl opacity-30 -mr-10 -mt-10"></div>
+                    <div class="relative z-10 space-y-3">
+                        <h4 class="text-md font-semibold flex items-center gap-1.5 text-indigo-200">
+                            <i data-lucide="help-circle" class="w-4 h-4"></i>
+                            Bagaimana cara menggunakan gambar dummy ini?
+                        </h4>
+                        <p class="text-sm text-indigo-100 leading-relaxed">
+                            Aplikasi web generator ini murni berjalan di sisi peramban (*browser*) Anda. Anda dapat menentukan dimensi kustom, memilih warna, menambahkan teks Anda sendiri, lalu menyalin atau mengunduhnya langsung untuk disisipkan ke berkas desain, presentasi PowerPoint, atau kerangka pemrograman front-end Anda.
+                        </p>
+                    </div>
+                </div>
+
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-12 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-slate-500 text-sm">
+            <p>© 2026 Dummy Images Generator.</p>
+            <p class="mt-1 text-xs text-slate-400">Dirancang dengan ❤️ by 296 STUDIOS.</p>
+        </div>
+    </footer>
+
+    <!-- Script Processing -->
+    <script>
+        // Init Lucide Icons
+        lucide.createIcons();
+
+        // Canvas & Dom Setup
+        const canvas = document.getElementById('generator-canvas');
+        const ctx = canvas.getContext('2d');
+        const svgContainer = document.getElementById('svg-preview-container');
+
+        // Inputs
+        const imgWidth = document.getElementById('img-width');
+        const imgHeight = document.getElementById('img-height');
+        const btnLock = document.getElementById('btn-lock');
+        const lockIcon = document.getElementById('lock-icon');
+        const lockText = document.getElementById('lock-text');
+
+        // Solid background controls
+        const colorBg = document.getElementById('color-bg');
+        const colorBgHex = document.getElementById('color-bg-hex');
+        const colorText = document.getElementById('color-text');
+        const colorTextHex = document.getElementById('color-text-hex');
+
+        // Image background controls
+        const tabSolid = document.getElementById('tab-solid');
+        const tabImage = document.getElementById('tab-image');
+        const sectionSolidControls = document.getElementById('section-solid-controls');
+        const sectionImageControls = document.getElementById('section-image-controls');
+        const fileUpload = document.getElementById('file-upload');
+        const dropzone = document.getElementById('dropzone');
+        const activeImageBar = document.getElementById('active-image-bar');
+        const activeImageName = document.getElementById('active-image-name');
+        const btnRemoveImage = document.getElementById('btn-remove-image');
+        const imageFit = document.getElementById('image-fit');
+        const imageOpacity = document.getElementById('image-opacity');
+        const opacityVal = document.getElementById('opacity-val');
+        const colorImgText = document.getElementById('color-img-text');
+        const colorImgTextHex = document.getElementById('color-img-text-hex');
+
+        // Custom Typography controls
+        const imgText = document.getElementById('img-text');
+        const fontSizeInput = document.getElementById('font-size');
+        const btnBold = document.getElementById('btn-bold');
+        const btnItalic = document.getElementById('btn-italic');
+        const fontFamily = document.getElementById('font-family');
+
+        const formatRadios = document.getElementsByName('img-format');
+        const dimensionBadge = document.getElementById('dimension-badge');
+
+        // Buttons Action
+        const btnDownload = document.getElementById('btn-download');
+        const btnCopy = document.getElementById('btn-copy');
+        const toastMsg = document.getElementById('toast-message');
+        const toastText = document.getElementById('toast-text');
+
+        // State variables
+        let isLocked = false;
+        let aspectRatio = 1;
+        let isBold = false;
+        let isItalic = false;
+        
+        let bgType = 'solid'; // 'solid' or 'image'
+        let uploadedImageObject = null; // Holds Loaded HTMLImageElement for canvas rendering
+
+        // Tab Switchers
+        tabSolid.addEventListener('click', () => {
+            bgType = 'solid';
+            tabSolid.className = "py-1.5 text-xs font-semibold rounded-md bg-white text-indigo-700 shadow-sm transition";
+            tabImage.className = "py-1.5 text-xs font-semibold rounded-md text-slate-600 hover:text-slate-900 transition";
+            sectionSolidControls.classList.remove('hidden');
+            sectionImageControls.classList.add('hidden');
+            drawDummyImage();
+        });
+
+        tabImage.addEventListener('click', () => {
+            bgType = 'image';
+            tabImage.className = "py-1.5 text-xs font-semibold rounded-md bg-white text-indigo-700 shadow-sm transition";
+            tabSolid.className = "py-1.5 text-xs font-semibold rounded-md text-slate-600 hover:text-slate-900 transition";
+            sectionImageControls.classList.remove('hidden');
+            sectionSolidControls.classList.add('hidden');
+            
+            // If no image is selected yet, load a default beautiful first preset to avoid empty state
+            if (!uploadedImageObject) {
+                applySampleImage('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80', 'Abstract Wave');
+            } else {
+                drawDummyImage();
+            }
+        });
+
+        // File Uploader Trigger
+        dropzone.addEventListener('click', () => fileUpload.click());
+
+        // Drag and Drop implementation
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('border-indigo-600', 'bg-indigo-50/50');
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('border-indigo-600', 'bg-indigo-50/50');
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('border-indigo-600', 'bg-indigo-50/50');
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                processImageFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        fileUpload.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0]) {
+                processImageFile(e.target.files[0]);
+            }
+        });
+
+        function processImageFile(file) {
+            if (!file.type.startsWith('image/')) {
+                alert('Silakan pilih file gambar yang valid!');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.onload = function() {
+                    uploadedImageObject = img;
+                    activeImageName.textContent = file.name;
+                    activeImageBar.classList.remove('hidden');
+                    drawDummyImage();
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Apply Unsplash sample images
+        function applySampleImage(url, name) {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = function() {
+                uploadedImageObject = img;
+                activeImageName.textContent = name;
+                activeImageBar.classList.remove('hidden');
+                drawDummyImage();
+            };
+            img.src = url;
+        }
+
+        // Remove active image back to solid background helper
+        btnRemoveImage.addEventListener('click', () => {
+            uploadedImageObject = null;
+            activeImageBar.classList.add('hidden');
+            fileUpload.value = '';
+            drawDummyImage();
+        });
+
+        // Image fit and Opacity change triggers
+        imageFit.addEventListener('change', drawDummyImage);
+        imageOpacity.addEventListener('input', (e) => {
+            opacityVal.textContent = e.target.value;
+            drawDummyImage();
+        });
+
+        // Text color sync for solid tab
+        function syncColorFromPicker(picker, textInput) {
+            textInput.value = picker.value.toUpperCase();
+            drawDummyImage();
+        }
+
+        function syncColorFromText(textInput, picker) {
+            let val = textInput.value;
+            if (!val.startsWith('#')) {
+                val = '#' + val;
+            }
+            if (/^#[0-9A-F]{6}$/i.test(val)) {
+                picker.value = val;
+                textInput.value = val.toUpperCase();
+                drawDummyImage();
+            }
+        }
+
+        colorBg.addEventListener('input', () => syncColorFromPicker(colorBg, colorBgHex));
+        colorBgHex.addEventListener('input', () => syncColorFromText(colorBgHex, colorBg));
+        
+        colorText.addEventListener('input', () => syncColorFromPicker(colorText, colorTextHex));
+        colorTextHex.addEventListener('input', () => syncColorFromText(colorTextHex, colorText));
+
+        // Text color sync for image tab
+        colorImgText.addEventListener('input', () => syncColorFromPicker(colorImgText, colorImgTextHex));
+        colorImgTextHex.addEventListener('input', () => syncColorFromText(colorImgTextHex, colorImgText));
+
+        // Dimension handlers & aspect lock
+        imgWidth.addEventListener('input', () => {
+            if (isLocked) {
+                imgHeight.value = Math.round(imgWidth.value / aspectRatio);
+            }
+            drawDummyImage();
+        });
+
+        imgHeight.addEventListener('input', () => {
+            if (isLocked) {
+                imgWidth.value = Math.round(imgHeight.value * aspectRatio);
+            }
+            drawDummyImage();
+        });
+
+        btnLock.addEventListener('click', () => {
+            isLocked = !isLocked;
+            if (isLocked) {
+                aspectRatio = imgWidth.value / imgHeight.value;
+                btnLock.classList.replace('bg-slate-100', 'bg-indigo-100');
+                btnLock.classList.replace('text-slate-600', 'text-indigo-700');
+                lockIcon.setAttribute('data-lucide', 'lock-keyhole');
+                lockText.textContent = `Terkunci (${imgWidth.value}:${imgHeight.value})`;
+            } else {
+                btnLock.classList.replace('bg-indigo-100', 'bg-slate-100');
+                btnLock.classList.replace('text-indigo-700', 'text-slate-600');
+                lockIcon.setAttribute('data-lucide', 'lock');
+                lockText.textContent = "Kunci Rasio";
+            }
+            lucide.createIcons();
+        });
+
+        // Toggle text styles
+        btnBold.addEventListener('click', () => {
+            isBold = !isBold;
+            btnBold.classList.toggle('bg-slate-200', isBold);
+            btnBold.classList.toggle('border-indigo-500', isBold);
+            drawDummyImage();
+        });
+
+        btnItalic.addEventListener('click', () => {
+            isItalic = !isItalic;
+            btnItalic.classList.toggle('bg-slate-200', isItalic);
+            btnItalic.classList.toggle('border-indigo-500', isItalic);
+            drawDummyImage();
+        });
+
+        // General event listeners
+        imgText.addEventListener('input', drawDummyImage);
+        fontSizeInput.addEventListener('input', drawDummyImage);
+        fontFamily.addEventListener('change', drawDummyImage);
+        formatRadios.forEach(radio => radio.addEventListener('change', drawDummyImage));
+
+        // Presets functions
+        function applyPreset(w, h) {
+            imgWidth.value = w;
+            imgHeight.value = h;
+            if (isLocked) {
+                aspectRatio = w / h;
+                lockText.textContent = `Terkunci (${w}:${h})`;
+            }
+            drawDummyImage();
+        }
+
+        function applyColors(bg, text) {
+            bgType = 'solid';
+            tabSolid.click();
+            colorBg.value = bg;
+            colorBgHex.value = bg.toUpperCase();
+            colorText.value = text;
+            colorTextHex.value = text.toUpperCase();
+            drawDummyImage();
+        }
+
+        // Get active format
+        function getSelectedFormat() {
+            let format = 'png';
+            formatRadios.forEach(radio => {
+                if (radio.checked) format = radio.value;
+            });
+            return format;
+        }
+
+        // Render dummy generator logic
+        function drawDummyImage() {
+            const width = parseInt(imgWidth.value) || 300;
+            const height = parseInt(imgHeight.value) || 300;
+            const chosenFontFamily = fontFamily.value;
+            const selectedFormat = getSelectedFormat();
+
+            // Sizing badges
+            dimensionBadge.textContent = `${width} x ${height} px`;
+
+            // Text calculations
+            const customText = imgText.value.trim();
+            const displayText = customText !== "" ? customText : `${width} x ${height}`;
+            
+            // Set dynamic text color based on active tab background mode
+            const activeTextColor = (bgType === 'solid') ? colorText.value : colorImgText.value;
+
+            // Render HTML5 Canvas
+            canvas.width = width;
+            canvas.height = height;
+
+            // Step 1: Draw Background
+            if (bgType === 'solid') {
+                ctx.fillStyle = colorBg.value;
+                ctx.fillRect(0, 0, width, height);
+            } else if (bgType === 'image' && uploadedImageObject) {
+                // If it is in image background mode and we have an image object loaded
+                
+                // Clear and fill neutral background just in case image is small/transparent or loading
+                ctx.fillStyle = "#1e293b"; 
+                ctx.fillRect(0, 0, width, height);
+
+                // Set Opacity Blend Alpha
+                const op = parseFloat(imageOpacity.value) / 100;
+                ctx.globalAlpha = op;
+
+                const fitMode = imageFit.value;
+                const imgW = uploadedImageObject.width;
+                const imgH = uploadedImageObject.height;
+
+                if (fitMode === 'stretch') {
+                    ctx.drawImage(uploadedImageObject, 0, 0, width, height);
+                } else if (fitMode === 'contain') {
+                    const ratio = Math.min(width / imgW, height / imgH);
+                    const newW = imgW * ratio;
+                    const newH = imgH * ratio;
+                    const x = (width - newW) / 2;
+                    const y = (height - newH) / 2;
+                    ctx.drawImage(uploadedImageObject, x, y, newW, newH);
+                } else {
+                    // Default is 'cover' (fill screen maintaining crop)
+                    const ratio = Math.max(width / imgW, height / imgH);
+                    const newW = imgW * ratio;
+                    const newH = imgH * ratio;
+                    const x = (width - newW) / 2;
+                    const y = (height - newH) / 2;
+                    ctx.drawImage(uploadedImageObject, x, y, newW, newH);
+                }
+
+                // Reset canvas configuration alpha
+                ctx.globalAlpha = 1.0;
+            } else {
+                // Fallback background if image is null
+                ctx.fillStyle = "#e2e8f0";
+                ctx.fillRect(0, 0, width, height);
+            }
+
+            // Step 2: Determine Font Size
+            let size = parseInt(fontSizeInput.value);
+            if (!size || size <= 0) {
+                size = Math.min(width / (displayText.length * 0.6), height / 4.5);
+                size = Math.max(Math.round(size), 12);
+            }
+
+            // Step 3: Draw Text
+            let fontStyle = "";
+            if (isItalic) fontStyle += "italic ";
+            if (isBold) fontStyle += "bold ";
+            ctx.font = `${fontStyle}${size}px ${chosenFontFamily}`;
+            
+            ctx.fillStyle = activeTextColor;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            // Draw shadow text for image background readability
+            if (bgType === 'image') {
+                ctx.shadowColor = "rgba(0, 0, 0, 0.6)";
+                ctx.shadowBlur = 8;
+                ctx.shadowOffsetX = 2;
+                ctx.shadowOffsetY = 2;
+            } else {
+                ctx.shadowBlur = 0;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
+            }
+
+            ctx.fillText(displayText, width / 2, height / 2);
+
+            // Clean shadows after drawing text
+            ctx.shadowBlur = 0;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 0;
+
+            // Handle Preview Layout Display (Toggle SVG and Canvas correctly)
+            if (selectedFormat === 'svg') {
+                canvas.style.display = 'none';
+                svgContainer.style.display = 'block';
+                generateSVGPreview(width, height, activeTextColor, displayText, size, fontStyle, chosenFontFamily);
+            } else {
+                canvas.style.display = 'block';
+                svgContainer.style.display = 'none';
+            }
+        }
+
+        // SVG string generator
+        function buildSVGString(width, height, textColor, text, fontSize, fontStyle, fontFamily) {
+            const safeText = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            
+            let fontWeightStyle = "normal";
+            let fontItalicStyle = "normal";
+            if (fontStyle.includes("bold")) fontWeightStyle = "bold";
+            if (fontStyle.includes("italic")) fontItalicStyle = "italic";
+
+            // If we are in solid color mode
+            let bgFill = "";
+            if (bgType === 'solid') {
+                bgFill = `<rect width="100%" height="100%" fill="${colorBg.value}"/>`;
+            } else if (bgType === 'image' && uploadedImageObject) {
+                // If using image, convert to embedded base64 in SVG for complete exports
+                try {
+                    const dataUrl = canvas.toDataURL("image/png");
+                    bgFill = `<image width="100%" height="100%" href="${dataUrl}" x="0" y="0" />`;
+                } catch(e) {
+                    // Fallback to neutral color if canvas is tainted by external URL cross-origin limits
+                    bgFill = `<rect width="100%" height="100%" fill="#1e293b"/>`;
+                }
+            } else {
+                bgFill = `<rect width="100%" height="100%" fill="#e2e8f0"/>`;
+            }
+
+            // Check if shadow is needed
+            let textShadowStyle = bgType === 'image' ? 'style="filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.6));"' : '';
+
+            return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+                ${bgFill}
+                <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" 
+                    fill="${textColor}" 
+                    font-family="${fontFamily}" 
+                    font-size="${fontSize}px" 
+                    font-weight="${fontWeightStyle}" 
+                    font-style="${fontItalicStyle}"
+                    ${textShadowStyle}>
+                    ${safeText}
+                </text>
+            </svg>`;
+        }
+
+        function generateSVGPreview(width, height, textColor, text, fontSize, fontStyle, fontFamily) {
+            const svgString = buildSVGString(width, height, textColor, text, fontSize, fontStyle, fontFamily);
+            svgContainer.innerHTML = svgString;
+            const svgElement = svgContainer.querySelector('svg');
+            if (svgElement) {
+                svgElement.setAttribute('class', 'max-w-full h-auto rounded-lg shadow-sm');
+                svgElement.style.maxHeight = '450px';
+            }
+        }
+
+        // Download Action
+        btnDownload.addEventListener('click', () => {
+            const width = parseInt(imgWidth.value) || 300;
+            const height = parseInt(imgHeight.value) || 300;
+            const selectedFormat = getSelectedFormat();
+            const filename = `dummy_${width}x${height}.${selectedFormat}`;
+
+            if (selectedFormat === 'svg') {
+                const activeTextColor = (bgType === 'solid') ? colorText.value : colorImgText.value;
+                const customText = imgText.value.trim();
+                const displayText = customText !== "" ? customText : `${width} x ${height}`;
+                const chosenFontFamily = fontFamily.value;
+                
+                let size = parseInt(fontSizeInput.value);
+                if (!size || size <= 0) {
+                    size = Math.min(width / (displayText.length * 0.6), height / 4.5);
+                    size = Math.max(Math.round(size), 12);
+                }
+                
+                let fontStyle = "";
+                if (isItalic) fontStyle += "italic ";
+                if (isBold) fontStyle += "bold ";
+
+                const svgContent = buildSVGString(width, height, activeTextColor, displayText, size, fontStyle, chosenFontFamily);
+                const blob = new Blob([svgContent], { type: 'image/svg+xml;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                
+                triggerDownload(url, filename);
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+            } else {
+                let mimeType = 'image/png';
+                if (selectedFormat === 'jpeg') mimeType = 'image/jpeg';
+                if (selectedFormat === 'webp') mimeType = 'image/webp';
+
+                // Quality setting
+                try {
+                    const imgURL = canvas.toDataURL(mimeType, 0.95);
+                    triggerDownload(imgURL, filename);
+                } catch (err) {
+                    alert('Gagal mengekspor gambar karena masalah keamanan peramban (CORS) dari contoh gambar eksternal. Silakan unggah gambar Anda sendiri atau coba format PNG/SVG!');
+                }
+            }
+        });
+
+        function triggerDownload(dataUrl, filename) {
+            const link = document.createElement('a');
+            link.href = dataUrl;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Copy Image to Clipboard
+        btnCopy.addEventListener('click', async () => {
+            const selectedFormat = getSelectedFormat();
+            
+            function showToast(message, isSuccess = true) {
+                toastText.textContent = message;
+                if (!isSuccess) {
+                    toastMsg.classList.replace('bg-emerald-50', 'bg-rose-50');
+                    toastMsg.classList.replace('border-emerald-200', 'border-rose-200');
+                    toastMsg.classList.replace('text-emerald-800', 'text-rose-800');
+                } else {
+                    toastMsg.classList.replace('bg-rose-50', 'bg-emerald-50');
+                    toastMsg.classList.replace('border-rose-200', 'border-emerald-200');
+                    toastMsg.classList.replace('text-rose-800', 'text-emerald-800');
+                }
+                
+                toastMsg.classList.remove('hidden');
+                setTimeout(() => {
+                    toastMsg.classList.add('hidden');
+                }, 4000);
+            }
+
+            if (selectedFormat === 'svg') {
+                try {
+                    const width = parseInt(imgWidth.value) || 300;
+                    const height = parseInt(imgHeight.value) || 300;
+                    const activeTextColor = (bgType === 'solid') ? colorText.value : colorImgText.value;
+                    const customText = imgText.value.trim();
+                    const displayText = customText !== "" ? customText : `${width} x ${height}`;
+                    const chosenFontFamily = fontFamily.value;
+                    
+                    let size = parseInt(fontSizeInput.value);
+                    if (!size || size <= 0) {
+                        size = Math.min(width / (displayText.length * 0.6), height / 4.5);
+                        size = Math.max(Math.round(size), 12);
+                    }
+                    let fontStyle = "";
+                    if (isItalic) fontStyle += "italic ";
+                    if (isBold) fontStyle += "bold ";
+
+                    const svgContent = buildSVGString(width, height, activeTextColor, displayText, size, fontStyle, chosenFontFamily);
+                    
+                    const tempTextArea = document.createElement('textarea');
+                    tempTextArea.value = svgContent;
+                    document.body.appendChild(tempTextArea);
+                    tempTextArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempTextArea);
+
+                    showToast("Kode XML SVG berhasil disalin ke papan klip!");
+                } catch (err) {
+                    showToast("Gagal menyalin teks SVG.", false);
+                }
+            } else {
+                try {
+                    canvas.toBlob(async (blob) => {
+                        if (!blob) {
+                            showToast("Kesalahan saat menghasilkan blob gambar.", false);
+                            return;
+                        }
+                        try {
+                            const data = [new ClipboardItem({ [blob.type]: blob })];
+                            await navigator.clipboard.write([data]);
+                            showToast("Gambar berhasil disalin ke papan klip!");
+                        } catch (writeErr) {
+                            // Fallback to DataURL
+                            const tempInput = document.createElement('input');
+                            tempInput.value = canvas.toDataURL();
+                            document.body.appendChild(tempInput);
+                            tempInput.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(tempInput);
+                            showToast("Alamat DataURL Gambar disalin karena batasan peramban!");
+                        }
+                    });
+                } catch (err) {
+                    showToast("Maaf, peramban Anda tidak mendukung penyalinan gambar langsung atau terjadi pembatasan keamanan (CORS).", false);
+                }
+            }
+        });
+
+        // Initialize First Drawing
+        window.onload = function() {
+            drawDummyImage();
+        };
+    </script>
+</body>
+</html>
