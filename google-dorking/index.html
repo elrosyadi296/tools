@@ -1,1087 +1,897 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="transition-colors duration-300">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>296Tools - Google Search Operator Tool</title>
-  <!-- --- FAVICON (SVG Crown Emoji) --- -->
-    <link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
+  
+  <!-- Font Family Premium -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- Tailwind CSS Setup -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              light: '#6c63ff',
+              dark: '#a78bfa',
+              accent: '#38bdf8',
+              emerald: '#34d399'
+            }
+          },
+          fontFamily: {
+            clash: ['Clash Display', 'sans-serif'],
+            bricolage: ['Bricolage Grotesque', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- FAVICON -->
+  <link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
     
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+    /* Variabel CSS untuk Mode Terang (Default) */
+    :root {
+      --bg: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-card: #f1f5f9;
+      --border: rgba(15, 23, 42, 0.08);
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --shadow-premium: 0 10px 30px -10px rgba(108, 99, 255, 0.1);
+    }
 
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
+    /* Variabel CSS untuk Mode Gelap */
+    .dark {
+      --bg: #07070a;
+      --bg-surface: #11111b;
+      --bg-card: #1e1e2f;
+      --border: rgba(255, 255, 255, 0.07);
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --shadow-premium: 0 10px 40px rgba(0,0,0,0.5), 0 0 40px rgba(108,99,255,0.15);
     }
 
     body {
-      font-family: 'Space Grotesk', sans-serif;
-      background: #07070a;
-      color: #e2e8f0;
+      font-family: 'Bricolage Grotesque', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-primary);
       min-height: 100vh;
-      padding: 0;
-      line-height: 1.5;
+      transition: background-color 0.3s, color 0.3s;
     }
 
-    .app {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 2rem 1rem 4rem;
-    }
-
-    /* Header */
-    .header {
-      text-align: center;
-      margin-bottom: 2.5rem;
-      position: relative;
-    }
-
-    .logo {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 0.5rem;
-    }
-
-    .logo-icon {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, #2563eb, #7c3aed);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
-    }
-
-    .logo-text {
-      font-size: 1.8rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #60a5fa, #c084fc);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .tagline {
-      font-size: 0.95rem;
-      color: #64748b;
-      letter-spacing: 0.05em;
-    }
-
-    /* Tabs */
-    .tabs-container {
-      display: flex;
-      background: #11111b;
-      padding: 4px;
-      border-radius: 10px;
-      border: 1px solid #1e1e2f;
-      margin-bottom: 1.5rem;
-    }
-
-    .tab-btn {
-      flex: 1;
-      background: transparent;
-      border: none;
-      color: #94a3b8;
-      padding: 10px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      border-radius: 8px;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .tab-btn.active {
-      background: #1e1b4b;
-      color: #a78bfa;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Section Styles */
-    .section-title {
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: #64748b;
-      margin-bottom: 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* Grid Operator */
-    .operators-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-      gap: 10px;
-      margin-bottom: 2rem;
-    }
-
-    .op-card {
-      background: #11111b;
-      border: 1px solid #1e1e2f;
-      border-radius: 10px;
-      padding: 12px 14px;
-      cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      text-align: left;
-    }
-
-    .op-card:hover {
-      border-color: #3b82f6;
-      background: #151926;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
-    }
-
-    .op-name {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #60a5fa;
-    }
-
-    .op-desc {
-      font-size: 0.75rem;
-      color: #64748b;
-      line-height: 1.4;
-    }
-
-    /* Builder Card */
-    .builder-section {
-      background: #11111b;
-      border: 1px solid #1e1e2f;
-      border-radius: 16px;
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    }
-
-    .fields-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-      margin-bottom: 1.25rem;
-    }
-
-    @media (max-width: 640px) {
-      .fields-grid {
-        grid-template-columns: 1fr;
-      }
-      .operators-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    .field-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .field-group.full {
-      grid-column: 1 / -1;
-    }
-
-    label {
-      font-size: 0.8rem;
-      color: #94a3b8;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    label .badge {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.68rem;
-      background: #1e1e2f;
-      color: #60a5fa;
-      padding: 2px 6px;
-      border-radius: 4px;
-      border: 1px solid #2a2a3f;
-    }
-
-    input[type="text"], input[type="date"], select {
-      background: #07070a;
-      border: 1px solid #1e1e2f;
-      border-radius: 8px;
-      padding: 10px 14px;
-      color: #e2e8f0;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.88rem;
-      width: 100%;
-      outline: none;
-      transition: all 0.15s;
-    }
-
-    input[type="text"]:focus, input[type="date"]:focus, select:focus {
-      border-color: #3b82f6;
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
-    }
-
-    select option {
-      background: #11111b;
-    }
-
-    /* Date Range Picker Container */
-    .date-range-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    /* Checkbox & Options */
-    .checkbox-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .check-tag {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: #1a1a2e;
-      border: 1px solid #2a2a44;
-      border-radius: 8px;
-      padding: 6px 12px;
-      cursor: pointer;
-      font-size: 0.78rem;
-      color: #94a3b8;
-      transition: all 0.15s;
-      user-select: none;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .check-tag input {
-      accent-color: #3b82f6;
-      width: 14px;
-      height: 14px;
-    }
-
-    .check-tag:hover {
-      border-color: #3b82f6;
-      color: #60a5fa;
-      background: #161b33;
-    }
-
-    .check-tag.active {
-      border-color: #3b82f6;
-      color: #60a5fa;
-      background: #0f172a;
-    }
-
-    /* Result Box styling */
-    .result-box-container {
-      margin-top: 1.5rem;
-    }
-
-    .result-box {
-      background: #07070a;
-      border: 1px solid #1e1e2f;
-      border-radius: 12px;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      min-height: 60px;
-      position: relative;
-    }
-
-    .result-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px dashed #1e1e2f;
-      padding-bottom: 8px;
-      font-size: 0.75rem;
-      color: #64748b;
-    }
-
-    .result-query {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.9rem;
-      color: #a3e635;
-      word-break: break-all;
-      line-height: 1.6;
-      white-space: pre-wrap;
-    }
-
-    .result-placeholder {
-      font-size: 0.85rem;
-      color: #475569;
-      font-style: italic;
-    }
-
-    /* Custom Notification Alert Modal replacement */
-    .custom-alert {
+    /* Noise Overlay */
+    body::before {
+      content: '';
       position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #1e1b4b;
-      border: 1px solid #4338ca;
-      color: #c084fc;
-      padding: 12px 20px;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-      transform: translateY(-20px);
-      opacity: 0;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      z-index: 1000;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
       pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
     }
 
-    .custom-alert.show {
-      transform: translateY(0);
-      opacity: 1;
+    /* Animasi Transisi */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
-
-    /* Buttons */
-    .btn-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 1.25rem;
-    }
-
-    .btn {
-      padding: 12px 20px;
-      border-radius: 10px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #2563eb, #7c3aed);
-      color: white;
-      flex: 2;
-      min-width: 180px;
-      box-shadow: 0 4px 15px rgba(124, 58, 237, 0.25);
-    }
-
-    .btn-primary:hover {
-      opacity: 0.95;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35);
-    }
-
-    .btn-primary:active { transform: scale(0.98); }
-
-    .btn-copy {
-      background: #1e1e2f;
-      color: #cbd5e1;
-      border: 1px solid #2a2a3f;
-      flex: 1;
-      min-width: 100px;
-    }
-
-    .btn-copy:hover {
-      background: #27273f;
-      color: #f8fafc;
-    }
-
-    .btn-clear {
-      background: transparent;
-      color: #64748b;
-      border: 1px solid #1e1e2f;
-      padding: 12px 16px;
-    }
-
-    .btn-clear:hover {
-      color: #f87171;
-      border-color: #ef4444;
-      background: rgba(239, 68, 68, 0.05);
-    }
-
-    /* Preset & Examples Section */
-    .divider {
-      height: 1px;
-      background: #1e1e2f;
-      margin: 2rem 0;
-    }
-
-    .examples-section {
-      margin-top: 1.5rem;
-    }
-
-    .example-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    @media (min-width: 768px) {
-      .example-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    .example-item {
-      background: #11111b;
-      border: 1px solid #1e1e2f;
-      border-left: 4px solid #3b82f6;
-      border-radius: 0 12px 12px 0;
-      padding: 12px 16px;
-      cursor: pointer;
-      transition: all 0.2s;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      text-align: left;
-    }
-
-    .example-item:hover {
-      background: #161624;
-      border-left-color: #a78bfa;
-      transform: translateX(3px);
-    }
-
-    .example-badge {
-      display: inline-block;
-      align-self: flex-start;
-      font-size: 0.65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      padding: 2px 8px;
-      border-radius: 4px;
-      margin-bottom: 2px;
-    }
-
-    .badge-osint { background: #1e293b; color: #94a3b8; }
-    .badge-vuln { background: #451a03; color: #f59e0b; }
-    .badge-intel { background: #064e3b; color: #34d399; }
-    .badge-files { background: #1e1b4b; color: #c084fc; }
-
-    .example-title {
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: #f1f5f9;
-    }
-
-    .example-query {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.78rem;
-      color: #60a5fa;
-      word-break: break-all;
-      background: #07070a;
-      padding: 6px 10px;
-      border-radius: 6px;
-      border: 1px solid #1a1a2e;
-    }
-
-    /* Toast Notification */
-    .copied-msg {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(10px);
-      background: #10b981;
-      color: #ffffff;
-      padding: 10px 24px;
-      border-radius: 8px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      opacity: 0;
-      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
-      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      pointer-events: none;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .copied-msg.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
+    .animate-fade-up {
+      animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
   </style>
 </head>
-<body>
+<body class="flex flex-col">
 
-<div class="app">
-
-  <!-- Header -->
-  <div class="header">
-    <div class="logo">
-      <div class="logo-icon"><i class="fa-solid fa-brain"></i></div>
-      <span class="logo-text">DorkBuilder</span>
-    </div>
-    <div class="tagline">Advanced Google Dork & OSINT Intelligence Generator</div>
-  </div>
-
-  <!-- Tab Selector -->
-  <div class="tabs-container">
-    <button class="tab-btn active" onclick="switchTab('all')" id="tab-all">
-      🌐 Semua Operator
-    </button>
-    <button class="tab-btn" onclick="switchTab('sec')" id="tab-sec">
-      🛡️ Keamanan & Penetrasi (Dorks)
-    </button>
-  </div>
-
-  <!-- Tab 1: Operator Umum -->
-  <div id="panel-all">
-    <div class="section-title">⚡ Operator Dasar & Pencarian Cepat</div>
-    <div class="operators-grid">
-      <div class="op-card" onclick="addOp('site:')">
-        <span class="op-name">site:</span>
-        <span class="op-desc">Membatasi hasil pada situs/domain tertentu</span>
-      </div>
-      <div class="op-card" onclick="addOp('intitle:')">
-        <span class="op-name">intitle:</span>
-        <span class="op-desc">Mencari istilah tertentu di dalam judul halaman</span>
-      </div>
-      <div class="op-card" onclick="addOp('inurl:')">
-        <span class="op-name">inurl:</span>
-        <span class="op-desc">Mencari istilah yang terkandung di dalam URL</span>
-      </div>
-      <div class="op-card" onclick="addOp('filetype:')">
-        <span class="op-name">filetype:</span>
-        <span class="op-desc">Menyaring ekstensi dokumen (PDF, XLS, dll)</span>
-      </div>
-      <div class="op-card" onclick="addOp('intext:')">
-        <span class="op-name">intext:</span>
-        <span class="op-desc">Mencari teks hanya di bagian body halaman</span>
-      </div>
-      <div class="op-card" onclick="addOp('define:')">
-        <span class="op-name">define:</span>
-        <span class="op-desc">Mencari kamus definisi instan dari istilah</span>
-      </div>
-      <div class="op-card" onclick="addOp('related:')">
-        <span class="op-name">related:</span>
-        <span class="op-desc">Mencari web yang memiliki konten sejenis</span>
-      </div>
-      <div class="op-card" onclick="addOp('cache:')">
-        <span class="op-name">cache:</span>
-        <span class="op-desc">Melihat snapshot halaman terakhir dari Google</span>
+  <!-- Header / Topbar -->
+  <header class="sticky top-0 z-40 w-full bg-[var(--bg)]/80 backdrop-blur-md border-b border-[var(--border)] transition-all">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="homepage.html" class="flex items-center gap-3">
+        <div class="w-9 h-9 bg-gradient-to-tr from-brand-light to-brand-accent rounded-lg flex items-center justify-center shadow-lg">
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" class="w-6 h-6 object-contain" alt="Logo 296">
+        </div>
+        <div class="flex flex-col">
+          <span class="font-clash text-base font-bold leading-none tracking-tight">296<span class="text-brand-dark">Tools</span></span>
+          <span class="text-[10px] text-[var(--text-muted)] font-medium mt-0.5">Google Dorking Tools</span>
+        </div>
+      </a>
+      
+      <div class="flex items-center gap-3">
+        <!-- Tombol Pengubah Mode Gelap/Terang -->
+        <button id="themeToggle" class="p-2 rounded-lg bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] transition-all" title="Ubah Tema">
+          <i class="fa-solid fa-moon dark:hidden text-base"></i>
+          <i class="fa-solid fa-sun hidden dark:block text-base text-yellow-400"></i>
+        </button>
       </div>
     </div>
+  </header>
+
+  <!-- Konten Utama -->
+  <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-8 animate-fade-up relative z-10 space-y-8 pb-24 md:pb-8">
+    
+    <!-- Title & Introduction -->
+    <div class="text-center md:text-left relative overflow-hidden">
+      <div class="inline-flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-brand-dark bg-brand-light/10 border border-brand-light/20 rounded-full px-4 py-1.5 mb-4">
+        <i class="fa-solid fa-brain"></i> DorkBuilder
+      </div>
+      <h1 class="font-clash text-3xl font-extrabold tracking-tight text-[var(--text-primary)] sm:text-4xl">Advanced Google Dork & OSINT</h1>
+      <p class="mt-2 text-sm text-[var(--text-secondary)] max-w-2xl font-light leading-relaxed">Susun query pencarian Google yang canggih untuk kepentingan investigasi OSINT, pencarian data spesifik, dan penetrasi keamanan sistem secara legal.</p>
+    </div>
+
+    <!-- Tab Selector (Semua Operator vs Cyber Security) -->
+    <div class="flex p-1 bg-[var(--bg-card)] rounded-xl border border-[var(--border)] max-w-md">
+      <button class="flex-1 py-2.5 px-4 rounded-lg text-xs font-bold transition-all duration-200 text-brand-light bg-[var(--bg-surface)] shadow-sm flex items-center justify-center gap-2 cursor-pointer" onclick="switchTab('all')" id="tab-all">
+        🌐 Semua Operator
+      </button>
+      <button class="flex-1 py-2.5 px-4 rounded-lg text-xs font-bold transition-all duration-200 text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center justify-center gap-2 cursor-pointer" onclick="switchTab('sec')" id="tab-sec">
+        🛡️ Keamanan & Penetrasi (Dorks)
+      </button>
+    </div>
+
+    <!-- Panel 1: Operator Umum -->
+    <section id="panel-all" class="space-y-3">
+      <h3 class="font-clash text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">⚡ Operator Dasar & Pencarian Cepat</h3>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <button onclick="addOp('site:')" class="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-3.5 text-left hover:border-brand-light transition-all duration-200 group cursor-pointer">
+          <span class="block font-mono text-xs font-bold text-brand-light group-hover:text-brand-dark">site:</span>
+          <span class="block text-[10px] text-[var(--text-secondary)] mt-1 font-light leading-snug">Membatasi hasil pada situs/domain tertentu</span>
+        </button>
+        <button onclick="addOp('intitle:')" class="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-3.5 text-left hover:border-brand-light transition-all duration-200 group cursor-pointer">
+          <span class="block font-mono text-xs font-bold text-brand-light group-hover:text-brand-dark">intitle:</span>
+          <span class="block text-[10px] text-[var(--text-secondary)] mt-1 font-light leading-snug">Mencari istilah tertentu di dalam judul halaman</span>
+        </button>
+        <button onclick="addOp('inurl:')" class="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-3.5 text-left hover:border-brand-light transition-all duration-200 group cursor-pointer">
+          <span class="block font-mono text-xs font-bold text-brand-light group-hover:text-brand-dark">inurl:</span>
+          <span class="block text-[10px] text-[var(--text-secondary)] mt-1 font-light leading-snug">Mencari istilah yang terkandung di dalam URL</span>
+        </button>
+        <button onclick="addOp('filetype:')" class="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-3.5 text-left hover:border-brand-light transition-all duration-200 group cursor-pointer">
+          <span class="block font-mono text-xs font-bold text-brand-light group-hover:text-brand-dark">filetype:</span>
+          <span class="block text-[10px] text-[var(--text-secondary)] mt-1 font-light leading-snug">Menyaring ekstensi dokumen (PDF, XLS, dll)</span>
+        </button>
+        <button onclick="addOp('intext:')" class="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-3.5 text-left hover:border-brand-light transition-all duration-200 group cursor-pointer">
+          <span class="block font-mono text-xs font-bold text-brand-light group-hover:text-brand-dark">intext:</span>
+          <span class="block text-[10px] text-[var(--text-secondary)] mt-1 font-light leading-snug">Mencari teks hanya di bagian body halaman</span>
+        </button>
+        <button onclick="addOp('define:')" class="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-3.5 text-left hover:border-brand-light transition-all duration-200 group cursor-pointer">
+          <span class="block font-mono text-xs font-bold text-brand-light group-hover:text-brand-dark">define:</span>
+          <span class="block text-[10px] text-[var(--text-secondary)] mt-1 font-light leading-snug">Mencari kamus definisi instan dari istilah</span>
+        </button>
+        <button onclick="addOp('related:')" class="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-3.5 text-left hover:border-brand-light transition-all duration-200 group cursor-pointer">
+          <span class="block font-mono text-xs font-bold text-brand-light group-hover:text-brand-dark">related:</span>
+          <span class="block text-[10px] text-[var(--text-secondary)] mt-1 font-light leading-snug">Mencari web yang memiliki konten sejenis</span>
+        </button>
+        <button onclick="addOp('cache:')" class="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-3.5 text-left hover:border-brand-light transition-all duration-200 group cursor-pointer">
+          <span class="block font-mono text-xs font-bold text-brand-light group-hover:text-brand-dark">cache:</span>
+          <span class="block text-[10px] text-[var(--text-secondary)] mt-1 font-light leading-snug">Melihat snapshot halaman terakhir dari Google</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Panel 2: Operator Cyber Security / Pentesting (Hidden on start) -->
+    <section id="panel-sec" class="hidden space-y-3">
+      <h3 class="font-clash text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider text-brand-emerald">💀 Operator Khusus OSINT & Pentesting</h3>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <button onclick="addOp('intitle:&quot;index of&quot;')" class="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-3.5 text-left hover:border-brand-emerald transition-all duration-200 group cursor-pointer">
+          <span class="block font-mono text-xs font-bold text-brand-emerald">intitle:"index of"</span>
+          <span class="block text-[10px] text-[var(--text-secondary)] mt-1 font-light leading-snug">Mencari direktori folder yang terbuka publik</span>
+        </button>
+        <button onclick="addOp('inurl:admin')" class="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-3.5 text-left hover:border-brand-emerald transition-all duration-200 group cursor-pointer">
+          <span class="block font-mono text-xs font-bold text-brand-emerald">inurl:admin</span>
+          <span class="block text-[10px] text-[var(--text-secondary)] mt-1 font-light leading-snug">Menargetkan pintu masuk login atau panel admin</span>
+        </button>
+        <button onclick="addOp('&quot;sql syntax error&quot;')" class="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-3.5 text-left hover:border-brand-emerald transition-all duration-200 group cursor-pointer">
+          <span class="block font-mono text-xs font-bold text-brand-emerald">"sql syntax error"</span>
+          <span class="block text-[10px] text-[var(--text-secondary)] mt-1 font-light leading-snug">Mencari jejak galat database di halaman web</span>
+        </button>
+        <button onclick="addOp('inurl:wp-content')" class="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-3.5 text-left hover:border-brand-emerald transition-all duration-200 group cursor-pointer">
+          <span class="block font-mono text-xs font-bold text-brand-emerald">inurl:wp-content</span>
+          <span class="block text-[10px] text-[var(--text-secondary)] mt-1 font-light leading-snug">Menemukan berkas terunggah pada WordPress</span>
+        </button>
+        <button onclick="addOp('ext:log OR ext:txt')" class="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-3.5 text-left hover:border-brand-emerald transition-all duration-200 group cursor-pointer">
+          <span class="block font-mono text-xs font-bold text-brand-emerald">ext:log OR ext:txt</span>
+          <span class="block text-[10px] text-[var(--text-secondary)] mt-1 font-light leading-snug">Memburu berkas riwayat sistem atau log</span>
+        </button>
+        <button onclick="addOp('inurl:config OR ext:env')" class="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-3.5 text-left hover:border-brand-emerald transition-all duration-200 group cursor-pointer">
+          <span class="block font-mono text-xs font-bold text-brand-emerald">ext:env OR config</span>
+          <span class="block text-[10px] text-[var(--text-secondary)] mt-1 font-light leading-snug">Menargetkan berkas kunci rahasia lingkungan</span>
+        </button>
+        <button onclick="addOp('&quot;choose file to upload&quot;')" class="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-3.5 text-left hover:border-brand-emerald transition-all duration-200 group cursor-pointer">
+          <span class="block font-mono text-xs font-bold text-brand-emerald">"upload file"</span>
+          <span class="block text-[10px] text-[var(--text-secondary)] mt-1 font-light leading-snug">Mencari form input unggah file yang terekspos</span>
+        </button>
+        <button onclick="addOp('filetype:sql OR ext:backup')" class="bg-[var(--bg-surface)] border border-[var(--border)] rounded-xl p-3.5 text-left hover:border-brand-emerald transition-all duration-200 group cursor-pointer">
+          <span class="block font-mono text-xs font-bold text-brand-emerald">filetype:sql / backup</span>
+          <span class="block text-[10px] text-[var(--text-secondary)] mt-1 font-light leading-snug">Mencari cadangan basis data yang tertinggal</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Main Builder Form -->
+    <section class="bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-6 shadow-sm space-y-6">
+      <div class="border-b border-[var(--border)] pb-3 flex items-center justify-between">
+        <h2 class="font-clash text-base font-bold text-brand-light flex items-center gap-2">
+          <i class="fa-solid fa-square-poll-horizontal"></i> Form Penyusun Query (Query Builder)
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Domain / Site -->
+        <div class="space-y-1">
+          <label class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Domain / Target <span class="text-xs bg-[var(--bg-card)] text-brand-light border border-[var(--border)] px-1.5 py-0.5 rounded font-mono ml-1">site:</span></label>
+          <input type="text" id="f-site" placeholder="contoh: .go.id atau facebook.com" oninput="buildQuery()" class="w-full px-4 py-2.5 bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl focus:border-brand-light focus:outline-none text-sm">
+        </div>
+
+        <!-- Judul Halaman -->
+        <div class="space-y-1">
+          <label class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Teks di Judul <span class="text-xs bg-[var(--bg-card)] text-brand-light border border-[var(--border)] px-1.5 py-0.5 rounded font-mono ml-1">intitle:</span></label>
+          <input type="text" id="f-intitle" placeholder="contoh: index of / atau rahasia" oninput="buildQuery()" class="w-full px-4 py-2.5 bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl focus:border-brand-light focus:outline-none text-sm">
+        </div>
+
+        <!-- Teks di URL -->
+        <div class="space-y-1">
+          <label class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Teks di URL <span class="text-xs bg-[var(--bg-card)] text-brand-light border border-[var(--border)] px-1.5 py-0.5 rounded font-mono ml-1">inurl:</span></label>
+          <input type="text" id="f-inurl" placeholder="contoh: /phpmyadmin/ atau .env" oninput="buildQuery()" class="w-full px-4 py-2.5 bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl focus:border-brand-light focus:outline-none text-sm">
+        </div>
+
+        <!-- Format Berkas -->
+        <div class="space-y-1">
+          <label class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Tipe Dokumen <span class="text-xs bg-[var(--bg-card)] text-brand-light border border-[var(--border)] px-1.5 py-0.5 rounded font-mono ml-1">filetype: / ext:</span></label>
+          <select id="f-filetype" onchange="buildQuery()" class="w-full px-4 py-2.5 bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl focus:border-brand-light focus:outline-none text-sm bg-transparent">
+            <option value="" class="bg-[var(--bg-surface)]">— Semua Format —</option>
+            <option value="pdf" class="bg-[var(--bg-surface)]">PDF (.pdf)</option>
+            <option value="xls" class="bg-[var(--bg-surface)]">Excel (.xls, .xlsx)</option>
+            <option value="doc" class="bg-[var(--bg-surface)]">Word (.doc, .docx)</option>
+            <option value="ppt" class="bg-[var(--bg-surface)]">PowerPoint (.ppt, .pptx)</option>
+            <option value="sql" class="bg-[var(--bg-surface)]">SQL Dump (.sql)</option>
+            <option value="log" class="bg-[var(--bg-surface)]">Log File (.log)</option>
+            <option value="env" class="bg-[var(--bg-surface)]">Environment (.env)</option>
+            <option value="txt" class="bg-[var(--bg-surface)]">Text File (.txt)</option>
+            <option value="xml" class="bg-[var(--bg-surface)]">XML (.xml)</option>
+            <option value="json" class="bg-[var(--bg-surface)]">JSON (.json)</option>
+            <option value="zip" class="bg-[var(--bg-surface)]">Archive (.zip, .rar, .tar.gz)</option>
+          </select>
+        </div>
+
+        <!-- Main Keyword -->
+        <div class="space-y-1 md:col-span-2">
+          <label class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">🔑 Kata Kunci Utama / Frasa Eksak</label>
+          <input type="text" id="f-keywords" placeholder='Masukkan kata kunci utama Anda, gunakan kutip "untuk pencarian eksak"' oninput="buildQuery()" class="w-full px-4 py-2.5 bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl focus:border-brand-light focus:outline-none text-sm">
+        </div>
+
+        <!-- Must & Not -->
+        <div class="space-y-1">
+          <label class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">➕ Kata Wajib Ada (OR / AND)</label>
+          <input type="text" id="f-must" placeholder="contoh: login, dashboard (pisahkan koma)" oninput="buildQuery()" class="w-full px-4 py-2.5 bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl focus:border-brand-light focus:outline-none text-sm">
+        </div>
+        <div class="space-y-1">
+          <label class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">➖ Pengecualian Kata / Situs (-)</label>
+          <input type="text" id="f-not" placeholder="contoh: wikipedia.org, -wp-admin (pisahkan koma)" oninput="buildQuery()" class="w-full px-4 py-2.5 bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl focus:border-brand-light focus:outline-none text-sm">
+        </div>
+
+        <!-- Teks di Body -->
+        <div class="space-y-1">
+          <label class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Teks di Isi Halaman <span class="text-xs bg-[var(--bg-card)] text-brand-light border border-[var(--border)] px-1.5 py-0.5 rounded font-mono ml-1">intext:</span></label>
+          <input type="text" id="f-intext" placeholder="contoh: password atau DB_PASSWORD" oninput="buildQuery()" class="w-full px-4 py-2.5 bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl focus:border-brand-light focus:outline-none text-sm">
+        </div>
+
+        <!-- Operator Tanggal -->
+        <div class="space-y-1">
+          <label class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">📅 Rentang Waktu (before / after)</label>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="date" id="f-after" onchange="buildQuery()" title="Sesudah tanggal" class="w-full px-3 py-2 bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl focus:border-brand-light focus:outline-none text-xs">
+            <input type="date" id="f-before" onchange="buildQuery()" title="Sebelum tanggal" class="w-full px-3 py-2 bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl focus:border-brand-light focus:outline-none text-xs">
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter Opsional -->
+      <div class="space-y-2">
+        <span class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">🏷️ Opsi Logika Query</span>
+        <div class="flex flex-wrap gap-2">
+          <label class="flex items-center gap-2 p-2 px-4 bg-[var(--bg-card)] border border-[var(--border)] rounded-xl cursor-pointer text-xs font-semibold text-[var(--text-secondary)] transition-all select-none font-mono" id="lbl-exact">
+            <input type="checkbox" id="ck-exact" onchange="toggleCheckClass('ck-exact', 'lbl-exact')" class="w-4 h-4 text-brand-light border-[var(--border)] rounded focus:ring-brand-light"> Bungkus Kata Kunci ("")
+          </label>
+          <label class="flex items-center gap-2 p-2 px-4 bg-[var(--bg-card)] border border-[var(--border)] rounded-xl cursor-pointer text-xs font-semibold text-[var(--text-secondary)] transition-all select-none font-mono" id="lbl-or">
+            <input type="checkbox" id="ck-or" onchange="toggleCheckClass('ck-or', 'lbl-or')" class="w-4 h-4 text-brand-light border-[var(--border)] rounded focus:ring-brand-light"> Gunakan OR antar kata
+          </label>
+          <label class="flex items-center gap-2 p-2 px-4 bg-[var(--bg-card)] border border-[var(--border)] rounded-xl cursor-pointer text-xs font-semibold text-[var(--text-secondary)] transition-all select-none font-mono" id="lbl-wild">
+            <input type="checkbox" id="ck-wild" onchange="toggleCheckClass('ck-wild', 'lbl-wild')" class="w-4 h-4 text-brand-light border-[var(--border)] rounded focus:ring-brand-light"> Akhiri dengan Wildcard (*)
+          </label>
+        </div>
+      </div>
+
+      <!-- Output Query -->
+      <div class="space-y-3 pt-2">
+        <span class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">🔮 Hasil Query Anda</span>
+        <div id="result-box" class="bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-4 flex flex-col gap-2 min-h-24">
+          <div class="flex justify-between items-center border-b border-[var(--border)] pb-2 text-[10px] font-bold text-[var(--text-muted)] font-mono">
+            <span>GOOGLE DORK QUERY</span>
+            <span>STATUS: LIVE</span>
+          </div>
+          <div id="query-display" class="font-mono text-xs md:text-sm text-brand-emerald break-all whitespace-pre-wrap leading-relaxed">Mulai isi formulir atau pilih preset di bawah untuk merancang dork...</div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex flex-col sm:flex-row gap-3 pt-2">
+        <button class="flex-grow py-3 px-6 bg-brand-light hover:bg-opacity-95 text-white font-bold rounded-xl shadow-lg shadow-brand-light/20 transition-all text-sm cursor-pointer flex items-center justify-center gap-2" onclick="searchGoogle()">
+          <i class="fa-solid fa-magnifying-glass"></i> Luncurkan di Google ↗
+        </button>
+        <button class="py-3 px-6 bg-[var(--bg-card)] border border-[var(--border)] hover:bg-[var(--border)] text-[var(--text-primary)] font-bold rounded-xl transition-all text-sm cursor-pointer flex items-center justify-center gap-2" onclick="copyQuery()">
+          <i class="fa-solid fa-copy"></i> Salin Query
+        </button>
+        <button class="py-3 px-6 bg-transparent border border-rose-500/20 text-rose-500 hover:bg-rose-500/5 font-bold rounded-xl transition-all text-sm cursor-pointer flex items-center justify-center gap-2" onclick="clearAll()">
+          <i class="fa-solid fa-trash-can"></i> Bersihkan Semua
+        </button>
+      </div>
+    </section>
+
+    <!-- Pustaka Kasus OSINT & Cyber Security -->
+    <section class="space-y-4">
+      <div class="flex items-center gap-3">
+        <span class="w-1 h-5 rounded-full bg-brand-light inline-block"></span>
+        <h2 class="font-clash text-xs font-semibold tracking-wider uppercase text-[var(--text-secondary)]">💡 Pustaka Kasus OSINT Terpopuler</h2>
+      </div>
+      <p class="text-xs text-[var(--text-muted)] font-light mt-[-6px]">Klik salah satu taktik di bawah untuk memuat template intelijen pencarian secara instan.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- OSINT Kampus -->
+        <button onclick="loadExample('site:ac.id filetype:pdf \&quot;skripsi\&quot; OR \&quot;jurnal\&quot;')" class="bg-[var(--bg-surface)] border-l-4 border-l-brand-light border border-[var(--border)] rounded-r-xl p-4 text-left hover:bg-[var(--bg-card)] transition-all cursor-pointer space-y-2">
+          <span class="inline-block text-[9px] font-bold text-[var(--text-secondary)] bg-[var(--bg-card)] px-2 py-0.5 rounded uppercase tracking-wider border border-[var(--border)]">Kampus & Riset</span>
+          <h4 class="text-sm font-bold text-[var(--text-primary)] leading-snug">Mencari PDF karya ilmiah / skripsi di kampus Indonesia</h4>
+          <code class="block font-mono text-[10px] text-brand-dark bg-[var(--bg-card)]/50 p-2 rounded truncate max-w-full">site:ac.id filetype:pdf "skripsi" OR "jurnal"</code>
+        </button>
+
+        <!-- File Terbuka -->
+        <button onclick="loadExample('site:gov.id intitle:\&quot;index of\&quot; filetype:xlsx OR filetype:xls')" class="bg-[var(--bg-surface)] border-l-4 border-l-brand-accent border border-[var(--border)] rounded-r-xl p-4 text-left hover:bg-[var(--bg-card)] transition-all cursor-pointer space-y-2">
+          <span class="inline-block text-[9px] font-bold text-[var(--text-secondary)] bg-[var(--bg-card)] px-2 py-0.5 rounded uppercase tracking-wider border border-[var(--border)]">Dokumen Pemerintah</span>
+          <h4 class="text-sm font-bold text-[var(--text-primary)] leading-snug">Menemukan direktori index dari data Excel di institusi pemerintah</h4>
+          <code class="block font-mono text-[10px] text-brand-dark bg-[var(--bg-card)]/50 p-2 rounded truncate max-w-full">site:gov.id intitle:"index of" filetype:xlsx OR filetype:xls</code>
+        </button>
+
+        <!-- Kunci Lingkungan -->
+        <button onclick="loadExample('filetype:env DB_PASSWORD OR DB_HOST -github.com -gitlab.com')" class="bg-[var(--bg-surface)] border-l-4 border-l-brand-emerald border border-[var(--border)] rounded-r-xl p-4 text-left hover:bg-[var(--bg-card)] transition-all cursor-pointer space-y-2">
+          <span class="inline-block text-[9px] font-bold text-rose-500 bg-rose-500/10 px-2 py-0.5 rounded uppercase tracking-wider border border-rose-500/20">Keamanan / Pentest</span>
+          <h4 class="text-sm font-bold text-[var(--text-primary)] leading-snug">Kebocoran Kunci Rahasia Sistem Berkas Lingkungan (.env)</h4>
+          <code class="block font-mono text-[10px] text-brand-dark bg-[var(--bg-card)]/50 p-2 rounded truncate max-w-full">filetype:env DB_PASSWORD OR DB_HOST -github.com -gitlab.com</code>
+        </button>
+
+        <!-- Backup Terbuka -->
+        <button onclick="loadExample('ext:sql OR ext:backup OR ext:dump \&quot;backup\&quot; -github.com')" class="bg-[var(--bg-surface)] border-l-4 border-l-brand-emerald border border-[var(--border)] rounded-r-xl p-4 text-left hover:bg-[var(--bg-card)] transition-all cursor-pointer space-y-2">
+          <span class="inline-block text-[9px] font-bold text-rose-500 bg-rose-500/10 px-2 py-0.5 rounded uppercase tracking-wider border border-rose-500/20">Keamanan / Pentest</span>
+          <h4 class="text-sm font-bold text-[var(--text-primary)] leading-snug">Mencari cadangan berkas basis data (SQL Dump) yang terekspos</h4>
+          <code class="block font-mono text-[10px] text-brand-dark bg-[var(--bg-card)]/50 p-2 rounded truncate max-w-full">ext:sql OR ext:backup OR ext:dump "backup" -github.com</code>
+        </button>
+
+        <!-- Log Keamanan -->
+        <button onclick="loadExample('inurl:log ext:log \&quot;error\&quot; OR \&quot;exception\&quot;')" class="bg-[var(--bg-surface)] border-l-4 border-l-brand-emerald border border-[var(--border)] rounded-r-xl p-4 text-left hover:bg-[var(--bg-card)] transition-all cursor-pointer space-y-2">
+          <span class="inline-block text-[9px] font-bold text-rose-500 bg-rose-500/10 px-2 py-0.5 rounded uppercase tracking-wider border border-rose-500/20">Keamanan / Pentest</span>
+          <h4 class="text-sm font-bold text-[var(--text-primary)] leading-snug">Memburu berkas catatan galat sistem (Error Log) terbuka</h4>
+          <code class="block font-mono text-[10px] text-brand-dark bg-[var(--bg-card)]/50 p-2 rounded truncate max-w-full">inurl:log ext:log "error" OR "exception"</code>
+        </button>
+
+        <!-- LinkedIn OSINT -->
+        <button onclick="loadExample('site:linkedin.com/in/ \&quot;cyber security\&quot; \&quot;Jakarta\&quot;')" class="bg-[var(--bg-surface)] border-l-4 border-l-brand-light border border-[var(--border)] rounded-r-xl p-4 text-left hover:bg-[var(--bg-card)] transition-all cursor-pointer space-y-2">
+          <span class="inline-block text-[9px] font-bold text-[var(--text-secondary)] bg-[var(--bg-card)] px-2 py-0.5 rounded uppercase tracking-wider border border-[var(--border)]">Talent OSINT</span>
+          <h4 class="text-sm font-bold text-[var(--text-primary)] leading-snug">Menargetkan profil profesional Keamanan Siber di area Jakarta</h4>
+          <code class="block font-mono text-[10px] text-brand-dark bg-[var(--bg-card)]/50 p-2 rounded truncate max-w-full">site:linkedin.com/in/ "cyber security" "Jakarta"</code>
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Kaki Halaman / Footer -->
+  <footer class="w-full py-8 text-center text-xs text-[var(--text-muted)] border-t border-[var(--border)] mt-12 bg-[var(--bg-surface)] relative z-10 pb-24 md:pb-8">
+    <div class="max-w-4xl mx-auto px-4">
+      <p class="mb-2">&copy; 2026 DorkBuilder. Dirancang secara aman dan diproses langsung pada peramban Anda.</p>
+      <p class="text-[10px] tracking-wide uppercase font-bold text-slate-400">Powered by 296GROUP</p>
+    </div>
+  </footer>
+
+  <!-- Alert Custom & Toast -->
+  <div class="custom-alert fixed top-20 right-4 bg-slate-900 border border-brand-light/30 text-white px-5 py-3 rounded-xl text-xs font-semibold shadow-2xl transform translate-x-12 opacity-0 transition-all duration-300 pointer-events-none z-50 flex items-center gap-2" id="custom-alert">Pemberitahuan muncul di sini</div>
+  <div class="copied-msg fixed bottom-20 md:bottom-6 left-1/2 -translate-x-1/2 bg-brand-emerald text-white px-6 py-2.5 rounded-full text-xs font-semibold shadow-2xl opacity-0 transition-all duration-300 pointer-events-none z-50 flex items-center gap-2" id="copied-msg">
+    <i class="fa-solid fa-circle-check"></i> ✓ Berhasil disalin ke papan klip!
   </div>
 
-  <!-- Tab 2: Operator Cyber Security / Pentesting (Hidden on start) -->
-  <div id="panel-sec" style="display: none;">
-    <div class="section-title">💀 Operator Khusus OSINT & Pentesting</div>
-    <div class="operators-grid">
-      <div class="op-card" onclick="addOp('intitle:&quot;index of&quot;')">
-        <span class="op-name">intitle:"index of"</span>
-        <span class="op-desc">Mencari direktori folder yang terbuka publik</span>
-      </div>
-      <div class="op-card" onclick="addOp('inurl:admin')">
-        <span class="op-name">inurl:admin</span>
-        <span class="op-desc">Menargetkan pintu masuk login atau panel admin</span>
-      </div>
-      <div class="op-card" onclick="addOp('&quot;sql syntax error&quot;')">
-        <span class="op-name">"sql syntax error"</span>
-        <span class="op-desc">Mencari jejak galat database di halaman web</span>
-      </div>
-      <div class="op-card" onclick="addOp('inurl:wp-content')">
-        <span class="op-name">inurl:wp-content</span>
-        <span class="op-desc">Menemukan berkas terunggah pada WordPress</span>
-      </div>
-      <div class="op-card" onclick="addOp('ext:log OR ext:txt')">
-        <span class="op-name">ext:log OR ext:txt</span>
-        <span class="op-desc">Memburu berkas riwayat sistem atau log</span>
-      </div>
-      <div class="op-card" onclick="addOp('inurl:config OR ext:env')">
-        <span class="op-name">ext:env OR config</span>
-        <span class="op-desc">Menargetkan berkas kunci rahasia lingkungan</span>
-      </div>
-      <div class="op-card" onclick="addOp('&quot;choose file to upload&quot;')">
-        <span class="op-name">"upload file"</span>
-        <span class="op-desc">Mencari form input unggah file yang terekspos</span>
-      </div>
-      <div class="op-card" onclick="addOp('filetype:sql OR ext:backup')">
-        <span class="op-name">filetype:sql / backup</span>
-        <span class="op-desc">Mencari cadangan basis data yang tertinggal</span>
-      </div>
+  <!-- ========================================================== -->
+  <!-- BAR NAVIGASI SELULER (Mobile Sticky Bottom Navbar - 3 Tombol) -->
+  <!-- ========================================================== -->
+  <div class="fixed bottom-0 left-0 right-0 z-50 bg-[var(--bg-surface)]/90 backdrop-blur-lg border-t border-[var(--border)] shadow-xl md:hidden block">
+    <div class="flex justify-around items-center h-16">
+      <!-- Tombol Kiri: Pop-up / Daftar Macam Tools -->
+      <button onclick="openToolsModal()" class="flex flex-col items-center justify-center text-[var(--text-secondary)] hover:text-brand-light transition-all flex-1 py-1">
+        <i class="fa-solid fa-compass text-lg mb-1"></i>
+        <span class="text-[10px] font-semibold">Semua Alat</span>
+      </button>
+
+      <!-- Tombol Tengah: Beranda Utama (Homepage) -->
+      <a href="homepage.html" class="flex flex-col items-center justify-center text-brand-light transition-all flex-1 py-1">
+        <div class="w-10 h-10 bg-brand-light text-white rounded-full flex items-center justify-center shadow-lg -mt-5 border-4 border-[var(--bg-surface)]">
+          <i class="fa-solid fa-house text-sm"></i>
+        </div>
+        <span class="text-[10px] font-semibold mt-1">Beranda</span>
+      </a>
+
+      <!-- Tombol Kanan: About Us Pop-up -->
+      <button onclick="openAboutModal()" class="flex flex-col items-center justify-center text-[var(--text-secondary)] hover:text-brand-light transition-all flex-1 py-1">
+        <i class="fa-solid fa-circle-info text-lg mb-1"></i>
+        <span class="text-[10px] font-semibold">About Us</span>
+      </button>
     </div>
   </div>
 
-  <!-- Main Builder Area -->
-  <div class="builder-section">
-    <div class="section-title" style="margin-bottom:1rem; color: #a78bfa;">🛠️ Form Penyusun Query (Query Builder)</div>
+  <!-- ========================================================== -->
+  <!-- POP-UP MODAL: ABOUT US -->
+  <!-- ========================================================== -->
+  <div id="aboutModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-300">
+    <div class="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-2xl max-w-md w-full border border-[var(--border)] shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="aboutModalCard">
+      <div class="p-6 space-y-4">
+        <div class="flex justify-between items-center border-b border-[var(--border)] pb-3">
+          <h3 class="font-clash text-lg font-bold text-brand-light flex items-center gap-2">
+            <i class="fa-solid fa-address-card"></i> Tentang 296Tools
+          </h3>
+          <button onclick="closeAboutModal()" class="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg hover:bg-[var(--bg-card)]">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+        
+        <div class="space-y-3 text-sm leading-relaxed text-[var(--text-secondary)]">
+          <div class="w-16 h-16 bg-brand-light/10 rounded-2xl mx-auto flex items-center justify-center">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTrTr1ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" class="w-10 h-10 object-contain" alt="296 Studios Logo">
+          </div>
+          <p class="text-center font-bold text-sm text-[var(--text-primary)]">296GROUP - Solusi Digital Lokal</p>
+          <p>
+            <strong>296Tools</strong> adalah direktori & ekosistem micro-apps yang dikembangkan untuk membantu kegiatan digital harian Anda secara produktif. 
+          </p>
+          <p>
+            Seluruh data diproses secara <strong>100% lokal di dalam browser Anda (Client-Side)</strong>. Kami sama sekali tidak mengirim atau menyimpan berkas dokumen atau data sensitif Anda ke server luar. Keamanan privasi Anda terjamin penuh.
+          </p>
+        </div>
 
-    <div class="fields-grid">
-      <!-- Domain / Site -->
-      <div class="field-group">
-        <label><span class="badge">site:</span> Domain / Target</label>
-        <input type="text" id="f-site" placeholder="contoh: .go.id atau facebook.com" oninput="buildQuery()">
-      </div>
-
-      <!-- Judul Halaman -->
-      <div class="field-group">
-        <label><span class="badge">intitle:</span> Teks di Judul</label>
-        <input type="text" id="f-intitle" placeholder="contoh: index of / atau rahasia" oninput="buildQuery()">
-      </div>
-
-      <!-- Teks di URL -->
-      <div class="field-group">
-        <label><span class="badge">inurl:</span> Teks di URL</label>
-        <input type="text" id="f-inurl" placeholder="contoh: /phpmyadmin/ atau .env" oninput="buildQuery()">
-      </div>
-
-      <!-- Format Berkas -->
-      <div class="field-group">
-        <label><span class="badge">filetype: / ext:</span> Tipe Dokumen</label>
-        <select id="f-filetype" onchange="buildQuery()">
-          <option value="">— Semua Format —</option>
-          <option value="pdf">PDF (.pdf)</option>
-          <option value="xls">Excel (.xls, .xlsx)</option>
-          <option value="doc">Word (.doc, .docx)</option>
-          <option value="ppt">PowerPoint (.ppt, .pptx)</option>
-          <option value="sql">SQL Dump (.sql)</option>
-          <option value="log">Log File (.log)</option>
-          <option value="env">Environment (.env)</option>
-          <option value="txt">Text File (.txt)</option>
-          <option value="xml">XML (.xml)</option>
-          <option value="json">JSON (.json)</option>
-          <option value="zip">Archive (.zip, .rar, .tar.gz)</option>
-        </select>
-      </div>
-
-      <!-- Main Keyword -->
-      <div class="field-group full">
-        <label>🔑 Kata Kunci Utama / Frasa Eksak</label>
-        <input type="text" id="f-keywords" placeholder='Masukkan kata kunci utama Anda, gunakan kutip "untuk pencarian eksak"' oninput="buildQuery()">
-      </div>
-
-      <!-- Must & Not -->
-      <div class="field-group">
-        <label>➕ Kata Wajib Ada (OR / AND)</label>
-        <input type="text" id="f-must" placeholder="contoh: login, dashboard (pisahkan koma)" oninput="buildQuery()">
-      </div>
-      <div class="field-group">
-        <label>➖ Pengecualian Kata / Situs (-)</label>
-        <input type="text" id="f-not" placeholder="contoh: wikipedia.org, -wp-admin (pisahkan koma)" oninput="buildQuery()">
-      </div>
-
-      <!-- Teks di Body -->
-      <div class="field-group">
-        <label><span class="badge">intext:</span> Teks di Isi Halaman</label>
-        <input type="text" id="f-intext" placeholder="contoh: password atau DB_PASSWORD" oninput="buildQuery()">
-      </div>
-
-      <!-- Operator Tanggal -->
-      <div class="field-group">
-        <label>📅 Rentang Waktu (before / after)</label>
-        <div class="date-range-container">
-          <input type="date" id="f-after" onchange="buildQuery()" title="Sesudah tanggal">
-          <input type="date" id="f-before" onchange="buildQuery()" title="Sebelum tanggal">
+        <div class="pt-2 flex justify-end">
+          <button onclick="closeAboutModal()" class="px-5 py-2 text-xs font-semibold bg-brand-light text-white rounded-lg hover:bg-opacity-90 transition-all">
+            Mengerti, Terima Kasih
+          </button>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- Filter Opsional -->
-    <div class="section-title">🏷️ Opsi Logika Query</div>
-    <div class="checkbox-group" style="margin-bottom:1.5rem;">
-      <label class="check-tag" id="lbl-exact">
-        <input type="checkbox" id="ck-exact" onchange="toggleCheckClass('ck-exact', 'lbl-exact')"> Bungkus Kata Kunci ("")
-      </label>
-      <label class="check-tag" id="lbl-or">
-        <input type="checkbox" id="ck-or" onchange="toggleCheckClass('ck-or', 'lbl-or')"> Gunakan OR antar kata
-      </label>
-      <label class="check-tag" id="lbl-wild">
-        <input type="checkbox" id="ck-wild" onchange="toggleCheckClass('ck-wild', 'lbl-wild')"> Akhiri dengan Wildcard (*)
-      </label>
-    </div>
-
-    <!-- Output Query -->
-    <div class="result-box-container">
-      <div class="section-title">🔮 Hasil Query Anda</div>
-      <div id="result-box" class="result-box">
-        <div class="result-header">
-          <span>GOOGLE DORK QUERY</span>
-          <span style="font-family: monospace;">status: live</span>
+  <!-- ========================================================== -->
+  <!-- POP-UP MODAL: DAFTAR MACAM-MACAM TOOLS -->
+  <!-- ========================================================== -->
+  <div id="toolsMenuModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-300">
+    <div class="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-2xl max-w-2xl w-full border border-[var(--border)] shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="toolsMenuCard">
+      <div class="p-6 space-y-4">
+        <div class="flex justify-between items-center border-b border-[var(--border)] pb-3">
+          <h3 class="font-clash text-lg font-bold text-brand-light flex items-center gap-2">
+            <i class="fa-solid fa-grid-2"></i> Macam-Macam Alat (Quick Access)
+          </h3>
+          <button onclick="closeToolsModal()" class="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg hover:bg-[var(--bg-card)]">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
         </div>
-        <div id="query-display" class="result-placeholder">Mulai isi formulir atau pilih preset di bawah untuk merancang dork...</div>
-      </div>
-    </div>
 
-    <!-- Buttons -->
-    <div class="btn-row">
-      <button class="btn btn-primary" onclick="searchGoogle()">🔍 Luncurkan di Google ↗</button>
-      <button class="btn btn-copy" onclick="copyQuery()">📋 Salin Query</button>
-      <button class="btn btn-clear" onclick="clearAll()">✕ Bersihkan Semua</button>
-    </div>
-  </div>
+        <!-- Scrollable list of all tools in modal -->
+        <div class="max-h-[60vh] overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-3 pr-1" id="modalToolsList">
+          <!-- Daftar dinamis akan di-populate oleh JS -->
+        </div>
 
-  <div class="divider"></div>
-
-  <!-- Advanced Templates / Library -->
-  <div class="examples-section">
-    <div class="section-title" style="color: #60a5fa;">💡 Pustaka Kasus OSINT & Cyber Security Terpopuler</div>
-    <p style="font-size: 0.85rem; color: #64748b; margin-top: -6px; margin-bottom: 1.25rem;">
-      Klik salah satu taktik di bawah untuk memuat template intelijen pencarian secara instan.
-    </p>
-
-    <div class="example-grid">
-      <!-- OSINT Kampus -->
-      <div class="example-item" onclick="loadExample('site:ac.id filetype:pdf \"skripsi\" OR \"jurnal\"')">
-        <span class="example-badge badge-osint">Kampus & Riset</span>
-        <div class="example-title">Mencari PDF karya ilmiah / skripsi di kampus Indonesia</div>
-        <div class="example-query">site:ac.id filetype:pdf "skripsi" OR "jurnal"</div>
-      </div>
-
-      <!-- File Terbuka -->
-      <div class="example-item" onclick="loadExample('site:gov.id intitle:\"index of\" filetype:xlsx OR filetype:xls')">
-        <span class="example-badge badge-files">Dokumen Pemerintah</span>
-        <div class="example-title">Menemukan direktori index dari data Excel di institusi pemerintah</div>
-        <div class="example-query">site:gov.id intitle:"index of" filetype:xlsx OR filetype:xls</div>
-      </div>
-
-      <!-- Kunci Lingkungan -->
-      <div class="example-item" onclick="loadExample('filetype:env DB_PASSWORD OR DB_HOST -github.com -gitlab.com')">
-        <span class="example-badge badge-vuln">Keamanan / Pentest</span>
-        <div class="example-title">Kebocoran Kunci Rahasia Sistem Berkas Lingkungan (.env)</div>
-        <div class="example-query">filetype:env DB_PASSWORD OR DB_HOST -github.com -gitlab.com</div>
-      </div>
-
-      <!-- Backup Terbuka -->
-      <div class="example-item" onclick="loadExample('ext:sql OR ext:backup OR ext:dump \"backup\" -github.com')">
-        <span class="example-badge badge-vuln">Keamanan / Pentest</span>
-        <div class="example-title">Mencari cadangan berkas basis data (SQL Dump) yang terekspos</div>
-        <div class="example-query">ext:sql OR ext:backup OR ext:dump "backup" -github.com</div>
-      </div>
-
-      <!-- Log Keamanan -->
-      <div class="example-item" onclick="loadExample('inurl:log ext:log \"error\" OR \"exception\"')">
-        <span class="example-badge badge-vuln">Keamanan / Pentest</span>
-        <div class="example-title">Memburu berkas catatan galat sistem (Error Log) terbuka</div>
-        <div class="example-query">inurl:log ext:log "error" OR "exception"</div>
-      </div>
-
-      <!-- LinkedIn OSINT -->
-      <div class="example-item" onclick="loadExample('site:linkedin.com/in/ \"cyber security\" \"Jakarta\"')">
-        <span class="example-badge badge-intel">Talent OSINT</span>
-        <div class="example-title">Menargetkan profil profesional Keamanan Siber di area Jakarta</div>
-        <div class="example-query">site:linkedin.com/in/ "cyber security" "Jakarta"</div>
-      </div>
-
-      <!-- WordPress Config -->
-      <div class="example-item" onclick="loadExample('intitle:\"index of\" \"wp-config.php\"')">
-        <span class="example-badge badge-vuln">Keamanan / Pentest</span>
-        <div class="example-title">Konfigurasi penting WordPress yang tidak sengaja bocor</div>
-        <div class="example-query">intitle:"index of" "wp-config.php"</div>
-      </div>
-
-      <!-- Kamera Pengawas -->
-      <div class="example-item" onclick="loadExample('inurl:\"/view/view.shtml\" OR inurl:\"/view/index.shtml\"')">
-        <span class="example-badge badge-intel">IoT OSINT</span>
-        <div class="example-title">Mendeteksi antarmuka kamera pengawas pintar (IP Cam) publik</div>
-        <div class="example-query">inurl:"/view/view.shtml" OR inurl:"/view/index.shtml"</div>
+        <div class="pt-2 flex justify-end">
+          <button onclick="closeToolsModal()" class="px-5 py-2 text-xs font-semibold bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-lg hover:bg-[var(--border)] transition-all">
+            Tutup
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Alert Custom & Toast -->
-<div class="custom-alert" id="custom-alert">Pemberitahuan muncul di sini</div>
-<div class="copied-msg" id="copied-msg">✓ Berhasil disalin ke papan klip!</div>
+  <!-- Script Logika -->
+  <script>
+    let generatedQuery = '';
 
-<script>
-  let generatedQuery = '';
-
-  // Tab switcher
-  function switchTab(tab) {
-    const tabAll = document.getElementById('tab-all');
-    const tabSec = document.getElementById('tab-sec');
-    const panelAll = document.getElementById('panel-all');
-    const panelSec = document.getElementById('panel-sec');
-
-    if (tab === 'all') {
-      tabAll.classList.add('active');
-      tabSec.classList.remove('active');
-      panelAll.style.display = 'block';
-      panelSec.style.display = 'none';
+    // ==========================================================
+    // SISTEM TEMA: GELAP / TERANG (DARK & LIGHT MODE)
+    // ==========================================================
+    const themeToggleBtn = document.getElementById('themeToggle');
+    
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
     } else {
-      tabAll.classList.remove('active');
-      tabSec.classList.add('active');
-      panelAll.style.display = 'none';
-      panelSec.style.display = 'block';
-    }
-  }
-
-  // Menambahkan operator cepat ke kotak kata kunci utama
-  function addOp(op) {
-    const kwInput = document.getElementById('f-keywords');
-    kwInput.value = (kwInput.value + ' ' + op).trim();
-    kwInput.focus();
-    buildQuery();
-    showAlert(`Menambahkan Operator: ${op}`);
-  }
-
-  // Sinkronisasi kelas tampilan checkbox label secara dinamis
-  function toggleCheckClass(checkId, labelId) {
-    const cb = document.getElementById(checkId);
-    const label = document.getElementById(labelId);
-    if (cb.checked) {
-      label.classList.add('active');
-    } else {
-      label.classList.remove('active');
-    }
-    buildQuery();
-  }
-
-  // Fungsi Pembangun Query yang sangat komprehensif
-  function buildQuery() {
-    const site = document.getElementById('f-site').value.trim();
-    const intitle = document.getElementById('f-intitle').value.trim();
-    const inurl = document.getElementById('f-inurl').value.trim();
-    const filetype = document.getElementById('f-filetype').value;
-    const keywords = document.getElementById('f-keywords').value.trim();
-    const must = document.getElementById('f-must').value.trim();
-    const notWord = document.getElementById('f-not').value.trim();
-    const intext = document.getElementById('f-intext').value.trim();
-    const dateAfter = document.getElementById('f-after').value;
-    const dateBefore = document.getElementById('f-before').value;
-
-    const exact = document.getElementById('ck-exact').checked;
-    const useOr = document.getElementById('ck-or').checked;
-    const wild = document.getElementById('ck-wild').checked;
-
-    let parts = [];
-
-    // Filter situs/domain
-    if (site) {
-      parts.push('site:' + site);
+        document.documentElement.classList.remove('dark');
     }
 
-    // Filter ekstensi/filetype
-    if (filetype) {
-      parts.push('filetype:' + filetype);
-    }
-
-    // Filter kata di judul halaman
-    if (intitle) {
-      parts.push('intitle:' + (intitle.includes(' ') && !intitle.startsWith('"') ? '"' + intitle + '"' : intitle));
-    }
-
-    // Filter kata di URL halaman
-    if (inurl) {
-      parts.push('inurl:' + (inurl.includes(' ') && !inurl.startsWith('"') ? '"' + inurl + '"' : inurl));
-    }
-
-    // Filter teks di body konten
-    if (intext) {
-      parts.push('intext:' + (intext.includes(' ') && !intext.startsWith('"') ? '"' + intext + '"' : intext));
-    }
-
-    // Filter tanggal setelah / sesudah (Modern Operator)
-    if (dateAfter) {
-      parts.push('after:' + dateAfter);
-    }
-    if (dateBefore) {
-      parts.push('before:' + dateBefore);
-    }
-
-    // Memproses Kata Kunci Utama
-    if (keywords) {
-      let processedKw = keywords;
-      
-      // Jika diset pencarian eksak dan belum ada tanda kutip ganda
-      if (exact && !processedKw.startsWith('"')) {
-        processedKw = '"' + processedKw + '"';
-      }
-      
-      // Menambahkan Wildcard di akhir kata
-      if (wild) {
-        processedKw = processedKw + ' *';
-      }
-      
-      // Konversi spasi menjadi logika OR jika diaktifkan
-      if (useOr && !processedKw.includes(' OR ')) {
-        processedKw = processedKw.split(/\s+/).join(' OR ');
-      }
-      
-      parts.push(processedKw);
-    }
-
-    // Menangani daftar kata yang harus ada (+)
-    if (must) {
-      must.split(',').forEach(word => {
-        const item = word.trim();
-        if (item) {
-          // Menambahkan tanda tambah (+) jika belum ada
-          parts.push(item.startsWith('+') ? item : '+' + item);
+    themeToggleBtn.addEventListener('click', () => {
+        if (document.documentElement.classList.contains('dark')) {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        } else {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
         }
-      });
-    }
+    });
 
-    // Menangani daftar kata/situs yang dikecualikan (-)
-    if (notWord) {
-      notWord.split(',').forEach(word => {
-        const item = word.trim();
-        if (item) {
-          // Menambahkan tanda minus (-) jika belum ada
-          parts.push(item.startsWith('-') ? item : '-' + item);
-        }
-      });
-    }
-
-    // Menggabungkan semua bagian operator pencarian
-    const finalQuery = parts.join(' ').trim();
-    generatedQuery = finalQuery;
-
-    const displayBox = document.getElementById('query-display');
-    const resultBox = document.getElementById('result-box');
-
-    if (finalQuery) {
-      displayBox.innerHTML = escapeHtml(finalQuery);
-      displayBox.className = 'result-query';
-    } else {
-      displayBox.innerHTML = 'Mulai isi formulir atau pilih preset di bawah untuk merancang dork...';
-      displayBox.className = 'result-placeholder';
-    }
-  }
-
-  // Fungsi mengamankan HTML dari karakter ilegal
-  function escapeHtml(str) {
-    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
-
-  // Penyelidikan langsung ke Google Search
-  function searchGoogle() {
-    if (!generatedQuery) {
-      showAlert('⚠️ Silakan buat atau pilih kriteria dork terlebih dahulu!', true);
-      return;
-    }
-    const url = 'https://www.google.com/search?q=' + encodeURIComponent(generatedQuery);
-    window.open(url, '_blank');
-  }
-
-  // Sistem Fallback Copy Clipboard (Lebih Stabil di lingkungan iFrame)
-  function copyQuery() {
-    if (!generatedQuery) {
-      showAlert('⚠️ Tidak ada query dork yang bisa disalin.', true);
-      return;
-    }
-    
-    // Gunakan cara teraman untuk menyalin teks (textarea tersembunyi)
-    const textarea = document.createElement('textarea');
-    textarea.value = generatedQuery;
-    textarea.style.position = 'fixed'; // Amankan dari scroll layar
-    document.body.appendChild(textarea);
-    textarea.select();
-    
-    try {
-      const successful = document.execCommand('copy');
-      if (successful) {
-        showToastNotification();
-      } else {
-        showAlert('Gagal menyalin query secara otomatis.', true);
-      }
-    } catch (err) {
-      showAlert('Terjadi galat saat menyalin ke papan klip.', true);
-    }
-    
-    document.body.removeChild(textarea);
-  }
-
-  // Reset semua input form ke kondisi semula
-  function clearAll() {
-    const inputsToClear = [
-      'f-site', 'f-intitle', 'f-inurl', 'f-intext', 
-      'f-keywords', 'f-must', 'f-not', 'f-after', 'f-before'
+    // ==========================================================
+    // PETUNJUK PENAMBAHAN ALAT / LAMAN BARU:
+    // Jika Anda ingin mendaftarkan tools baru ke dalam pop-up modal,
+    // silakan tambahkan objek baru ke dalam array "ALL_TOOLS" di bawah ini.
+    // ==========================================================
+    const ALL_TOOLS = [
+        { name: 'Converter File', desc: 'Pengkonversi berkas PDF, Word, Teks, & Gambar', icon: 'fa-solid fa-file', url: 'converter-file.html' },
+        { name: 'Fake Post X', desc: 'Pembuat screenshot postingan media sosial X secara instan', icon: 'fa-brands fa-x-twitter', url: 'fake-post-x.html' },
+        { name: 'Favicon Maker', desc: 'Pembuat & kompresor Favicon modern terlengkap (.ico & .png)', icon: 'fa-solid fa-file-image', url: 'favicon-maker.html' },
+        { name: 'Generator QR Code', desc: 'Pembuat QR Code premium dengan warna & logo kustom', icon: 'fa-solid fa-qrcode', url: 'generator-qr-code.html' },
+        { name: 'Google Dorking Tools', desc: 'Advanced Google Dork & OSINT Intelligence Generator', icon: 'fa-brands fa-google', url: 'google-dorking.html' },
+        { name: 'Image Compressor', desc: 'Pengkompres ukuran dimensi & kapasitas kilobyte gambar', icon: 'fa-regular fa-images', url: 'image-compresor.html' },
+        { name: 'Invoice Maker', desc: 'Pembuat berkas tagihan (Invoice) praktis terkompresi PDF', icon: 'fa-solid fa-file-invoice', url: 'invoice-maker.html' },
+        { name: 'Prompt Generator', desc: 'Pembuat format prompt siap pakai untuk optimasi ChatGPT/Claude', icon: 'fa-regular fa-keyboard', url: 'prompt-generator.html' },
+        { name: 'Scraping Link FB Reels', desc: 'Ekstraktor tautan (URL) reel profil publik dari Facebook', icon: 'fa-brands fa-facebook', url: 'scraping-fb-reels.html' },
+        { name: 'Smart HPP', desc: 'Kalkulator HPP & Harga Jual Anti Boncos bagi pemilik bisnis', icon: 'fa-solid fa-calculator', url: 'smart-hpp.html' },
+        { name: 'URL Shortener', desc: 'Pangkas URL panjang menjadi ringkas dan mudah dibagikan', icon: 'fa-solid fa-link', url: 'url-shortener.html' },
+        { name: 'WA Link Generator', desc: 'Pembuat link pesan instan WhatsApp otomatis', icon: 'fa-brands fa-whatsapp', url: 'wa-link-generator.html' },
     ];
-    
-    inputsToClear.forEach(id => {
-      document.getElementById(id).value = '';
-    });
-    
-    document.getElementById('f-filetype').value = '';
-    
-    // Matikan semua opsi checkbox
-    const checkboxes = ['ck-exact', 'ck-or', 'ck-wild'];
-    checkboxes.forEach(id => {
-      document.getElementById(id).checked = false;
-    });
-    
-    // Bersihkan kelas visual aktif
-    const labelIds = ['lbl-exact', 'lbl-or', 'lbl-wild'];
-    labelIds.forEach(id => {
-      document.getElementById(id).classList.remove('active');
-    });
 
-    generatedQuery = '';
-    
-    const displayBox = document.getElementById('query-display');
-    displayBox.innerHTML = 'Mulai isi formulir atau pilih preset di bawah untuk merancang dork...';
-    displayBox.className = 'result-placeholder';
-    
-    showAlert('🧼 Semua form berhasil dibersihkan!');
-  }
+    // Tab switcher
+    function switchTab(tab) {
+      const tabAll = document.getElementById('tab-all');
+      const tabSec = document.getElementById('tab-sec');
+      const panelAll = document.getElementById('panel-all');
+      const panelSec = document.getElementById('panel-sec');
 
-  // Mengisi form berdasarkan preset/contoh dorking yang diklik
-  function loadExample(query) {
-    clearAll();
-    
-    // Masukkan ke bagian keyword utama secara langsung untuk fleksibilitas edit manual
-    document.getElementById('f-keywords').value = query;
-    generatedQuery = query;
-    
-    const displayBox = document.getElementById('query-display');
-    displayBox.innerHTML = escapeHtml(query);
-    displayBox.className = 'result-query';
-    
-    // Auto Scroll halus ke area builder jika pengguna di layar seluler
-    document.querySelector('.builder-section').scrollIntoView({ behavior: 'smooth' });
-    showAlert('💡 Contoh Preset Dork Berhasil Dimuat!');
-  }
-
-  // Tampilan Toast Sukses Menyalin
-  function showToastNotification() {
-    const toast = document.getElementById('copied-msg');
-    toast.classList.add('show');
-    setTimeout(() => {
-      toast.classList.remove('show');
-    }, 2500);
-  }
-
-  // Custom alert cantik pengganti window.alert()
-  function showAlert(msg, isWarning = false) {
-    const alertBox = document.getElementById('custom-alert');
-    alertBox.innerHTML = msg;
-    
-    if (isWarning) {
-      alertBox.style.background = '#7f1d1d';
-      alertBox.style.borderColor = '#ef4444';
-      alertBox.style.color = '#fca5a5';
-    } else {
-      alertBox.style.background = '#1e1b4b';
-      alertBox.style.borderColor = '#4338ca';
-      alertBox.style.color = '#c084fc';
+      if (tab === 'all') {
+        tabAll.className = "flex-1 py-2.5 px-4 rounded-lg text-xs font-bold transition-all duration-200 text-brand-light bg-[var(--bg-surface)] shadow-sm flex items-center justify-center gap-2 cursor-pointer";
+        tabSec.className = "flex-1 py-2.5 px-4 rounded-lg text-xs font-bold transition-all duration-200 text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center justify-center gap-2 cursor-pointer";
+        panelAll.classList.remove('hidden');
+        panelSec.classList.add('hidden');
+      } else {
+        tabSec.className = "flex-1 py-2.5 px-4 rounded-lg text-xs font-bold transition-all duration-200 text-brand-light bg-[var(--bg-surface)] shadow-sm flex items-center justify-center gap-2 cursor-pointer";
+        tabAll.className = "flex-1 py-2.5 px-4 rounded-lg text-xs font-bold transition-all duration-200 text-[var(--text-secondary)] hover:text-[var(--text-primary)] flex items-center justify-center gap-2 cursor-pointer";
+        panelAll.classList.add('hidden');
+        panelSec.classList.remove('hidden');
+      }
     }
-    
-    alertBox.classList.add('show');
-    setTimeout(() => {
-      alertBox.classList.remove('show');
-    }, 3000);
-  }
-</script>
+
+    // Menambahkan operator cepat ke kotak kata kunci utama
+    function addOp(op) {
+      const kwInput = document.getElementById('f-keywords');
+      kwInput.value = (kwInput.value + ' ' + op).trim();
+      kwInput.focus();
+      buildQuery();
+      showAlert(`Menambahkan Operator: ${op}`);
+    }
+
+    // Sinkronisasi kelas tampilan checkbox label secara dinamis
+    function toggleCheckClass(checkId, labelId) {
+      const cb = document.getElementById(checkId);
+      const label = document.getElementById(labelId);
+      if (cb.checked) {
+        label.classList.add('!border-brand-light', '!bg-brand-light/10', '!text-brand-light');
+      } else {
+        label.classList.remove('!border-brand-light', '!bg-brand-light/10', '!text-brand-light');
+      }
+      buildQuery();
+    }
+
+    // Fungsi Pembangun Query yang sangat komprehensif
+    function buildQuery() {
+      const site = document.getElementById('f-site').value.trim();
+      const intitle = document.getElementById('f-intitle').value.trim();
+      const inurl = document.getElementById('f-inurl').value.trim();
+      const filetype = document.getElementById('f-filetype').value;
+      const keywords = document.getElementById('f-keywords').value.trim();
+      const must = document.getElementById('f-must').value.trim();
+      const notWord = document.getElementById('f-not').value.trim();
+      const intext = document.getElementById('f-intext').value.trim();
+      const dateAfter = document.getElementById('f-after').value;
+      const dateBefore = document.getElementById('f-before').value;
+
+      const exact = document.getElementById('ck-exact').checked;
+      const useOr = document.getElementById('ck-or').checked;
+      const wild = document.getElementById('ck-wild').checked;
+
+      let parts = [];
+
+      // Filter situs/domain
+      if (site) {
+        parts.push('site:' + site);
+      }
+
+      // Filter ekstensi/filetype
+      if (filetype) {
+        parts.push('filetype:' + filetype);
+      }
+
+      // Filter kata di judul halaman
+      if (intitle) {
+        parts.push('intitle:' + (intitle.includes(' ') && !intitle.startsWith('"') ? '"' + intitle + '"' : intitle));
+      }
+
+      // Filter kata di URL halaman
+      if (inurl) {
+        parts.push('inurl:' + (inurl.includes(' ') && !inurl.startsWith('"') ? '"' + inurl + '"' : inurl));
+      }
+
+      // Filter teks di body konten
+      if (intext) {
+        parts.push('intext:' + (intext.includes(' ') && !intext.startsWith('"') ? '"' + intext + '"' : intext));
+      }
+
+      // Filter tanggal setelah / sesudah (Modern Operator)
+      if (dateAfter) {
+        parts.push('after:' + dateAfter);
+      }
+      if (dateBefore) {
+        parts.push('before:' + dateBefore);
+      }
+
+      // Memproses Kata Kunci Utama
+      if (keywords) {
+        let processedKw = keywords;
+        
+        // Jika diset pencarian eksak dan belum ada tanda kutip ganda
+        if (exact && !processedKw.startsWith('"')) {
+          processedKw = '"' + processedKw + '"';
+        }
+        
+        // Menambahkan Wildcard di akhir kata
+        if (wild) {
+          processedKw = processedKw + ' *';
+        }
+        
+        // Konversi spasi menjadi logika OR jika diaktifkan
+        if (useOr && !processedKw.includes(' OR ')) {
+          processedKw = processedKw.split(/\s+/).join(' OR ');
+        }
+        
+        parts.push(processedKw);
+      }
+
+      // Menangani daftar kata yang harus ada (+)
+      if (must) {
+        must.split(',').forEach(word => {
+          const item = word.trim();
+          if (item) {
+            // Menambahkan tanda tambah (+) jika belum ada
+            parts.push(item.startsWith('+') ? item : '+' + item);
+          }
+        });
+      }
+
+      // Menangani daftar kata/situs yang dikecualikan (-)
+      if (notWord) {
+        notWord.split(',').forEach(word => {
+          const item = word.trim();
+          if (item) {
+            // Menambahkan tanda minus (-) jika belum ada
+            parts.push(item.startsWith('-') ? item : '-' + item);
+          }
+        });
+      }
+
+      // Menggabungkan semua bagian operator pencarian
+      const finalQuery = parts.join(' ').trim();
+      generatedQuery = finalQuery;
+
+      const displayBox = document.getElementById('query-display');
+      const resultBox = document.getElementById('result-box');
+
+      if (finalQuery) {
+        displayBox.innerHTML = escapeHtml(finalQuery);
+        displayBox.className = 'font-mono text-xs md:text-sm text-brand-emerald break-all whitespace-pre-wrap leading-relaxed';
+      } else {
+        displayBox.innerHTML = 'Mulai isi formulir atau pilih preset di bawah untuk merancang dork...';
+        displayBox.className = 'font-mono text-xs text-[var(--text-muted)] break-all whitespace-pre-wrap leading-relaxed';
+      }
+    }
+
+    // Fungsi mengamankan HTML dari karakter ilegal
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // Penyelidikan langsung ke Google Search
+    function searchGoogle() {
+      if (!generatedQuery) {
+        showAlert('⚠️ Silakan buat atau pilih kriteria dork terlebih dahulu!', true);
+        return;
+      }
+      const url = 'https://www.google.com/search?q=' + encodeURIComponent(generatedQuery);
+      window.open(url, '_blank');
+    }
+
+    // Sistem Fallback Copy Clipboard (Lebih Stabil di lingkungan iFrame)
+    function copyQuery() {
+      if (!generatedQuery) {
+        showAlert('⚠️ Tidak ada query dork yang bisa disalin.', true);
+        return;
+      }
+      
+      const textarea = document.createElement('textarea');
+      textarea.value = generatedQuery;
+      textarea.style.position = 'fixed'; // Amankan dari scroll layar
+      document.body.appendChild(textarea);
+      textarea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showToastNotification();
+        } else {
+          showAlert('Gagal menyalin query secara otomatis.', true);
+        }
+      } catch (err) {
+        showAlert('Terjadi galat saat menyalin ke papan klip.', true);
+      }
+      
+      document.body.removeChild(textarea);
+    }
+
+    // Reset semua input form ke kondisi semula
+    function clearAll() {
+      const inputsToClear = [
+        'f-site', 'f-intitle', 'f-inurl', 'f-intext', 
+        'f-keywords', 'f-must', 'f-not', 'f-after', 'f-before'
+      ];
+      
+      inputsToClear.forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      
+      document.getElementById('f-filetype').value = '';
+      
+      // Matikan semua opsi checkbox
+      const checkboxes = ['ck-exact', 'ck-or', 'ck-wild'];
+      checkboxes.forEach(id => {
+        document.getElementById(id).checked = false;
+      });
+      
+      // Bersihkan kelas visual aktif
+      const labelIds = ['lbl-exact', 'lbl-or', 'lbl-wild'];
+      labelIds.forEach(id => {
+        document.getElementById(id).classList.remove('!border-brand-light', '!bg-brand-light/10', '!text-brand-light');
+      });
+
+      generatedQuery = '';
+      
+      const displayBox = document.getElementById('query-display');
+      displayBox.innerHTML = 'Mulai isi formulir atau pilih preset di bawah untuk merancang dork...';
+      displayBox.className = 'font-mono text-xs text-[var(--text-muted)] break-all whitespace-pre-wrap leading-relaxed';
+      
+      showAlert('🧼 Semua form berhasil dibersihkan!');
+    }
+
+    // Mengisi form berdasarkan preset/contoh dorking yang diklik
+    function loadExample(query) {
+      clearAll();
+      
+      // Masukkan ke bagian keyword utama secara langsung untuk fleksibilitas edit manual
+      document.getElementById('f-keywords').value = query;
+      generatedQuery = query;
+      
+      const displayBox = document.getElementById('query-display');
+      displayBox.innerHTML = escapeHtml(query);
+      displayBox.className = 'font-mono text-xs md:text-sm text-brand-emerald break-all whitespace-pre-wrap leading-relaxed';
+      
+      // Auto Scroll halus ke area builder jika pengguna di layar seluler
+      document.querySelector('.bg-\\[var\\(--bg-surface\\)\\]').scrollIntoView({ behavior: 'smooth' });
+      showAlert('💡 Contoh Preset Dork Berhasil Dimuat!');
+    }
+
+    // Tampilan Toast Sukses Menyalin
+    function showToastNotification() {
+      const toast = document.getElementById('copied-msg');
+      toast.classList.remove('opacity-0');
+      toast.classList.add('opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('opacity-100');
+        toast.classList.add('opacity-0');
+      }, 2500);
+    }
+
+    // Custom alert cantik pengganti window.alert()
+    function showAlert(msg, isWarning = false) {
+      const alertBox = document.getElementById('custom-alert');
+      alertBox.innerHTML = msg;
+      
+      if (isWarning) {
+        alertBox.style.background = '#7f1d1d';
+        alertBox.style.borderColor = '#ef4444';
+        alertBox.style.color = '#fca5a5';
+      } else {
+        alertBox.style.background = 'var(--bg-surface)';
+        alertBox.style.borderColor = 'var(--border)';
+        alertBox.style.color = 'var(--text-primary)';
+      }
+      
+      alertBox.classList.remove('opacity-0', 'translate-x-12');
+      alertBox.classList.add('opacity-100', 'translate-x-0');
+      setTimeout(() => {
+        alertBox.classList.remove('opacity-100', 'translate-x-0');
+        alertBox.classList.add('opacity-0', 'translate-x-12');
+      }, 3000);
+    }
+
+    // ==========================================================
+    // MANAJEMEN MODAL & SISTEM NAVIGASI SELULER
+    // ==========================================================
+    const aboutModal = document.getElementById('aboutModal');
+    const aboutModalCard = document.getElementById('aboutModalCard');
+    const toolsMenuModal = document.getElementById('toolsMenuModal');
+    const toolsMenuCard = document.getElementById('toolsMenuCard');
+    const modalToolsList = document.getElementById('modalToolsList');
+
+    // Buka Modal About Us
+    function openAboutModal() {
+        aboutModal.classList.remove('hidden');
+        setTimeout(() => {
+            aboutModal.classList.add('opacity-100');
+            aboutModalCard.classList.remove('scale-95');
+            aboutModalCard.classList.add('scale-100');
+        }, 50);
+    }
+
+    // Tutup Modal About Us
+    function closeAboutModal() {
+        aboutModal.classList.remove('opacity-100');
+        aboutModalCard.classList.remove('scale-100');
+        aboutModalCard.classList.add('scale-95');
+        setTimeout(() => {
+            aboutModal.classList.add('hidden');
+        }, 300);
+    }
+
+    // Buka Modal Daftar Macam-Macam Tools
+    function openToolsModal() {
+        // Populate list dinamis
+        modalToolsList.innerHTML = ALL_TOOLS.map(t => `
+            <a href="${t.url}" class="flex items-center gap-3 p-3 rounded-xl border border-[var(--border)] hover:bg-[var(--bg-card)] transition-all">
+                <div class="w-8 h-8 rounded-lg bg-brand-light/10 text-brand-light flex items-center justify-center text-sm">
+                    <i class="${t.icon}"></i>
+                </div>
+                <div class="flex-grow">
+                    <h4 class="text-xs font-bold text-[var(--text-primary)]">${t.name}</h4>
+                    <p class="text-[10px] text-[var(--text-muted)] truncate max-w-[200px] sm:max-w-md">${t.desc}</p>
+                </div>
+            </a>
+        `).join('');
+
+        toolsMenuModal.classList.remove('hidden');
+        setTimeout(() => {
+            toolsMenuModal.classList.add('opacity-100');
+            toolsMenuCard.classList.remove('scale-95');
+            toolsMenuCard.classList.add('scale-100');
+        }, 50);
+    }
+
+    // Tutup Modal Daftar Macam-Macam Tools
+    function closeToolsModal() {
+        toolsMenuModal.classList.remove('opacity-100');
+        toolsMenuCard.classList.remove('scale-100');
+        toolsMenuCard.classList.add('scale-95');
+        setTimeout(() => {
+            toolsMenuModal.classList.add('hidden');
+        }, 300);
+    }
+
+    // Klik di luar area modal untuk menutup modal
+    window.addEventListener('click', (e) => {
+        if (e.target === aboutModal) closeAboutModal();
+        if (e.target === toolsMenuModal) closeToolsModal();
+    });
+  </script>
 </body>
 </html>
