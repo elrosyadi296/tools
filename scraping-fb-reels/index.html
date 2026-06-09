@@ -1,839 +1,830 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="transition-colors duration-300">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>296Tools — FB Reel Extractor</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
- <!-- --- FAVICON (SVG Crown Emoji) --- -->
-<link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
-    
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<title>FB Reel Extractor — 296Tools</title>
+<!-- ========================================================== -->
+<!-- META TAG UMUM (Untuk SEO Dasar & Browser) -->
+<!-- ========================================================== -->
+<meta name="description" content="Ekstrak link FB Reel dan Video langsung dari source HTML profil secara instan. 100% lokal, aman, privat, dan super cepat.">
+<meta name="robots" content="index, follow">
 
+<!-- Font Family Premium -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- Favicon -->
+<link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
+
+<!-- Tailwind CSS Setup -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            light: '#6c63ff',
+            dark: '#a78bfa',
+            accent: '#38bdf8',
+            emerald: '#34d399',
+            facebook: '#1877F2'
+          }
+        },
+        fontFamily: {
+          clash: ['Clash Display', 'sans-serif'],
+          bricolage: ['Bricolage Grotesque', 'sans-serif'],
+          mono: ['DM Mono', 'monospace'],
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  /* Variabel CSS untuk Mode Terang (Default) */
   :root {
-    --bg:        #0a0c10;
-    --bg2:       #111318;
-    --bg3:       #181c23;
-    --bg4:       #1e232d;
-    --border:    rgba(255,255,255,0.07);
-    --border2:   rgba(255,255,255,0.13);
-    --accent:    #1877F2;
-    --accent2:   #3b95ff;
-    --accentGlow:rgba(24,119,242,0.25);
-    --green:     #2ecc88;
-    --greenBg:   rgba(46,204,136,0.12);
-    --text:      #e8eaf0;
-    --text2:     #8b92a5;
-    --text3:     #555e72;
-    --mono:      'DM Mono', monospace;
-    --sans:      'DM Sans', sans-serif;
-    --display:   'Syne', sans-serif;
-    --radius:    12px;
-    --radius-sm: 8px;
+    --bg: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-card: #f1f5f9;
+    --border: rgba(15, 23, 42, 0.08);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --shadow-premium: 0 10px 30px -10px rgba(108, 99, 255, 0.1);
   }
 
-  html { scroll-behavior: smooth; }
+  /* Variabel CSS untuk Mode Gelap */
+  .dark {
+    --bg: #0b0c10;
+    --bg-surface: #13141a;
+    --bg-card: #1e2029;
+    --border: rgba(255, 255, 255, 0.07);
+    --text-primary: #f0f0f5;
+    --text-secondary: #9899a8;
+    --text-muted: #5a5b6a;
+    --shadow-premium: 0 10px 40px rgba(0,0,0,0.5), 0 0 40px rgba(108,99,255,0.15);
+  }
 
   body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    font-size: 15px;
-    line-height: 1.6;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    background-color: var(--bg);
+    color: var(--text-primary);
     min-height: 100vh;
     overflow-x: hidden;
+    transition: background-color 0.3s, color 0.3s;
   }
 
-  /* ── Background decoration ── */
+  /* Noise Overlay */
   body::before {
     content: '';
     position: fixed;
-    top: -200px; left: 50%;
-    transform: translateX(-50%);
-    width: 800px; height: 600px;
-    background: radial-gradient(ellipse, rgba(24,119,242,0.08) 0%, transparent 70%);
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
     pointer-events: none;
     z-index: 0;
+    opacity: 0.5;
   }
 
-  /* ── Layout ── */
-  .wrap {
-    position: relative;
-    z-index: 1;
-    max-width: 780px;
-    margin: 0 auto;
-    padding: 0 20px 80px;
-  }
-
-  /* ── Header ── */
-  header {
-    padding: 48px 0 36px;
-    text-align: center;
-  }
-
-  .logo-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--bg3);
-    border: 1px solid var(--border2);
-    border-radius: 50px;
-    padding: 6px 16px 6px 8px;
-    margin-bottom: 24px;
-    animation: fadeDown 0.5s ease both;
-  }
-
-  .logo-icon {
-    width: 28px; height: 28px;
-    background: var(--accent);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-  }
-
-  .logo-icon svg { width: 16px; height: 16px; fill: #fff; }
-
-  .logo-badge span {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text2);
-    letter-spacing: 0.03em;
-  }
-
-  header h1 {
-    font-family: var(--display);
-    font-size: clamp(28px, 6vw, 44px);
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    line-height: 1.15;
-    color: var(--text);
-    animation: fadeDown 0.5s 0.1s ease both;
-  }
-
-  header h1 span {
-    color: var(--accent2);
-  }
-
-  header p {
-    margin-top: 12px;
-    font-size: 15px;
-    color: var(--text2);
-    font-weight: 300;
-    animation: fadeDown 0.5s 0.2s ease both;
-  }
-
-  /* ── Steps guide ── */
-  .steps {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-    gap: 10px;
-    margin-bottom: 28px;
-    animation: fadeUp 0.5s 0.3s ease both;
-  }
-
-  .step {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 16px;
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .step-num {
-    width: 24px; height: 24px;
-    border-radius: 50%;
-    background: var(--accentGlow);
-    border: 1px solid rgba(24,119,242,0.4);
-    color: var(--accent2);
-    font-size: 12px;
-    font-weight: 600;
-    font-family: var(--mono);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-
-  .step-text {
-    font-size: 13px;
-    color: var(--text2);
-    line-height: 1.5;
-  }
-
-  .step-text strong { color: var(--text); font-weight: 500; }
-
-  /* ── Card ── */
-  .card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    animation: fadeUp 0.5s 0.35s ease both;
-  }
-
-  .card-header {
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  .card-header-left {
-    display: flex; align-items: center; gap: 10px;
-  }
-
-  .card-title {
-    font-family: var(--display);
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text);
-  }
-
-  .char-count {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--text3);
-  }
-
-  /* ── Textarea ── */
-  textarea {
-    width: 100%;
-    min-height: 180px;
-    background: var(--bg2);
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 12px;
-    line-height: 1.7;
-    padding: 16px 20px;
-    border: none;
-    outline: none;
-    resize: vertical;
-    display: block;
-    transition: background 0.2s;
-  }
-
-  textarea::placeholder { color: var(--text3); }
-  textarea:focus { background: var(--bg3); }
-
-  /* ── Action bar ── */
-  .action-bar {
-    padding: 14px 20px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    background: var(--bg3);
-  }
-
-  /* ── Buttons ── */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 9px 18px;
-    border-radius: var(--radius-sm);
-    font-family: var(--sans);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    border: 1px solid transparent;
-    white-space: nowrap;
-  }
-
-  .btn svg { width: 15px; height: 15px; flex-shrink: 0; }
-
-  .btn-primary {
-    background: var(--accent);
-    color: #fff;
-    border-color: var(--accent);
-  }
-  .btn-primary:hover { background: var(--accent2); border-color: var(--accent2); }
-  .btn-primary:active { transform: scale(0.97); }
-
-  .btn-ghost {
-    background: transparent;
-    color: var(--text2);
-    border-color: var(--border2);
-  }
-  .btn-ghost:hover { background: var(--bg4); color: var(--text); border-color: var(--border2); }
-  .btn-ghost:active { transform: scale(0.97); }
-
-  .btn-danger {
-    background: transparent;
-    color: #e05555;
-    border-color: rgba(224,85,85,0.25);
-  }
-  .btn-danger:hover { background: rgba(224,85,85,0.1); border-color: rgba(224,85,85,0.4); }
-
-  /* ── Stats ── */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-top: 20px;
-    animation: fadeUp 0.4s ease both;
-  }
-
-  .stat-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px 18px;
-    text-align: center;
-    transition: border-color 0.2s;
-  }
-
-  .stat-card.highlight { border-color: rgba(24,119,242,0.35); }
-
-  .stat-val {
-    font-family: var(--display);
-    font-size: 32px;
-    font-weight: 800;
-    color: var(--accent2);
-    line-height: 1;
-    margin-bottom: 6px;
-  }
-
-  .stat-label {
-    font-size: 12px;
-    color: var(--text3);
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-
-  /* ── Result panel ── */
-  .result-panel {
-    margin-top: 20px;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    animation: fadeUp 0.4s ease both;
-  }
-
-  .result-toolbar {
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
-    background: var(--bg3);
-  }
-
-  .filter-tabs {
-    display: flex;
-    gap: 6px;
-  }
-
-  .tab {
-    padding: 5px 13px;
-    border-radius: 50px;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    border: 1px solid var(--border2);
-    background: transparent;
-    color: var(--text2);
-    font-family: var(--sans);
-    transition: all 0.15s;
-  }
-
-  .tab.active {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-  }
-
-  .export-btns { display: flex; gap: 6px; }
-
-  .link-list {
-    max-height: 380px;
-    overflow-y: auto;
-    padding: 8px;
-  }
-
-  .link-list::-webkit-scrollbar { width: 4px; }
-  .link-list::-webkit-scrollbar-track { background: transparent; }
-  .link-list::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 4px; }
-
-  .link-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px 10px;
-    border-radius: var(--radius-sm);
-    transition: background 0.15s;
-  }
-
-  .link-item:hover { background: var(--bg3); }
-
-  .type-badge {
-    font-size: 10px;
-    font-weight: 600;
-    font-family: var(--mono);
-    padding: 3px 8px;
-    border-radius: 4px;
-    flex-shrink: 0;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  .badge-reel {
-    background: rgba(24,119,242,0.15);
-    color: var(--accent2);
-    border: 1px solid rgba(24,119,242,0.3);
-  }
-
-  .badge-video {
-    background: var(--greenBg);
-    color: var(--green);
-    border: 1px solid rgba(46,204,136,0.3);
-  }
-
-  .link-url {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--text2);
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    text-decoration: none;
-    transition: color 0.15s;
-  }
-
-  .link-url:hover { color: var(--accent2); }
-
-  .copy-one {
-    width: 28px; height: 28px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--text3);
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.15s;
-  }
-
-  .copy-one:hover { background: var(--bg4); color: var(--text); border-color: var(--border2); }
-  .copy-one svg { width: 13px; height: 13px; }
-
-  .no-result {
-    text-align: center;
-    padding: 56px 20px;
-    color: var(--text3);
-  }
-
-  .no-result svg { width: 40px; height: 40px; margin: 0 auto 14px; display: block; opacity: 0.4; }
-  .no-result p { font-size: 14px; }
-
-  /* ── Empty state ── */
-  .empty-state {
-    display: none;
-    text-align: center;
-    padding: 40px 20px;
-    margin-top: 20px;
-  }
-
-  .empty-icon {
-    width: 56px; height: 56px;
-    margin: 0 auto 16px;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    display: flex; align-items: center; justify-content: center;
-  }
-
-  .empty-icon svg { width: 28px; height: 28px; color: var(--text3); }
-
-  /* ── Toast ── */
-  .toast {
-    position: fixed;
-    bottom: 28px;
-    right: 28px;
-    background: var(--bg3);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius);
-    padding: 12px 18px;
-    font-size: 13px;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-    z-index: 1000;
-    transform: translateY(80px);
-    opacity: 0;
-    transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
-  }
-
-  .toast.show { transform: translateY(0); opacity: 1; }
-  .toast svg { width: 16px; height: 16px; color: var(--green); flex-shrink: 0; }
-
-  /* ── Footer ── */
-  footer {
-    text-align: center;
-    padding: 32px 0 0;
-    font-size: 12px;
-    color: var(--text3);
-    animation: fadeUp 0.5s 0.5s ease both;
-  }
-
-  footer a { color: var(--text2); text-decoration: none; }
-  footer a:hover { color: var(--accent2); }
-
-  /* ── Animations ── */
-  @keyframes fadeDown {
-    from { opacity:0; transform: translateY(-16px); }
-    to   { opacity:1; transform: translateY(0); }
-  }
-  @keyframes fadeUp {
-    from { opacity:0; transform: translateY(16px); }
-    to   { opacity:1; transform: translateY(0); }
-  }
-
-  /* ── Scrollbar global ── */
+  /* Scrollbar */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* Hero Gradient Blur */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+  .blob-1 {
+    width: 400px; height: 250px;
+    background: rgba(24, 119, 242, 0.12);
+    top: -40px; left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* Animasi Transisi Halaman */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-up {
+    animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Custom styling for list scroll */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 10px;
+  }
 </style>
 </head>
-<body>
+<body class="flex flex-col">
 
-<div class="wrap">
+  <!-- Header / Topbar Navigation -->
+  <header class="sticky top-0 z-40 w-full bg-[var(--bg)]/80 backdrop-blur-md border-b border-[var(--border)] transition-all">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="homepage_296tools.html" class="flex items-center gap-3">
+        <div class="w-9 h-9 bg-gradient-to-tr from-brand-facebook to-brand-light rounded-lg flex items-center justify-center shadow-lg">
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" class="w-6 h-6 object-contain" alt="Logo 296">
+        </div>
+        <span class="font-clash text-lg font-bold tracking-tight">296<span class="text-brand-facebook">Tools</span></span>
+      </a>
 
-  <!-- Header -->
-  <header>
-    <div class="logo-badge">
-      <div class="logo-icon">
-        <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+      <!-- Menu Samping Kanan (Theme Toggle & Label Keamanan) -->
+      <div class="flex items-center gap-4">
+        <span class="hidden md:inline-block text-xs font-semibold text-[var(--text-secondary)] bg-[var(--bg-card)] px-3 py-1.5 rounded-full border border-[var(--border)]">
+          🔒 100% Lokal & Privat
+        </span>
+        <!-- Tombol Pengubah Mode Gelap/Terang -->
+        <button id="themeToggle" class="p-2.5 rounded-lg bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] transition-all" title="Ubah Tema">
+          <i class="fa-solid fa-moon dark:hidden text-lg"></i>
+          <i class="fa-solid fa-sun hidden dark:block text-lg text-yellow-400"></i>
+        </button>
       </div>
-      <span>296Tools — FB Reel Extractor</span>
     </div>
-    <h1>Extract <span>Reel Links</span><br>dari Profil Facebook</h1>
-    <p>Paste HTML source halaman profil FB — dapatkan semua URL reel &amp; video seketika</p>
   </header>
 
-  <!-- Steps -->
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">1</div>
-      <div class="step-text">Buka profil FB target, scroll tab <strong>Reels / Videos</strong> sampai cukup</div>
-    </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <div class="step-text">Tekan <strong>Ctrl+U</strong> untuk buka page source di tab baru</div>
-    </div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <div class="step-text"><strong>Ctrl+A</strong> lalu <strong>Ctrl+C</strong> untuk copy semua isi HTML</div>
-    </div>
-    <div class="step">
-      <div class="step-num">4</div>
-      <div class="step-text">Paste di bawah, klik <strong>Ekstrak</strong> — link langsung muncul!</div>
-    </div>
-  </div>
+  <!-- Konten Utama -->
+  <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-8 relative z-10 animate-fade-up">
+    
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-  <!-- Input card -->
-  <div class="card">
-    <div class="card-header">
-      <div class="card-header-left">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1877F2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
-        </svg>
-        <span class="card-title">HTML Source</span>
+    <!-- Hero / Judul Halaman -->
+    <section class="text-center py-6 relative overflow-hidden" id="hero-section">
+      <div class="blob blob-1"></div>
+      
+      <div class="inline-flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-brand-facebook bg-brand-facebook/10 border border-brand-facebook/20 rounded-full px-4 py-1.5 mb-4">
+        <i class="fa-solid fa-video animate-pulse"></i> FB Reel Extractor
       </div>
-      <span class="char-count" id="charCount">0 karakter</span>
-    </div>
-    <textarea id="htmlInput" spellcheck="false"
-      placeholder="Paste HTML source halaman Facebook di sini...&#10;&#10;Ctrl+U pada halaman profil FB → Ctrl+A → Ctrl+C → Ctrl+V di sini"></textarea>
-    <div class="action-bar">
-      <button class="btn btn-primary" id="btnExtract">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        Ekstrak Link
-      </button>
-      <button class="btn btn-ghost" id="btnPaste">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
-        Paste Clipboard
-      </button>
-      <button class="btn btn-danger" id="btnClear">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
-        Bersihkan
-      </button>
-    </div>
-  </div>
 
-  <!-- Empty error state -->
-  <div class="empty-state" id="emptyState">
-    <div class="empty-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-      </svg>
-    </div>
-    <p style="color:var(--text2); font-weight:500; margin-bottom:6px;">Tidak ditemukan link reel atau video</p>
-    <p style="color:var(--text3); font-size:13px;">Pastikan kamu sudah scroll halaman profil FB terlebih dahulu sebelum copy HTML-nya</p>
-  </div>
+      <h1 class="font-clash text-3xl md:text-5xl font-bold tracking-tight leading-none mb-4">
+        296<span class="bg-gradient-to-r from-brand-facebook via-brand-light to-brand-accent bg-clip-text text-transparent">Reelify</span>
+      </h1>
 
-  <!-- Stats -->
-  <div class="stats-grid" id="statsGrid" style="display:none;">
-    <div class="stat-card">
-      <div class="stat-val" id="statReel">0</div>
-      <div class="stat-label">Reel</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-val" id="statVideo">0</div>
-      <div class="stat-label">Video</div>
-    </div>
-    <div class="stat-card highlight">
-      <div class="stat-val" id="statTotal">0</div>
-      <div class="stat-label">Total Unik</div>
-    </div>
-  </div>
+      <p class="text-xs md:text-sm text-[var(--text-secondary)] max-w-lg mx-auto font-light leading-relaxed">
+        Salin dan temukan semua tautan Reels maupun video dari source kode profil Facebook secara aman, privat, dan instan.
+      </p>
+    </section>
 
-  <!-- Result panel -->
-  <div class="result-panel" id="resultPanel" style="display:none;">
-    <div class="result-toolbar">
-      <div class="filter-tabs">
-        <button class="tab active" data-f="all">Semua</button>
-        <button class="tab" data-f="reel">Reel</button>
-        <button class="tab" data-f="video">Video</button>
+    <!-- Langkah Panduan Ekstraksi -->
+    <section class="mb-8">
+      <div class="bg-[var(--bg-surface)] p-5 rounded-2xl border border-[var(--border)] shadow-sm">
+        <span class="block text-xs font-bold text-[var(--text-secondary)] mb-4 uppercase tracking-wider">
+          💡 CARA PENGGUNAAN FB REEL EXTRACTOR:
+        </span>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+          
+          <div class="flex gap-3 items-start p-3 bg-[var(--bg-card)]/40 rounded-xl border border-[var(--border)]">
+            <span class="w-6 h-6 flex items-center justify-center font-mono font-bold bg-brand-facebook/10 text-brand-facebook rounded-full text-[11px] shrink-0">1</span>
+            <p class="text-[var(--text-secondary)] leading-relaxed">Buka profil FB target, scroll tab <strong class="text-[var(--text-primary)]">Reels / Videos</strong> secukupnya.</p>
+          </div>
+
+          <div class="flex gap-3 items-start p-3 bg-[var(--bg-card)]/40 rounded-xl border border-[var(--border)]">
+            <span class="w-6 h-6 flex items-center justify-center font-mono font-bold bg-brand-facebook/10 text-brand-facebook rounded-full text-[11px] shrink-0">2</span>
+            <p class="text-[var(--text-secondary)] leading-relaxed">Tekan tombol <strong class="text-[var(--text-primary)]">Ctrl + U</strong> untuk melihat page source di tab baru.</p>
+          </div>
+
+          <div class="flex gap-3 items-start p-3 bg-[var(--bg-card)]/40 rounded-xl border border-[var(--border)]">
+            <span class="w-6 h-6 flex items-center justify-center font-mono font-bold bg-brand-facebook/10 text-brand-facebook rounded-full text-[11px] shrink-0">3</span>
+            <p class="text-[var(--text-secondary)] leading-relaxed">Gunakan <strong class="text-[var(--text-primary)]">Ctrl + A</strong> kemudian <strong class="text-[var(--text-primary)]">Ctrl + C</strong> untuk menyalin seluruh kode HTML.</p>
+          </div>
+
+          <div class="flex gap-3 items-start p-3 bg-[var(--bg-card)]/40 rounded-xl border border-[var(--border)]">
+            <span class="w-6 h-6 flex items-center justify-center font-mono font-bold bg-brand-facebook/10 text-brand-facebook rounded-full text-[11px] shrink-0">4</span>
+            <p class="text-[var(--text-secondary)] leading-relaxed">Tempel source di area bawah, klik tombol <strong class="text-[var(--text-primary)]">Ekstrak Link</strong>.</p>
+          </div>
+
+        </div>
       </div>
-      <div class="export-btns">
-        <button class="btn btn-ghost" id="btnCopyAll" style="padding:6px 12px; font-size:12px;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-          Copy Semua
-        </button>
-        <button class="btn btn-ghost" id="btnDlTxt" style="padding:6px 12px; font-size:12px;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          .TXT
-        </button>
-        <button class="btn btn-ghost" id="btnDlJson" style="padding:6px 12px; font-size:12px;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          .JSON
-        </button>
-      </div>
-    </div>
-    <div class="link-list" id="linkList"></div>
-  </div>
+    </section>
 
-  <footer>
-    <p>FB Reel Extractor &nbsp;·&nbsp; Dibuat oleh <a href="https://296.web.id">296GROUP</a> &nbsp;·&nbsp; Hanya untuk keperluan pribadi yang sah</p>
+    <!-- Grid Utama Workspace -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- Sisi Kiri: Input Area & Aksi -->
+      <div class="lg:col-span-6 space-y-4">
+        <div class="bg-[var(--bg-surface)] p-5 rounded-2xl border border-[var(--border)] shadow-sm space-y-4">
+          
+          <div class="flex items-center justify-between pb-3 border-b border-[var(--border)]">
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-lg bg-brand-facebook/10 text-brand-facebook flex items-center justify-center text-sm">
+                <i class="fa-solid fa-code"></i>
+              </div>
+              <h3 class="font-clash font-bold text-[var(--text-primary)] text-sm">HTML Source Code</h3>
+            </div>
+            <span id="charCount" class="text-[10px] font-semibold text-[var(--text-muted)] font-mono bg-[var(--bg-card)] px-2.5 py-1 rounded-md border border-[var(--border)]">0 karakter</span>
+          </div>
+
+          <!-- Textarea Input HTML -->
+          <div class="space-y-1">
+            <textarea id="htmlInput" rows="12" spellcheck="false" class="w-full bg-[var(--bg-card)] text-xs text-[var(--text-primary)] border border-[var(--border)] rounded-xl p-4 font-mono leading-relaxed focus:outline-none focus:ring-2 focus:ring-brand-facebook/35 resize-none h-[280px]" placeholder="Tempel source code HTML Facebook di sini...&#10;&#10;Gunakan Ctrl+U di halaman profil FB target -> Ctrl+A -> Ctrl+C -> Tempel/Paste di sini..."></textarea>
+          </div>
+
+          <!-- Tombol Aksi Kerja -->
+          <div class="grid grid-cols-3 gap-2 pt-2">
+            <button id="btnExtract" class="col-span-2 bg-brand-facebook hover:bg-opacity-90 text-white font-semibold py-3 px-4 rounded-xl text-xs transition-all flex items-center justify-center gap-2 shadow-md shadow-brand-facebook/15">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <span>Ekstrak Link</span>
+            </button>
+            <button id="btnPaste" class="bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] font-semibold py-3 px-4 rounded-xl hover:bg-[var(--border)] transition-all flex items-center justify-center gap-2 text-xs" title="Paste Clipboard">
+              <i class="fa-solid fa-clipboard"></i>
+              <span class="hidden sm:inline">Paste</span>
+            </button>
+          </div>
+
+          <!-- Tombol Bersihkan -->
+          <button id="btnClear" class="w-full py-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 rounded-xl text-[11px] font-bold transition-all flex items-center justify-center gap-1.5 border border-rose-500/25">
+            <i class="fa-solid fa-trash-can"></i>
+            <span>Kosongkan Bidang Input</span>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- Sisi Kanan: Hasil Statistik & Ekstraksi -->
+      <div class="lg:col-span-6 space-y-4">
+        
+        <!-- Statistik Live Stats -->
+        <div id="statsGrid" style="display: none;" class="grid grid-cols-3 gap-3">
+          <div class="bg-[var(--bg-surface)] p-4 rounded-2xl border border-[var(--border)] text-center shadow-sm">
+            <span class="block text-2xl font-clash font-bold text-brand-facebook" id="statReel">0</span>
+            <span class="text-[9px] text-[var(--text-muted)] font-bold uppercase tracking-wider">FB Reels</span>
+          </div>
+          <div class="bg-[var(--bg-surface)] p-4 rounded-2xl border border-[var(--border)] text-center shadow-sm">
+            <span class="block text-2xl font-clash font-bold text-brand-emerald" id="statVideo">0</span>
+            <span class="text-[9px] text-[var(--text-muted)] font-bold uppercase tracking-wider">FB Videos</span>
+          </div>
+          <div class="bg-[var(--bg-surface)] p-4 rounded-2xl border border-brand-facebook/25 text-center shadow-sm bg-brand-facebook/5">
+            <span class="block text-2xl font-clash font-bold text-brand-facebook" id="statTotal">0</span>
+            <span class="text-[9px] text-brand-facebook/75 font-bold uppercase tracking-wider">Total Unik</span>
+          </div>
+        </div>
+
+        <!-- Panel Hasil Ekstraksi -->
+        <div id="resultPanel" style="display: none;" class="bg-[var(--bg-surface)] rounded-2xl border border-[var(--border)] shadow-xl relative text-[var(--text-primary)] min-h-[350px] flex flex-col justify-between overflow-hidden">
+          
+          <!-- Header Hasil Panel -->
+          <div class="p-4 bg-[var(--bg-card)]/40 border-b border-[var(--border)] flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+            <div class="flex items-center gap-2">
+              <button class="tab active px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-white bg-brand-facebook transition-all" data-f="all">Semua</button>
+              <button class="tab px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-[var(--text-secondary)] bg-[var(--bg-card)] hover:bg-[var(--border)] transition-all" data-f="reel">Reels</button>
+              <button class="tab px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-[var(--text-secondary)] bg-[var(--bg-card)] hover:bg-[var(--border)] transition-all" data-f="video">Videos</button>
+            </div>
+
+            <!-- Tombol Ekspor Data -->
+            <div class="flex items-center gap-1.5">
+              <button id="btnCopyAll" class="bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] text-[10px] font-bold px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1">
+                <i class="fa-solid fa-copy"></i>
+                <span>Copy</span>
+              </button>
+              <button id="btnDlTxt" class="bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] text-[10px] font-bold px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1" title="Unduh format .TXT">
+                <i class="fa-solid fa-file-lines"></i>
+                <span>.TXT</span>
+              </button>
+              <button id="btnDlJson" class="bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] text-[10px] font-bold px-2.5 py-1.5 rounded-lg transition-all flex items-center gap-1" title="Unduh format .JSON">
+                <i class="fa-solid fa-code-branch"></i>
+                <span>.JSON</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Daftar Link List -->
+          <div class="flex-grow p-4 max-h-[300px] overflow-y-auto custom-scrollbar space-y-2.5" id="linkList">
+            <!-- Isi List Dinamis -->
+          </div>
+
+        </div>
+
+        <!-- Default Empty / Placeholder State -->
+        <div id="emptyState" class="bg-[var(--bg-surface)] p-8 rounded-2xl border border-[var(--border)] text-center space-y-4 shadow-sm">
+          <div class="w-16 h-16 bg-[var(--bg-card)] text-[var(--text-muted)] rounded-2xl flex items-center justify-center mx-auto text-2xl">
+            <i class="fa-solid fa-folder-open opacity-50"></i>
+          </div>
+          <div class="space-y-1">
+            <p class="text-xs font-semibold text-[var(--text-primary)]">Belum ada tautan yang diekstrak</p>
+            <p class="text-[11px] text-[var(--text-secondary)] max-w-xs mx-auto leading-relaxed">
+              Pastikan Anda sudah mengikuti petunjuk panduan penyalinan kode HTML profil FB Anda secara benar.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Kaki Halaman (Footer Persis Homepage 296Tools) -->
+  <footer class="w-full py-8 text-center text-xs text-[var(--text-muted)] border-t border-[var(--border)] mt-12 bg-[var(--bg-surface)] relative z-10 pb-24 md:pb-8">
+    <div class="max-w-6xl mx-auto px-4">
+      <p class="mb-2">Dibuat dengan <i class="fa-solid fa-heart text-red-500 animate-pulse"></i> oleh <a href="https://296.web.id" class="text-brand-facebook hover:underline font-semibold" target="_blank">296GROUP</a></p>
+      <p class="text-[10px] tracking-wide uppercase font-bold text-slate-400">Powered by 296GROUP</p>
+    </div>
   </footer>
-</div>
 
-<!-- Toast -->
-<div class="toast" id="toast">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-  <span id="toastMsg">Disalin!</span>
-</div>
+  <!-- BAR NAVIGASI SELULER (Mobile Sticky Bottom Navbar) -->
+  <div class="fixed bottom-0 left-0 right-0 z-50 bg-[var(--bg-surface)]/90 backdrop-blur-lg border-t border-[var(--border)] shadow-xl md:hidden block">
+    <div class="flex justify-around items-center h-16">
+      <!-- Tombol Kiri: Kembali ke Daftar Tools -->
+      <!-- === [MULAILAH PERUBAHAN: NAVIGASI KIRI "SEMUA ALAT"] === -->
+      <!-- Mengubah link a href menjadi button onclick agar memicu modal pop-up -->
+      <button onclick="openToolsModal()" class="flex flex-col items-center justify-center text-[var(--text-secondary)] hover:text-brand-light transition-all flex-1 py-1">
+        <i class="fa-solid fa-compass text-lg mb-1"></i>
+        <span class="text-[10px] font-semibold">Semua Alat</span>
+      </button>
+      <!-- === [AKHIR PERUBAHAN] === -->
 
-<script>
-  // ── State
-  let allLinks = [];
-  let activeFilter = 'all';
+      <!-- Tombol Tengah: Beranda Utama (Homepage) -->
+      <a href="homepage_296tools.html" class="flex flex-col items-center justify-center text-brand-facebook transition-all flex-1 py-1">
+        <div class="w-10 h-10 bg-brand-facebook text-white rounded-full flex items-center justify-center shadow-lg -mt-5 border-4 border-[var(--bg-surface)]">
+          <i class="fa-solid fa-house text-sm"></i>
+        </div>
+        <span class="text-[10px] font-semibold mt-1">Beranda</span>
+      </a>
 
-  // ── DOM refs
-  const htmlInput   = document.getElementById('htmlInput');
-  const charCount   = document.getElementById('charCount');
-  const statsGrid   = document.getElementById('statsGrid');
-  const resultPanel = document.getElementById('resultPanel');
-  const linkList    = document.getElementById('linkList');
-  const emptyState  = document.getElementById('emptyState');
+      <!-- Tombol Kanan: About Us Pop-up -->
+      <button onclick="openAboutModal()" class="flex flex-col items-center justify-center text-[var(--text-secondary)] hover:text-brand-facebook transition-all flex-1 py-1">
+        <i class="fa-solid fa-circle-info text-lg mb-1"></i>
+        <span class="text-[10px] font-semibold">About Us</span>
+      </button>
+    </div>
+  </div>
 
-  // ── Char counter
-  htmlInput.addEventListener('input', () => {
-    const n = htmlInput.value.length;
-    charCount.textContent = n.toLocaleString('id') + ' karakter';
-  });
+  <!-- POP-UP MODAL: ABOUT US (Persis Homepage & Sub-apps) -->
+  <div id="aboutModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-300">
+    <div class="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-2xl max-w-md w-full border border-[var(--border)] shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="aboutModalCard">
+      <div class="p-6 space-y-4">
+        <div class="flex justify-between items-center border-b border-[var(--border)] pb-3">
+          <h3 class="font-clash text-base font-bold text-brand-facebook flex items-center gap-2">
+            <i class="fa-solid fa-address-card"></i> Tentang 296Tools
+          </h3>
+          <button onclick="closeAboutModal()" class="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg hover:bg-[var(--bg-card)]">
+            <i class="fa-solid fa-xmark text-base"></i>
+          </button>
+        </div>
+        
+        <div class="space-y-3 text-xs leading-relaxed text-[var(--text-secondary)]">
+          <div class="w-16 h-16 bg-brand-facebook/10 rounded-2xl mx-auto flex items-center justify-center">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" class="w-10 h-10 object-contain" alt="296 Studios Logo">
+          </div>
+          <p class="text-center font-bold text-xs text-[var(--text-primary)]">296GROUP - Solusi Digital Lokal</p>
+          <p>
+            <strong>296Tools</strong> adalah direktori & ekosistem micro-apps yang dikembangkan untuk membantu kegiatan digital harian Anda secara produktif. 
+          </p>
+          <p>
+            Seluruh data diproses secara <strong>100% lokal di dalam browser Anda (Client-Side)</strong>. Kami sama sekali tidak mengirim atau menyimpan berkas dokumen atau data sensitif Anda ke server luar. Keamanan privasi Anda terjamin penuh.
+          </p>
+          <div class="p-3 bg-[var(--bg-card)] rounded-xl border border-[var(--border)] text-[10px] text-[var(--text-muted)] text-center">
+            Misi kami adalah menyediakan alat bantu cepat, ringan, bersih tanpa pop-up iklan mengganggu.
+          </div>
+        </div>
 
-  // ── Extract patterns
-  function extractLinks(html) {
-    const seen = new Set();
-    const results = [];
-
-    const push = (url, type) => {
-      // clean URL — strip query/fragment, normalize slashes
-      const clean = url.replace(/\\u002F/g, '/').replace(/\\/g, '')
-                       .split(/["'\s>)<]/)[0]
-                       .replace(/[?&].*$/, '').replace(/\/$/, '');
-      if (clean && !seen.has(clean)) { seen.add(clean); results.push({ url: clean, type }); }
-    };
-
-    const patterns = [
-      { re: /https?:\/\/(?:www\.)?facebook\.com\/reel\/(\d{5,})/gi,            type: 'reel'  },
-      { re: /https?:\/\/(?:www\.)?fb\.watch\/([A-Za-z0-9_-]{4,})/gi,           type: 'reel'  },
-      { re: /https?:\/\/(?:www\.)?facebook\.com\/[^"'\s<>]+?\/videos\/(\d{5,})/gi, type: 'video' },
-      { re: /https?:\/\/(?:www\.)?facebook\.com\/watch\/?\?v=(\d{5,})/gi,       type: 'video' },
-      { re: /https?:\/\/(?:www\.)?facebook\.com\/video\/embed\?video_id=(\d{5,})/gi, type: 'video' },
-    ];
-
-    for (const { re, type } of patterns) {
-      let m;
-      while ((m = re.exec(html)) !== null) push(m[0], type);
-    }
-
-    // JSON embedded video IDs
-    for (const m of html.matchAll(/"video_id"\s*:\s*"(\d{10,})"/g)) {
-      push(`https://www.facebook.com/watch/?v=${m[1]}`, 'video');
-    }
-    // Reel IDs embedded in JSON
-    for (const m of html.matchAll(/"reel_id"\s*:\s*"(\d{8,})"/g)) {
-      push(`https://www.facebook.com/reel/${m[1]}`, 'reel');
-    }
-
-    return results;
-  }
-
-  // ── Render list
-  function renderList() {
-    const filtered = activeFilter === 'all'
-      ? allLinks
-      : allLinks.filter(l => l.type === activeFilter);
-
-    if (filtered.length === 0) {
-      linkList.innerHTML = `<div class="no-result">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <p>Tidak ada link untuk filter ini</p>
-      </div>`;
-      return;
-    }
-
-    linkList.innerHTML = filtered.map((item, i) => `
-      <div class="link-item">
-        <span class="type-badge ${item.type === 'reel' ? 'badge-reel' : 'badge-video'}">${item.type}</span>
-        <a class="link-url" href="${item.url}" target="_blank" rel="noopener" title="${item.url}">${item.url}</a>
-        <button class="copy-one" onclick="copyOne('${item.url}', this)" title="Copy link">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-        </button>
+        <div class="pt-2 flex justify-end">
+          <button onclick="closeAboutModal()" class="px-5 py-2 text-xs font-semibold bg-brand-facebook text-white rounded-lg hover:bg-opacity-90 transition-all">
+            Mengerti, Terima Kasih
+          </button>
+        </div>
       </div>
-    `).join('');
-  }
+    </div>
+  </div>
+  <!-- === [MULAILAH PERUBAHAN: STRUKTUR HTML MODAL DAFTAR MACAM-MACAM TOOLS] === -->
+  <!-- ========================================================== -->
+  <!-- POP-UP MODAL: DAFTAR MACAM-MACAM TOOLS (QUICK ACCESS) -->
+  <!-- ========================================================== -->
+  <div id="toolsMenuModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-300">
+    <div class="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-2xl max-w-2xl w-full border border-[var(--border)] shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="toolsMenuCard">
+      <div class="p-6 space-y-4">
+        <div class="flex justify-between items-center border-b border-[var(--border)] pb-3">
+          <h3 class="font-clash text-base font-bold text-brand-light flex items-center gap-2">
+            <i class="fa-solid fa-grid-2"></i> Macam-Macam Alat (Quick Access)
+          </h3>
+          <button onclick="closeToolsModal()" class="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg hover:bg-[var(--bg-card)]">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
 
-  // ── Extract button
-  document.getElementById('btnExtract').addEventListener('click', () => {
-    const html = htmlInput.value.trim();
-    if (!html) { showToast('Paste HTML dulu sebelum ekstrak!', false); return; }
+        <!-- Wadah List Grid Dinamis Tools -->
+        <div class="max-h-[60vh] overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-3 pr-1" id="modalToolsList">
+          <!-- Populated by JavaScript -->
+        </div>
 
-    allLinks = extractLinks(html);
-    const reels  = allLinks.filter(l => l.type === 'reel').length;
-    const videos = allLinks.filter(l => l.type === 'video').length;
+        <div class="pt-2 flex justify-end">
+          <button onclick="closeToolsModal()" class="px-5 py-2 text-xs font-semibold bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-lg hover:bg-[var(--border)] transition-all">
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- === [AKHIR PERUBAHAN] === -->
 
-    document.getElementById('statReel').textContent  = reels;
-    document.getElementById('statVideo').textContent = videos;
-    document.getElementById('statTotal').textContent = allLinks.length;
+  <!-- ========================================================== -->
+  <!-- LOGIKA PEMROGRAMAN FB REEL EXTRACTOR -->
+  <!-- ========================================================== -->
+  <script>
+    // ==========================================================
+    // SISTEM TEMA: GELAP / TERANG (DARK & LIGHT MODE)
+    // ==========================================================
+    const themeToggleBtn = document.getElementById('themeToggle');
+    
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
 
-    if (allLinks.length === 0) {
+    themeToggleBtn.addEventListener('click', () => {
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+
+// === [MULAILAH PERUBAHAN: DATA ALL_TOOLS UNTUK QUICK ACCESS MENU] ===
+    // Array yang berisi data menu pintas semua tools
+    const ALL_TOOLS = [
+        { name: 'Converter File', desc: 'Pengkonversi berkas PDF, Word, Teks, & Gambar', icon: 'fa-solid fa-file', url: 'converter-file.html' },
+        { name: 'Fake Post X', desc: 'Pembuat screenshot postingan media sosial X secara instan', icon: 'fa-brands fa-x-twitter', url: 'fake-post-x.html' },
+        { name: 'Favicon Maker', desc: 'Pembuat & kompresor Favicon modern terlengkap (.ico & .png)', icon: 'fa-solid fa-file-image', url: 'favicon-maker.html' },
+        { name: 'Generator QR Code', desc: 'Pembuat QR Code premium dengan warna & logo kustom', icon: 'fa-solid fa-qrcode', url: 'generator-qr-code.html' },
+        { name: 'Google Dorking Tools', desc: 'Advanced Google Dork & OSINT Intelligence Generator', icon: 'fa-brands fa-google', url: 'google-dorking.html' },
+        { name: 'Image Compressor', desc: 'Pengkompres ukuran dimensi & kapasitas kilobyte gambar', icon: 'fa-regular fa-images', url: 'image-compresor.html' },
+        { name: 'Invoice Maker', desc: 'Pembuat berkas tagihan (Invoice) praktis terkompresi PDF', icon: 'fa-solid fa-file-invoice', url: 'invoice-maker.html' },
+        { name: 'Prompt Generator', desc: 'Pembuat format prompt siap pakai untuk optimasi ChatGPT/Claude', icon: 'fa-regular fa-keyboard', url: 'prompt-generator.html' },
+        { name: 'Scraping Link FB Reels', desc: 'Ekstraktor tautan (URL) reel profil publik dari Facebook', icon: 'fa-brands fa-facebook', url: 'scraping-fb-reels.html' },
+        { name: 'Smart HPP', desc: 'Kalkulator HPP & Harga Jual Anti Boncos bagi pemilik bisnis', icon: 'fa-solid fa-calculator', url: 'smart-hpp.html' },
+        { name: 'URL Shortener', desc: 'Pangkas URL panjang menjadi ringkas dan mudah dibagikan', icon: 'fa-solid fa-link', url: 'url-shortener.html' },
+        { name: 'WA Link Generator', desc: 'Pembuat link pesan instan WhatsApp otomatis', icon: 'fa-brands fa-whatsapp', url: 'wa-link-generator.html' },
+    ];
+    // === [AKHIR PERUBAHAN] ===
+	
+    // ==========================================================
+    // STATE & DEKLARASI VARIABEL
+    // ==========================================================
+    let allLinks = [];
+    let activeFilter = 'all';
+
+    const htmlInput   = document.getElementById('htmlInput');
+    const charCount   = document.getElementById('charCount');
+    const statsGrid   = document.getElementById('statsGrid');
+    const resultPanel = document.getElementById('resultPanel');
+    const linkList    = document.getElementById('linkList');
+    const emptyState  = document.getElementById('emptyState');
+
+    // Menghitung Jumlah Karakter Input secara real-time
+    htmlInput.addEventListener('input', () => {
+      const n = htmlInput.value.length;
+      charCount.textContent = n.toLocaleString('id') + ' karakter';
+    });
+
+    // ==========================================================
+    // NOTIFIKASI TOAST (GAYA 296TOOLS)
+    // ==========================================================
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `transform translate-y-2 opacity-0 transition-all duration-300 ease-out flex items-center p-4 min-w-[280px] max-w-sm rounded-2xl shadow-xl border text-xs font-semibold pointer-events-auto ${
+        type === 'success' 
+          ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500 dark:text-emerald-400 backdrop-blur-md' 
+          : type === 'error' 
+            ? 'bg-red-500/10 border-red-500/20 text-red-500 dark:text-red-400 backdrop-blur-md' 
+            : 'bg-[var(--bg-surface)] border-[var(--border)] text-[var(--text-primary)] backdrop-blur-md'
+      }`;
+      
+      const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+      toast.innerHTML = `<span class="mr-3 text-sm">${icon}</span><span class="flex-grow">${message}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+      setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // ==========================================================
+    // PATTERN EXTRACTION LOGIC
+    // ==========================================================
+    function extractLinks(html) {
+      const seen = new Set();
+      const results = [];
+
+      const push = (url, type) => {
+        const clean = url.replace(/\\u002F/g, '/').replace(/\\/g, '')
+                         .split(/["'\s>)<]/)[0]
+                         .replace(/[?&].*$/, '').replace(/\/$/, '');
+        if (clean && !seen.has(clean)) { 
+          seen.add(clean); 
+          results.push({ url: clean, type }); 
+        }
+      };
+
+      const patterns = [
+        { re: /https?:\/\/(?:www\.)?facebook\.com\/reel\/(\d{5,})/gi,            type: 'reel'  },
+        { re: /https?:\/\/(?:www\.)?fb\.watch\/([A-Za-z0-9_-]{4,})/gi,           type: 'reel'  },
+        { re: /https?:\/\/(?:www\.)?facebook\.com\/[^"'\s<>]+?\/videos\/(\d{5,})/gi, type: 'video' },
+        { re: /https?:\/\/(?:www\.)?facebook\.com\/watch\/?\?v=(\d{5,})/gi,       type: 'video' },
+        { re: /https?:\/\/(?:www\.)?facebook\.com\/video\/embed\?video_id=(\d{5,})/gi, type: 'video' },
+      ];
+
+      for (const { re, type } of patterns) {
+        let m;
+        while ((m = re.exec(html)) !== null) push(m[0], type);
+      }
+
+      for (const m of html.matchAll(/"video_id"\s*:\s*"(\d{10,})"/g)) {
+        push(`https://www.facebook.com/watch/?v=${m[1]}`, 'video');
+      }
+      for (const m of html.matchAll(/"reel_id"\s*:\s*"(\d{8,})"/g)) {
+        push(`https://www.facebook.com/reel/${m[1]}`, 'reel');
+      }
+
+      return results;
+    }
+
+    // ==========================================================
+    // RENDERING LIST HASIL TAUTAN
+    // ==========================================================
+    function renderList() {
+      const filtered = activeFilter === 'all'
+        ? allLinks
+        : allLinks.filter(l => l.type === activeFilter);
+
+      if (filtered.length === 0) {
+        linkList.innerHTML = `
+          <div class="text-center py-12 text-[var(--text-muted)] space-y-2">
+            <div class="text-3xl"><i class="fa-solid fa-face-frown opacity-40"></i></div>
+            <p class="text-[11px] font-semibold">Tautan jenis filter ini tidak ditemukan.</p>
+          </div>
+        `;
+        return;
+      }
+
+      linkList.innerHTML = filtered.map((item, i) => `
+        <div class="flex items-center justify-between gap-3 p-3 bg-[var(--bg-card)]/40 hover:bg-[var(--bg-card)] rounded-xl border border-[var(--border)] transition-all">
+          <div class="flex items-center gap-2 truncate">
+            <span class="text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded ${
+              item.type === 'reel' 
+                ? 'bg-brand-facebook/10 text-brand-facebook border border-brand-facebook/20' 
+                : 'bg-brand-emerald/10 text-brand-emerald border border-brand-emerald/20'
+            }">
+              ${item.type}
+            </span>
+            <a class="text-xs font-mono text-[var(--text-secondary)] hover:text-brand-facebook transition truncate" href="${item.url}" target="_blank" rel="noopener" title="${item.url}">
+              ${item.url}
+            </a>
+          </div>
+          
+          <button class="shrink-0 p-2 text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--border)] rounded-lg transition" onclick="copySingleLink('${item.url}', this)" title="Copy Tautan">
+            <i class="fa-solid fa-copy"></i>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    // ==========================================================
+    // KUMPULAN EVENT LISTENERS & OPERASI
+    // ==========================================================
+    document.getElementById('btnExtract').addEventListener('click', () => {
+      const html = htmlInput.value.trim();
+      if (!html) { 
+        showToast('Masukkan kode sumber HTML terlebih dahulu!', 'error'); 
+        return; 
+      }
+
+      allLinks = extractLinks(html);
+      const reels  = allLinks.filter(l => l.type === 'reel').length;
+      const videos = allLinks.filter(l => l.type === 'video').length;
+
+      document.getElementById('statReel').textContent  = reels;
+      document.getElementById('statVideo').textContent = videos;
+      document.getElementById('statTotal').textContent = allLinks.length;
+
+      if (allLinks.length === 0) {
+        statsGrid.style.display   = 'none';
+        resultPanel.style.display = 'none';
+        emptyState.style.display  = 'block';
+        showToast('Maaf, tidak terdeteksi link reel atau video di dalam HTML.', 'error');
+      } else {
+        emptyState.style.display  = 'none';
+        statsGrid.style.display   = 'grid';
+        resultPanel.style.display = 'flex';
+        
+        activeFilter = 'all';
+        document.querySelectorAll('.tab').forEach(t => {
+          t.classList.remove('active', 'text-white', 'bg-brand-facebook');
+          t.classList.add('text-[var(--text-secondary)]', 'bg-[var(--bg-card)]');
+          if (t.dataset.f === 'all') {
+            t.classList.add('active', 'text-white', 'bg-brand-facebook');
+          }
+        });
+
+        renderList();
+        showToast(`Berhasil mengekstrak ${allLinks.length} tautan unik!`, 'success');
+      }
+    });
+
+    // Tempel Teks dari Clipboard
+    document.getElementById('btnPaste').addEventListener('click', async () => {
+      try {
+        const text = await navigator.clipboard.readText();
+        htmlInput.value = text;
+        charCount.textContent = text.length.toLocaleString('id') + ' karakter';
+        showToast('HTML berhasil ditempel!', 'success');
+      } catch {
+        showToast('Gagal mengakses clipboard. Silakan tempel secara manual (Ctrl+V).', 'error');
+      }
+    });
+
+    // Bersihkan Bidang Input
+    document.getElementById('btnClear').addEventListener('click', () => {
+      htmlInput.value = '';
+      charCount.textContent = '0 karakter';
       statsGrid.style.display   = 'none';
       resultPanel.style.display = 'none';
       emptyState.style.display  = 'block';
-    } else {
-      emptyState.style.display  = 'none';
-      statsGrid.style.display   = 'grid';
-      resultPanel.style.display = 'block';
-      activeFilter = 'all';
-      document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.f === 'all'));
-      renderList();
-      showToast(`${allLinks.length} link berhasil ditemukan!`);
-    }
-  });
-
-  // ── Paste clipboard
-  document.getElementById('btnPaste').addEventListener('click', async () => {
-    try {
-      const text = await navigator.clipboard.readText();
-      htmlInput.value = text;
-      charCount.textContent = text.length.toLocaleString('id') + ' karakter';
-      showToast('HTML berhasil di-paste dari clipboard!');
-    } catch {
-      showToast('Izin clipboard ditolak — paste manual (Ctrl+V)', false);
-    }
-  });
-
-  // ── Clear
-  document.getElementById('btnClear').addEventListener('click', () => {
-    htmlInput.value = '';
-    charCount.textContent = '0 karakter';
-    statsGrid.style.display   = 'none';
-    resultPanel.style.display = 'none';
-    emptyState.style.display  = 'none';
-    allLinks = [];
-  });
-
-  // ── Filter tabs
-  document.querySelectorAll('.tab').forEach(btn => {
-    btn.addEventListener('click', () => {
-      activeFilter = btn.dataset.f;
-      document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t === btn));
-      renderList();
+      allLinks = [];
+      showToast('Formulir berhasil dibersihkan.', 'success');
     });
-  });
 
-  // ── Copy one
-  function copyOne(url, btn) {
-    navigator.clipboard.writeText(url).then(() => {
-      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;color:var(--green)"><polyline points="20 6 9 17 4 12"/></svg>`;
-      showToast('Link disalin!');
+    // Penanganan Filter Tab Tautan
+    document.querySelectorAll('.tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeFilter = btn.dataset.f;
+        document.querySelectorAll('.tab').forEach(t => {
+          t.classList.remove('active', 'text-white', 'bg-brand-facebook');
+          t.classList.add('text-[var(--text-secondary)]', 'bg-[var(--bg-card)]');
+        });
+        btn.classList.add('active', 'text-white', 'bg-brand-facebook');
+        btn.classList.remove('text-[var(--text-secondary)]', 'bg-[var(--bg-card)]');
+        renderList();
+      });
+    });
+
+    // Salin Satu Per Satu (Dengan fallback yang aman untuk iframe sandboxed)
+    function copySingleLink(url, elementBtn) {
+      const textarea = document.createElement('textarea');
+      textarea.value = url;
+      textarea.style.position = 'fixed';
+      document.body.appendChild(textarea);
+      textarea.select();
+      
+      try {
+        document.execCommand('copy');
+        elementBtn.innerHTML = `<i class="fa-solid fa-check text-brand-emerald"></i>`;
+        showToast('Link berhasil disalin!', 'success');
+        setTimeout(() => {
+          elementBtn.innerHTML = `<i class="fa-solid fa-copy"></i>`;
+        }, 1800);
+      } catch (err) {
+        showToast('Gagal menyalin, salin secara manual.', 'error');
+      }
+      document.body.removeChild(textarea);
+    }
+
+    // Salin Semua Hasil Link Sesuai Filter Terpilih
+    document.getElementById('btnCopyAll').addEventListener('click', () => {
+      const filtered = activeFilter === 'all' ? allLinks : allLinks.filter(l => l.type === activeFilter);
+      if (filtered.length === 0) return;
+
+      const fullString = filtered.map(l => l.url).join('\n');
+      const textarea = document.createElement('textarea');
+      textarea.value = fullString;
+      textarea.style.position = 'fixed';
+      document.body.appendChild(textarea);
+      textarea.select();
+
+      try {
+        document.execCommand('copy');
+        showToast(`${filtered.length} link tersalin ke papan klip!`, 'success');
+      } catch (err) {
+        showToast('Gagal menyalin massal.', 'error');
+      }
+      document.body.removeChild(textarea);
+    });
+
+    // Unduh File Berkas .TXT
+    document.getElementById('btnDlTxt').addEventListener('click', () => {
+      const filtered = activeFilter === 'all' ? allLinks : allLinks.filter(l => l.type === activeFilter);
+      if (filtered.length === 0) return;
+      const content = filtered.map(l => l.url).join('\n');
+      triggerDownload(`fb_reels_${Date.now()}.txt`, content, 'text/plain');
+    });
+
+    // Unduh File Berkas .JSON
+    document.getElementById('btnDlJson').addEventListener('click', () => {
+      const filtered = activeFilter === 'all' ? allLinks : allLinks.filter(l => l.type === activeFilter);
+      if (filtered.length === 0) return;
+      const data = {
+        total: filtered.length,
+        extracted_at: new Date().toISOString(),
+        filter: activeFilter,
+        links: filtered
+      };
+      triggerDownload(`fb_reels_${Date.now()}.json`, JSON.stringify(data, null, 2), 'application/json');
+    });
+
+    // Driver Download Dokumen Lokal
+    function triggerDownload(filename, content, mimeType) {
+      const blob = new Blob([content], { type: mimeType });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast(`Berkas ${filename.split('_')[0].toUpperCase()} berhasil diunduh!`, 'success');
+    }
+
+    // ==========================================================
+    // POP-UP MODAL CONTROL
+    // ==========================================================
+    const aboutModal = document.getElementById('aboutModal');
+    const aboutModalCard = document.getElementById('aboutModalCard');
+
+    function openAboutModal() {
+      aboutModal.classList.remove('hidden');
       setTimeout(() => {
-        btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`;
-      }, 1800);
+        aboutModal.classList.add('opacity-100');
+        aboutModalCard.classList.remove('scale-95');
+        aboutModalCard.classList.add('scale-100');
+      }, 50);
+    }
+
+    function closeAboutModal() {
+      aboutModal.classList.remove('opacity-100');
+      aboutModalCard.classList.remove('scale-100');
+      aboutModalCard.classList.add('scale-95');
+      setTimeout(() => {
+        aboutModal.classList.add('hidden');
+      }, 300);
+    }
+
+    window.addEventListener('click', (e) => {
+      if (e.target === aboutModal) closeAboutModal();
     });
-  }
+	
+	// === [MULAILAH PERUBAHAN: LOGIKA PEMROGRAMAN UNTUK TOOLS MODAL (QUICK ACCESS)] ===
+    const toolsMenuModal = document.getElementById('toolsMenuModal');
+    const toolsMenuCard = document.getElementById('toolsMenuCard');
+    const modalToolsList = document.getElementById('modalToolsList');
 
-  // ── Copy all
-  document.getElementById('btnCopyAll').addEventListener('click', () => {
-    const filtered = activeFilter === 'all' ? allLinks : allLinks.filter(l => l.type === activeFilter);
-    navigator.clipboard.writeText(filtered.map(l => l.url).join('\n')).then(() => {
-      showToast(`${filtered.length} link disalin ke clipboard!`);
+    // Buka Modal Daftar Macam-Macam Tools
+    function openToolsModal() {
+        // Melakukan render menu secara dinamis menggunakan Javascript
+        modalToolsList.innerHTML = ALL_TOOLS.map(t => `
+            <a href="${t.url}" class="flex items-center gap-3 p-3 rounded-xl border border-[var(--border)] hover:bg-[var(--bg-card)] transition-all">
+                <div class="w-8 h-8 rounded-lg bg-brand-light/10 text-brand-light flex items-center justify-center text-sm">
+                    <i class="${t.icon}"></i>
+                </div>
+                <div class="flex-grow">
+                    <h4 class="text-xs font-bold text-[var(--text-primary)]">${t.name}</h4>
+                    <p class="text-[10px] text-[var(--text-muted)] truncate max-w-[200px] sm:max-w-md">${t.desc}</p>
+                </div>
+            </a>
+        `).join('');
+
+        toolsMenuModal.classList.remove('hidden');
+        setTimeout(() => {
+            toolsMenuModal.classList.add('opacity-100');
+            toolsMenuCard.classList.remove('scale-95');
+            toolsMenuCard.classList.add('scale-100');
+        }, 50);
+    }
+
+    // Tutup Modal Daftar Macam-Macam Tools
+    function closeToolsModal() {
+        toolsMenuModal.classList.remove('opacity-100');
+        toolsMenuCard.classList.remove('scale-100');
+        toolsMenuCard.classList.add('scale-95');
+        setTimeout(() => {
+            toolsMenuModal.classList.add('hidden');
+        }, 300);
+    }
+
+    // Listener klik area luar modal untuk menutup
+    window.addEventListener('click', (e) => {
+      if (e.target === aboutModal) closeAboutModal();
+      if (e.target === toolsMenuModal) closeToolsModal();
     });
-  });
-
-  // ── Download TXT
-  document.getElementById('btnDlTxt').addEventListener('click', () => {
-    const filtered = activeFilter === 'all' ? allLinks : allLinks.filter(l => l.type === activeFilter);
-    const content = filtered.map(l => l.url).join('\n');
-    download(`fb_reels_${Date.now()}.txt`, content, 'text/plain');
-  });
-
-  // ── Download JSON
-  document.getElementById('btnDlJson').addEventListener('click', () => {
-    const filtered = activeFilter === 'all' ? allLinks : allLinks.filter(l => l.type === activeFilter);
-    const data = {
-      total: filtered.length,
-      extracted_at: new Date().toISOString(),
-      filter: activeFilter,
-      links: filtered
-    };
-    download(`fb_reels_${Date.now()}.json`, JSON.stringify(data, null, 2), 'application/json');
-  });
-
-  function download(filename, content, type) {
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([content], { type }));
-    a.download = filename;
-    a.click();
-    showToast(`File ${filename.split('_')[2]?.split('.')[1]?.toUpperCase() || 'file'} berhasil diunduh!`);
-  }
-
-  // ── Toast
-  let toastTimer;
-  function showToast(msg, success = true) {
-    const t = document.getElementById('toast');
-    const icon = t.querySelector('svg');
-    document.getElementById('toastMsg').textContent = msg;
-    icon.style.color = success ? 'var(--green)' : '#e05555';
-    t.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
-  }
-</script>
+    // === [AKHIR PERUBAHAN] ===
+  </script>
 </body>
 </html>
