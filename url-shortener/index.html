@@ -1,638 +1,1011 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="transition-colors duration-300">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>296URL Shortener</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons untuk ikon yang cantik -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- QRCode.js untuk membuat QR Code secara lokal -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-  <!-- --- FAVICON (SVG Crown Emoji) --- -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>296Relink — Pemendek URL Lokal & Cepat</title>
+<!-- ========================================================== -->
+<!-- META TAG UMUM (Untuk SEO Dasar & Browser) -->
+<!-- ========================================================== -->
+<meta name="description" content="Pangkas URL panjang Anda menjadi tautan yang ringkas, aman, dan privat secara instan. 100% lokal tanpa database luar.">
+<meta name="robots" content="index, follow">
+
+<!-- Font Family Premium -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- Favicon -->
 <link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
-    
-    <script>
-        // REDIRECTION ENGINE INTERCEPTOR (Sistem Pengalihan Otomatis)
-        // Berjalan paling awal untuk mendeteksi jika ada request pengalihan (?r=kode)
-        (function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            let code = urlParams.get('r');
+
+<!-- QRCode.js untuk membuat QR Code secara lokal -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<!-- Tailwind CSS Setup -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            light: '#6c63ff',
+            dark: '#a78bfa',
+            accent: '#38bdf8',
+            emerald: '#10b981',
+            rose: '#f43f5e',
+            amber: '#f59e0b'
+          }
+        },
+        fontFamily: {
+          clash: ['Clash Display', 'sans-serif'],
+          bricolage: ['Bricolage Grotesque', 'sans-serif'],
+          mono: ['DM Mono', 'monospace'],
+        }
+      }
+    }
+  }
+</script>
+
+<script>
+    // ==========================================================
+    // REDIRECTION ENGINE INTERCEPTOR (Sistem Pengalihan Otomatis)
+    // Runs immediately to intercept "?r=code" or "#r=code" requests
+    // ==========================================================
+    (function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        let code = urlParams.get('r');
+        
+        if (!code && window.location.hash.startsWith('#r=')) {
+            code = decodeURIComponent(window.location.hash.substring(3));
+        }
+        
+        if (code) {
+            const appUrls = JSON.parse(localStorage.getItem('pangkas_urls')) || [];
+            const found = appUrls.find(item => item.code === code);
             
-            // Fallback mendukung hash (#r=kode) jika query param tidak terbaca
-            if (!code && window.location.hash.startsWith('#r=')) {
-                code = decodeURIComponent(window.location.hash.substring(3));
-            }
-            
-            if (code) {
-                const appUrls = JSON.parse(localStorage.getItem('pangkas_urls')) || [];
-                const found = appUrls.find(item => item.code === code);
+            if (found) {
+                // Update click statistics
+                found.clicks = (found.clicks || 0) + 1;
+                localStorage.setItem('pangkas_urls', JSON.stringify(appUrls));
                 
-                if (found) {
-                    // Tambahkan statistik klik sebelum pengalihan
-                    found.clicks = (found.clicks || 0) + 1;
-                    localStorage.setItem('pangkas_urls', JSON.stringify(appUrls));
-                    
-                    // RENDER LAMAN LOADING REDIRECT (Tampilan estetik saat memuat halaman tujuan)
-                    document.write(`
-                        <!DOCTYPE html>
-                        <html lang="id">
-                        <head>
-                            <meta charset="UTF-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                            <title>Mengarahkan ke tujuan... | PangkasLink</title>
-                            <script src="https://cdn.tailwindcss.com"><\/script>
-                            <style>
-                                @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
-                                body { font-family: 'Plus Jakarta Sans', sans-serif; }
-                            </style>
-                        </head>
-                        <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col items-center justify-center p-6 transition-colors duration-300">
-                            <div class="max-w-md w-full text-center space-y-6 bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800/80">
-                                <div class="relative w-24 h-24 mx-auto">
-                                    <div class="absolute inset-0 rounded-full border-4 border-sky-100 dark:border-slate-700"></div>
-                                    <div class="absolute inset-0 rounded-full border-4 border-sky-500 border-t-transparent animate-spin"></div>
-                                    <div class="absolute inset-0 flex items-center justify-center text-sky-500">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="animate-bounce"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-                                    </div>
-                                </div>
-                                <div class="space-y-2">
-                                    <h1 class="text-2xl font-extrabold tracking-tight">Menghubungkan Anda</h1>
-                                    <p class="text-sm text-slate-500 dark:text-slate-400">Tautan aman sedang diproses. Mohon tunggu sebentar.</p>
-                                </div>
-                                <div class="p-3 bg-slate-50 dark:bg-slate-950/40 rounded-2xl border border-slate-100 dark:border-slate-800/50 truncate text-xs font-mono text-slate-600 dark:text-slate-400 break-all">
-                                    \${found.longUrl}
-                                </div>
-                                <div class="text-xs text-slate-400">
-                                    Mengalihkan otomatis dalam <span id="countdown" class="font-bold text-sky-500 text-sm">2</span> detik atau <a href="\${found.longUrl}" class="text-sky-500 hover:underline font-semibold">klik disini</a> jika tidak berpindah.
+                // Render stylized loader overlay
+                document.write(`
+                    <!DOCTYPE html>
+                    <html lang="id">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Menghubungkan Anda... | 296Relink</title>
+                        <script src="https://cdn.tailwindcss.com"><\/script>
+                        <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;500;600;700&display=swap" rel="stylesheet">
+                        <style>
+                            body { font-family: 'Bricolage Grotesque', sans-serif; background-color: #0b0c10; color: #f0f0f5; }
+                            body::before {
+                                content: ''; position: fixed; inset: 0;
+                                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+                                pointer-events: none; opacity: 0.5; z-index: 0;
+                            }
+                        </style>
+                    </head>
+                    <body class="min-h-screen flex flex-col items-center justify-center p-6 relative">
+                        <div class="max-w-md w-full text-center space-y-6 bg-[#13141a] p-8 rounded-3xl shadow-2xl border border-white/10 z-10 relative">
+                            <div class="relative w-20 h-20 mx-auto">
+                                <div class="absolute inset-0 rounded-full border-4 border-white/5"></div>
+                                <div class="absolute inset-0 rounded-full border-4 border-[#6c63ff] border-t-transparent animate-spin"></div>
+                                <div class="absolute inset-0 flex items-center justify-center text-[#6c63ff]">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="animate-bounce"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l 1.71-1.71"></path></svg>
                                 </div>
                             </div>
-                        </body>
-                        </html>
-                    `);
-                    document.close();
+                            <div class="space-y-1">
+                                <h1 class="text-xl font-bold tracking-tight text-white font-clash">Mengalihkan Tautan</h1>
+                                <p class="text-xs text-slate-400">Tautan aman sedang diproses. Mohon tunggu sebentar.</p>
+                            </div>
+                            <div class="p-3 bg-white/5 rounded-2xl border border-white/5 truncate text-[11px] font-mono text-[#a78bfa] break-all">
+                                \${found.longUrl}
+                            </div>
+                            <div class="text-[11px] text-slate-400">
+                                Berpindah otomatis dalam <span id="countdown" class="font-bold text-[#38bdf8] text-xs">2</span> detik atau <a href="\${found.longUrl}" class="text-[#6c63ff] hover:underline font-semibold">klik di sini</a> jika tidak berpindah.
+                            </div>
+                        </div>
+                    </body>
+                    </html>
+                `);
+                document.close();
 
-                    // Hitung mundur pengalihan (Durasi: 2 detik)
-                    let countdown = 2;
-                    const interval = setInterval(() => {
-                        countdown--;
-                        const el = document.getElementById('countdown');
-                        if (el) el.textContent = countdown;
-                        if (countdown <= 0) {
-                            clearInterval(interval);
-                            window.location.replace(found.longUrl);
-                        }
-                    }, 1000);
-                    
-                    // Menghentikan rendering halaman utama PangkasLink agar langsung beralih ke loading redirect
-                    window.stop();
-                } else {
-                    alert("Tautan pendek tidak terdaftar atau telah dihapus dari penyimpanan browser lokal Anda.");
-                }
-            }
-        })();
-
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                        }
+                // Countdown Redirect Execution (2 seconds)
+                let countdown = 2;
+                const interval = setInterval(() => {
+                    countdown--;
+                    const el = document.getElementById('countdown');
+                    if (el) el.textContent = countdown;
+                    if (countdown <= 0) {
+                        clearInterval(interval);
+                        window.location.replace(found.longUrl);
                     }
-                }
+                }, 1000);
+                
+                // Block primary PangkasLink rendering
+                window.stop();
+            } else {
+                // We will handle redirect failure inside primary runtime
+                window.location.search = ""; 
             }
         }
-    </script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-    </style>
+    })();
+</script>
+
+<style>
+  /* CSS Variables for Light/Dark Themes */
+  :root {
+    --bg: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-card: #f1f5f9;
+    --border: rgba(15, 23, 42, 0.08);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --shadow-premium: 0 10px 30px -10px rgba(108, 99, 255, 0.1);
+  }
+
+  .dark {
+    --bg: #0b0c10;
+    --bg-surface: #13141a;
+    --bg-card: #1e2029;
+    --border: rgba(255, 255, 255, 0.07);
+    --text-primary: #f0f0f5;
+    --text-secondary: #9899a8;
+    --text-muted: #5a5b6a;
+    --shadow-premium: 0 10px 40px rgba(0,0,0,0.5), 0 0 40px rgba(108,99,255,0.15);
+  }
+
+  body {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    background-color: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  /* SVG Noise Overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* Hero Gradient Blur Blobs */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+  .blob-1 {
+    width: 400px; height: 250px;
+    background: rgba(108, 99, 255, 0.12);
+    top: -40px; left: 50%;
+    transform: translateX(-50%);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-up {
+    animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 10px;
+  }
+</style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen transition-colors duration-300">
+<body class="flex flex-col">
 
-    <!-- Header / Navigasi -->
-    <header class="border-b border-slate-200/80 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <div class="p-2 bg-primary-500 text-white rounded-xl">
-                    <i data-lucide="link-2" class="w-6 h-6"></i>
-                </div>
-                <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-primary-500 to-indigo-600 bg-clip-text text-transparent">URLShortener</span>
-            </div>
-            
-            <div class="flex items-center gap-4">
-                <!-- Mode Gelap Toggle -->
-                <button id="theme-toggle" class="p-2.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors text-slate-500 dark:text-slate-400">
-                    <i id="theme-toggle-dark-icon" class="w-5 h-5 hidden" data-lucide="moon"></i>
-                    <i id="theme-toggle-light-icon" class="w-5 h-5 hidden" data-lucide="sun"></i>
-                </button>
-                <a href="#riwayat-section" class="hidden sm:flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-primary-500 transition-colors">
-                    <i data-lucide="history" class="w-4 h-4"></i> Riwayat
-                </a>
-            </div>
+  <!-- Header / Topbar Navigation -->
+  <header class="sticky top-0 z-40 w-full bg-[var(--bg)]/80 backdrop-blur-md border-b border-[var(--border)] transition-all">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="homepage_296tools.html" class="flex items-center gap-3">
+        <div class="w-9 h-9 bg-gradient-to-tr from-brand-light to-brand-accent rounded-lg flex items-center justify-center shadow-lg">
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" class="w-6 h-6 object-contain" alt="Logo 296">
         </div>
-    </header>
+        <span class="font-clash text-lg font-bold tracking-tight">296<span class="text-brand-dark">Tools</span></span>
+      </a>
 
-    <main class="max-w-4xl mx-auto px-4 py-12">
-        <!-- Hero Section -->
-        <div class="text-center mb-12">
-           
-            <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight mt-4 mb-6 leading-tight">
-                Pangkas URL Panjang Menjadi <span class="bg-gradient-to-r from-primary-500 to-indigo-500 bg-clip-text text-transparent">Lebih Ringkas</span>
-            </h1>
-            
-        </div>
+      <!-- Menu Samping Kanan (Theme Toggle & Label Keamanan) -->
+      <div class="flex items-center gap-2 md:gap-4">
+        <span class="hidden md:inline-block text-xs font-semibold text-[var(--text-secondary)] bg-[var(--bg-card)] px-3 py-1.5 rounded-full border border-[var(--border)]">
+          🔒 100% Lokal & Privat
+        </span>
+        <button onclick="triggerResetAllHistory()" class="p-2 rounded-lg bg-[var(--bg-card)] hover:bg-rose-500/10 border border-[var(--border)] text-[var(--text-secondary)] hover:text-rose-500 transition-all text-xs flex items-center gap-1.5" title="Reset Data">
+          <i class="fa-solid fa-arrow-rotate-left"></i>
+          <span class="hidden sm:inline font-semibold">Reset</span>
+        </button>
+        <!-- Tombol Pengubah Mode Gelap/Terang -->
+        <button id="themeToggle" class="p-2.5 rounded-lg bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] transition-all" title="Ubah Tema">
+          <i class="fa-solid fa-moon dark:hidden text-base"></i>
+          <i class="fa-solid fa-sun hidden dark:block text-base text-yellow-400"></i>
+        </button>
+      </div>
+    </div>
+  </header>
 
-        <!-- Notification Toast -->
-        <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-            <div class="bg-slate-900 text-white dark:bg-white dark:text-slate-900 px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3">
-                <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>
-                <span id="toast-message" class="text-sm font-medium">Berhasil menyalin tautan!</span>
-            </div>
-        </div>
+  <!-- Konten Utama -->
+  <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-8 relative z-10 animate-fade-up">
+    
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-        <!-- Form Pemendek URL -->
-        <div class="bg-white dark:bg-slate-800/50 rounded-2xl p-6 sm:p-8 shadow-xl border border-slate-100 dark:border-slate-800/80 mb-12 backdrop-blur-sm">
-            <form id="shorten-form" class="space-y-4">
-                <div>
-                    <label for="long-url" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Tempel URL Panjang Anda</label>
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
-                            <i data-lucide="link" class="w-5 h-5"></i>
-                        </div>
-                        <input 
-                            type="url" 
-                            id="long-url" 
-                            required
-                            placeholder="https://contoh-website-sangat-panjang.com/halaman/artikel-terbaru" 
-                            class="w-full pl-11 pr-4 py-3.5 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all text-slate-900 dark:text-white"
-                        >
-                    </div>
-                </div>
+    <!-- Hero / Judul Halaman -->
+    <section class="text-center py-6 relative overflow-hidden" id="hero-section">
+      <div class="blob blob-1"></div>
+      
+      <div class="inline-flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-brand-light bg-brand-light/10 border border-brand-light/20 rounded-full px-4 py-1.5 mb-4">
+        <i class="fa-solid fa-link animate-pulse"></i> Pemendek URL Aman
+      </div>
 
-                <!-- Opsi Kustomisasi -->
-                <div class="pt-2">
-                    <button type="button" id="toggle-custom-btn" class="flex items-center gap-2 text-sm font-semibold text-primary-500 hover:text-primary-600 transition-colors">
-                        <i data-lucide="settings-2" class="w-4 h-4"></i>
-                        <span>Opsi Kustom URL (Opsional)</span>
-                        <i data-lucide="chevron-down" id="custom-arrow" class="w-4 h-4 transition-transform duration-200"></i>
-                    </button>
+      <h1 class="font-clash text-3xl md:text-5xl font-bold tracking-tight leading-none mb-4">
+        296<span class="bg-gradient-to-r from-brand-light via-brand-accent to-brand-emerald bg-clip-text text-transparent">Relink</span>
+      </h1>
 
-                    <div id="custom-fields" class="hidden mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-slate-50 dark:bg-slate-950/30 rounded-xl border border-slate-100 dark:border-slate-800/50">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Domain Deteksi Otomatis</label>
-                            <div id="detected-domain-badge" class="px-4 py-2.5 bg-slate-200/50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg text-slate-600 dark:text-slate-300 text-xs font-medium truncate select-none">
-                                Mendeteksi domain...
-                            </div>
-                        </div>
-                        <div>
-                            <label for="custom-alias" class="block text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">Alias Kustom</label>
-                            <input 
-                                type="text" 
-                                id="custom-alias" 
-                                placeholder="tautan-saya" 
-                                pattern="^[a-zA-Z0-9-_]+$"
-                                title="Hanya huruf, angka, tanda hubung (-), dan garis bawah (_)"
-                                class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all text-slate-900 dark:text-white text-sm"
-                            >
-                        </div>
-                    </div>
-                </div>
+      <p class="text-xs md:text-sm text-[var(--text-secondary)] max-w-lg mx-auto font-light leading-relaxed">
+        Pangkas URL panjang Anda menjadi ringkas. Mengalihkan lalu lintas secara aman, terintegrasi dengan layar pemuatan yang modern, dan 100% diproses di dalam browser Anda.
+      </p>
+    </section>
 
-                <button 
-                    type="submit" 
-                    class="w-full bg-gradient-to-r from-primary-500 to-indigo-600 hover:from-primary-600 hover:to-indigo-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg shadow-primary-500/20 hover:shadow-primary-600/30 transition-all flex items-center justify-center gap-2 text-base"
-                >
-                    <i data-lucide="scissors" class="w-5 h-5"></i>
-                    <span>Pangkas URL Sekarang</span>
-                </button>
-            </form>
+    <!-- Form Pemendek URL -->
+    <div class="bg-[var(--bg-surface)] p-6 sm:p-8 rounded-2xl border border-[var(--border)] shadow-sm space-y-5 mb-10">
+      <form id="shorten-form" class="space-y-5">
+        <div class="space-y-2">
+          <label for="long-url" class="block text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">Tempel URL Panjang Anda</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-[var(--text-muted)]">
+              <i class="fa-solid fa-globe text-sm"></i>
+            </span>
+            <input 
+              type="url" 
+              id="long-url" 
+              required
+              placeholder="https://contoh-website-sangat-panjang.com/halaman/artikel-terbaru" 
+              class="w-full pl-11 pr-4 py-3 bg-[var(--bg-card)] border border-[var(--border)] rounded-xl text-xs text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-brand-light/35 transition-all font-medium"
+            >
+          </div>
         </div>
 
-        <!-- Kotak Hasil Pemendekan -->
-        <div id="result-box" class="hidden bg-emerald-500/10 dark:bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-6 mb-12 animate-fade-in">
-            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-                <div class="space-y-3 w-full md:w-2/3">
-                    <div class="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold text-sm">
-                        <i data-lucide="party-popper" class="w-4 h-4"></i>
-                        <span>Tautan Aktif Domain Anda Berhasil Dibuat!</span>
-                    </div>
-                    <div>
-                        <!-- Tautan Aktif -->
-                        <h3 id="short-url-result" class="text-xl font-extrabold text-slate-900 dark:text-white break-all tracking-tight selection:bg-emerald-200"></h3>
-                        <p class="text-[10px] text-emerald-600 dark:text-emerald-400 mt-1 flex items-center gap-1 font-semibold">
-                            <i data-lucide="zap" class="w-3 h-3"></i> Tautan ini mengarah ke domain Anda sendiri dan akan memunculkan layar loading saat diakses!
-                        </p>
-                    </div>
-                    <p id="original-url-preview" class="text-xs text-slate-400 dark:text-slate-500 truncate max-w-full border-t border-slate-100 dark:border-slate-800/80 pt-2"></p>
-                </div>
+        <!-- Opsi Kustomisasi -->
+        <div class="space-y-2">
+          <button type="button" id="toggle-custom-btn" class="flex items-center gap-2 text-xs font-bold text-brand-light hover:text-opacity-80 transition-colors">
+            <i class="fa-solid fa-sliders"></i>
+            <span>Kustomisasi Alias Tautan (Opsional)</span>
+            <i class="fa-solid fa-chevron-down text-[10px] transition-transform duration-300" id="custom-arrow"></i>
+          </button>
 
-                <div class="flex items-center gap-2 w-full md:w-auto">
-                    <button id="copy-btn" class="flex-1 md:flex-none px-4 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-bold text-sm transition-all shadow-md shadow-emerald-500/10 flex items-center justify-center gap-2">
-                        <i data-lucide="copy" class="w-4 h-4"></i> Salin
-                    </button>
-                    <button id="qr-btn" class="flex-1 md:flex-none px-4 py-3 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2">
-                        <i data-lucide="qr-code" class="w-4 h-4"></i> QR Code
-                    </button>
-                    <button id="open-btn" class="px-4 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl font-semibold text-sm transition-all" title="Uji coba pengalihan langsung">
-                        <i data-lucide="external-link" class="w-4.5 h-4.5"></i>
-                    </button>
-                </div>
+          <div id="custom-fields" class="hidden mt-3 grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-[var(--bg-card)]/50 rounded-xl border border-[var(--border)]">
+            <div class="space-y-1.5">
+              <label class="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Domain Deteksi Otomatis</label>
+              <div id="detected-domain-badge" class="px-3.5 py-2.5 bg-[var(--bg-card)] border border-[var(--border)] rounded-xl text-[var(--text-secondary)] text-[11px] font-mono truncate select-none">
+                Mendeteksi domain...
+              </div>
             </div>
+            <div class="space-y-1.5">
+              <label for="custom-alias" class="block text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Alias Kustom</label>
+              <input 
+                type="text" 
+                id="custom-alias" 
+                placeholder="tautan-saya" 
+                pattern="^[a-zA-Z0-9-_]+$"
+                title="Hanya huruf, angka, tanda hubung (-), dan garis bawah (_)"
+                class="w-full px-3.5 py-2 bg-[var(--bg-card)] border border-[var(--border)] rounded-xl text-xs text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-brand-light/35 transition-all font-semibold font-mono"
+              >
+            </div>
+          </div>
         </div>
 
-        <!-- Section Riwayat -->
-        <section id="riwayat-section" class="scroll-mt-24">
-            <div class="flex items-center justify-between mb-6">
-                <div class="flex items-center gap-2">
-                    <i data-lucide="history" class="text-primary-500 w-5 h-5"></i>
-                    <h2 class="text-xl font-extrabold tracking-tight">Riwayat Tautan</h2>
-                </div>
-                <button id="clear-all-btn" class="text-xs font-semibold text-rose-500 hover:text-rose-600 dark:text-rose-400 flex items-center gap-1.5 transition-colors hidden">
-                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Hapus Semua
-                </button>
-            </div>
-
-            <!-- List Tautan Kosong -->
-            <div id="history-empty" class="text-center py-12 bg-white dark:bg-slate-800/30 rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
-                <div class="w-12 h-12 bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i data-lucide="link" class="w-6 h-6"></i>
-                </div>
-                <h3 class="text-base font-bold text-slate-700 dark:text-slate-300">Belum ada riwayat tautan</h3>
-                <p class="text-xs text-slate-400 dark:text-slate-500 max-w-xs mx-auto mt-1">Tautan yang Anda pendekkan akan muncul secara otomatis di halaman ini.</p>
-            </div>
-
-            <!-- Grid List Tautan Riwayat -->
-            <div id="history-list" class="space-y-4"></div>
-        </section>
-    </main>
-
-    <!-- Modal QR Code -->
-    <div id="qr-modal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 dark:border-slate-800/80 animate-scale-up">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                    <i data-lucide="qr-code" class="text-primary-500 w-5 h-5"></i> QR Code Tautan
-                </h3>
-                <button id="close-qr-btn" class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 rounded-lg transition-all">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-            
-            <div class="flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950/40 rounded-xl p-6 border border-slate-100 dark:border-slate-850 mb-6">
-                <div id="qrcode-container" class="bg-white p-3 rounded-lg shadow-inner"></div>
-                <p id="qr-link-text" class="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-4 truncate max-w-full text-center font-mono"></p>
-            </div>
-
-            <button id="download-qr-btn" class="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold py-3 px-4 rounded-xl hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors flex items-center justify-center gap-2 text-sm">
-                <i data-lucide="download" class="w-4 h-4"></i> Unduh QR Code
-            </button>
-        </div>
+        <button 
+          type="submit" 
+          class="w-full bg-gradient-to-r from-brand-light to-brand-accent hover:opacity-90 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-brand-light/10 transition-all flex items-center justify-center gap-2 text-xs"
+        >
+          <i class="fa-solid fa-scissors"></i>
+          <span>Pangkas URL Sekarang</span>
+        </button>
+      </form>
     </div>
 
-    <!-- Footer -->
-    <footer class="border-t border-slate-200/80 dark:border-slate-800/60 py-8 mt-24">
-        <div class="max-w-4xl mx-auto px-4 text-center text-slate-400 dark:text-slate-500 text-sm space-y-2">
-            <p>&copy; 2026 URLSHortenet.</p>
-            
+    <!-- Kotak Hasil Pemendekan -->
+    <div id="result-box" class="hidden bg-brand-emerald/5 dark:bg-brand-emerald/5 border border-brand-emerald/20 rounded-2xl p-5 sm:p-6 mb-10 transition-all">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div class="space-y-3 w-full md:w-2/3 text-xs">
+          <div class="flex items-center gap-1.5 text-brand-emerald font-bold">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Tautan Anda Berhasil Dipangkas!</span>
+          </div>
+          <div>
+            <h3 id="short-url-result" class="text-base sm:text-lg font-mono font-bold text-[var(--text-primary)] break-all tracking-tight select-all selection:bg-brand-emerald/25"></h3>
+            <p class="text-[10px] text-brand-emerald/80 mt-1 flex items-center gap-1 font-medium leading-relaxed">
+              <i class="fa-solid fa-bolt"></i> Tautan ini mengarah ke domain Anda sendiri dan akan memunculkan layar loading saat diakses!
+            </p>
+          </div>
+          <p id="original-url-preview" class="text-[10px] text-[var(--text-muted)] truncate max-w-full border-t border-[var(--border)] pt-2 font-mono"></p>
         </div>
-    </footer>
 
-    <script>
-        // DOM Elements
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-        const toggleCustomBtn = document.getElementById('toggle-custom-btn');
-        const customFields = document.getElementById('custom-fields');
-        const customArrow = document.getElementById('custom-arrow');
-        const detectedDomainBadge = document.getElementById('detected-domain-badge');
-        
-        const shortenForm = document.getElementById('shorten-form');
-        const longUrlInput = document.getElementById('long-url');
-        const customAliasInput = document.getElementById('custom-alias');
-        
-        const resultBox = document.getElementById('result-box');
-        const shortUrlResult = document.getElementById('short-url-result');
-        const originalUrlPreview = document.getElementById('original-url-preview');
-        const copyBtn = document.getElementById('copy-btn');
-        const qrBtn = document.getElementById('qr-btn');
-        const openBtn = document.getElementById('open-btn');
-        
-        const historyEmpty = document.getElementById('history-empty');
-        const historyList = document.getElementById('history-list');
-        const clearAllBtn = document.getElementById('clear-all-btn');
-        
-        const qrModal = document.getElementById('qr-modal');
-        const closeQrBtn = document.getElementById('close-qr-btn');
-        const qrcodeContainer = document.getElementById('qrcode-container');
-        const qrLinkText = document.getElementById('qr-link-text');
-        const downloadQrBtn = document.getElementById('download-qr-btn');
-        
-        const toast = document.getElementById('toast');
-        const toastMessage = document.getElementById('toast-message');
+        <div class="flex items-center gap-2 w-full md:w-auto shrink-0">
+          <button id="copy-btn" class="flex-1 md:flex-none px-4 py-2.5 bg-brand-emerald hover:opacity-90 text-white rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-copy"></i> 
+            <span>Salin</span>
+          </button>
+          <button id="qr-btn" class="flex-1 md:flex-none px-4 py-2.5 bg-[var(--bg-card)] hover:bg-[var(--border)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-qrcode"></i> 
+            <span>QR Code</span>
+          </button>
+          <button id="open-btn" class="px-3 py-2.5 bg-[var(--bg-card)] hover:bg-[var(--border)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl text-xs transition-all" title="Buka Tautan Langsung">
+            <i class="fa-solid fa-up-right-from-square"></i>
+          </button>
+        </div>
+      </div>
+    </div>
 
-        // State & Variabel
-        let appUrls = JSON.parse(localStorage.getItem('pangkas_urls')) || [];
-        let activeShortUrl = '';
-        let qrInstance = null;
+    <!-- Section Riwayat -->
+    <section id="riwayat-section" class="scroll-mt-24 space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-[var(--border)]">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-brand-light/10 text-brand-light flex items-center justify-center text-sm">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+          </div>
+          <div>
+            <h2 class="text-sm font-bold font-clash text-[var(--text-primary)]">Riwayat Tautan Anda</h2>
+            <p class="text-[10px] text-[var(--text-muted)]">Daftar pemendekan yang diproses lokal di perangkat ini.</p>
+          </div>
+        </div>
+        <button id="clear-all-btn" class="text-[10px] font-bold text-brand-rose bg-brand-rose/10 hover:bg-brand-rose/25 px-3 py-1.5 rounded-xl transition-all hidden flex items-center gap-1">
+          <i class="fa-solid fa-trash-can"></i> Hapus Semua
+        </button>
+      </div>
 
-        // Mendapatkan base URL aktif saat ini (Otomatis mendeteksi domain kustom/Github Pages)
-        function getActiveBaseUrl() {
-            // Mengambil skema + host + pathname halaman saat ini
-            // Jika dipasang di https://domainku.com/ akan menghasilkan https://domainku.com/
-            let path = window.location.origin + window.location.pathname;
-            if (!path.endsWith('/')) {
-                path = path + '/';
+      <!-- List Tautan Kosong -->
+      <div id="history-empty" class="text-center py-12 bg-[var(--bg-surface)] rounded-2xl border border-dashed border-[var(--border)] space-y-3">
+        <div class="w-12 h-12 bg-[var(--bg-card)] text-[var(--text-muted)] rounded-xl flex items-center justify-center mx-auto text-lg">
+          <i class="fa-solid fa-folder-open opacity-50"></i>
+        </div>
+        <div class="space-y-1">
+          <h3 class="text-xs font-semibold text-[var(--text-primary)]">Belum ada riwayat tautan</h3>
+          <p class="text-[11px] text-[var(--text-secondary)] max-w-xs mx-auto leading-relaxed">Tautan yang Anda pendekkan akan disimpan secara otomatis di browser lokal Anda.</p>
+        </div>
+      </div>
+
+      <!-- Grid List Tautan Riwayat -->
+      <div id="history-list" class="space-y-3"></div>
+    </section>
+  </main>
+
+  <!-- Modal QR Code -->
+  <div id="qr-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden transition-opacity duration-300">
+    <div class="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-2xl max-w-xs w-full border border-[var(--border)] shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="qrModalCard">
+      <div class="p-6 space-y-4">
+        <div class="flex justify-between items-center border-b border-[var(--border)] pb-3">
+          <h3 class="font-clash text-xs font-bold text-brand-light flex items-center gap-1.5">
+            <i class="fa-solid fa-qrcode"></i> QR Code Tautan
+          </h3>
+          <button id="close-qr-btn" class="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg hover:bg-[var(--bg-card)]">
+            <i class="fa-solid fa-xmark text-sm"></i>
+          </button>
+        </div>
+        
+        <div class="flex flex-col items-center justify-center bg-[var(--bg-card)]/40 rounded-xl p-4 border border-[var(--border)]">
+          <div id="qrcode-container" class="bg-white p-2.5 rounded-lg shadow-sm"></div>
+          <p id="qr-link-text" class="text-[10px] font-semibold text-[var(--text-secondary)] mt-3 truncate max-w-full text-center font-mono"></p>
+        </div>
+
+        <button id="download-qr-btn" class="w-full bg-brand-light hover:bg-opacity-90 text-white font-semibold py-2 rounded-xl text-xs transition-all flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-download"></i> Unduh QR Code
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POP-UP MODAL: ABOUT US -->
+  <div id="aboutModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-300">
+    <div class="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-2xl max-w-md w-full border border-[var(--border)] shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="aboutModalCard">
+      <div class="p-6 space-y-4 text-xs">
+        <div class="flex justify-between items-center border-b border-[var(--border)] pb-3">
+          <h3 class="font-clash text-base font-bold text-brand-light flex items-center gap-2">
+            <i class="fa-solid fa-address-card"></i> Tentang 296Tools
+          </h3>
+          <button onclick="closeAboutModal()" class="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg hover:bg-[var(--bg-card)]">
+            <i class="fa-solid fa-xmark text-base"></i>
+          </button>
+        </div>
+        
+        <div class="space-y-3 leading-relaxed text-[var(--text-secondary)]">
+          <div class="w-16 h-16 bg-brand-light/10 rounded-2xl mx-auto flex items-center justify-center">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" class="w-10 h-10 object-contain" alt="296 Studios Logo">
+          </div>
+          <p class="text-center font-bold text-[var(--text-primary)]">296GROUP - Solusi Digital Lokal</p>
+          <p>
+            <strong>296Tools</strong> adalah direktori & ekosistem micro-apps yang dikembangkan untuk membantu kegiatan digital harian Anda secara produktif. 
+          </p>
+          <p>
+            Seluruh data diproses secara <strong>100% lokal di dalam browser Anda (Client-Side)</strong>. Kami sama sekali tidak mengirim atau menyimpan berkas dokumen atau data sensitif Anda ke server luar. Keamanan privasi Anda terjamin penuh.
+          </p>
+          <div class="p-3 bg-[var(--bg-card)] rounded-xl border border-[var(--border)] text-[10px] text-[var(--text-muted)] text-center">
+            Misi kami adalah menyediakan alat bantu cepat, ringan, bersih tanpa pop-up iklan mengganggu.
+          </div>
+        </div>
+
+        <div class="pt-2 flex justify-end">
+          <button onclick="closeAboutModal()" class="px-5 py-2 text-xs font-semibold bg-brand-light text-white rounded-lg hover:bg-opacity-90 transition-all">
+            Mengerti, Terima Kasih
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POP-UP MODAL: CUSTOM CONFIRMATION (Pengganti confirm() browser) -->
+  <div id="customConfirm" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-300">
+    <div class="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-2xl max-w-sm w-full border border-[var(--border)] shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="customConfirmCard">
+      <div class="p-6 space-y-4">
+        <div class="flex items-center gap-3 text-brand-rose">
+          <div class="w-10 h-10 rounded-xl bg-brand-rose/10 flex items-center justify-center shrink-0">
+            <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+          </div>
+          <h4 class="font-clash text-sm font-bold text-[var(--text-primary)]">Butuh Konfirmasi</h4>
+        </div>
+        <p id="confirmMessage" class="text-xs leading-relaxed text-[var(--text-secondary)]">Apakah Anda yakin ingin melakukan tindakan ini?</p>
+        <div class="grid grid-cols-2 gap-3 pt-2">
+          <button onclick="closeConfirm(false)" class="py-2 text-xs font-semibold bg-[var(--bg-card)] hover:bg-[var(--border)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl transition-all">
+            Batal
+          </button>
+          <button onclick="closeConfirm(true)" class="py-2 text-xs font-semibold bg-brand-rose hover:bg-opacity-90 text-white rounded-xl transition-all">
+            Ya, Hapus
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Kaki Halaman (Footer) -->
+  <footer class="w-full py-8 text-center text-xs text-[var(--text-muted)] border-t border-[var(--border)] mt-12 bg-[var(--bg-surface)] relative z-10 pb-24 md:pb-8">
+    <div class="max-w-6xl mx-auto px-4">
+      <p class="mb-2">Dibuat dengan <i class="fa-solid fa-heart text-red-500 animate-pulse"></i> oleh <a href="https://296.web.id" class="text-brand-light hover:underline font-semibold" target="_blank">296GROUP</a></p>
+      <p class="text-[10px] tracking-wide uppercase font-bold text-slate-400">Powered by 296GROUP</p>
+    </div>
+  </footer>
+
+  <!-- BAR NAVIGASI SELULER (Mobile Sticky Bottom Navbar) -->
+  <div class="fixed bottom-0 left-0 right-0 z-50 bg-[var(--bg-surface)]/90 backdrop-blur-lg border-t border-[var(--border)] shadow-xl md:hidden block">
+    <div class="flex justify-around items-center h-16">
+      <!-- Tombol Kiri: Kembali ke Daftar Tools -->
+      <button onclick="openToolsModal()" class="flex flex-col items-center justify-center text-[var(--text-secondary)] hover:text-brand-light transition-all flex-1 py-1">
+        <i class="fa-solid fa-compass text-lg mb-1"></i>
+        <span class="text-[10px] font-semibold">Semua Alat</span>
+      </button>
+
+      <!-- Tombol Tengah: Beranda Utama (Homepage) -->
+      <a href="homepage_296tools.html" class="flex flex-col items-center justify-center text-brand-light transition-all flex-1 py-1">
+        <div class="w-10 h-10 bg-brand-light text-white rounded-full flex items-center justify-center shadow-lg -mt-5 border-4 border-[var(--bg-surface)]">
+          <i class="fa-solid fa-house text-sm"></i>
+        </div>
+        <span class="text-[10px] font-semibold mt-1">Beranda</span>
+      </a>
+
+      <!-- Tombol Kanan: About Us Pop-up -->
+      <button onclick="openAboutModal()" class="flex flex-col items-center justify-center text-[var(--text-secondary)] hover:text-brand-light transition-all flex-1 py-1">
+        <i class="fa-solid fa-circle-info text-lg mb-1"></i>
+        <span class="text-[10px] font-semibold">About Us</span>
+      </button>
+    </div>
+  </div>
+  <!-- === [MULAILAH PERUBAHAN: STRUKTUR HTML MODAL DAFTAR MACAM-MACAM TOOLS] === -->
+  <!-- ========================================================== -->
+  <!-- POP-UP MODAL: DAFTAR MACAM-MACAM TOOLS (QUICK ACCESS) -->
+  <!-- ========================================================== -->
+  <div id="toolsMenuModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-300">
+    <div class="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-2xl max-w-2xl w-full border border-[var(--border)] shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="toolsMenuCard">
+      <div class="p-6 space-y-4">
+        <div class="flex justify-between items-center border-b border-[var(--border)] pb-3">
+          <h3 class="font-clash text-base font-bold text-brand-light flex items-center gap-2">
+            <i class="fa-solid fa-grid-2"></i> Macam-Macam Alat (Quick Access)
+          </h3>
+          <button onclick="closeToolsModal()" class="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg hover:bg-[var(--bg-card)]">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+
+        <!-- Wadah List Grid Dinamis Tools -->
+        <div class="max-h-[60vh] overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-3 pr-1" id="modalToolsList">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <div class="pt-2 flex justify-end">
+          <button onclick="closeToolsModal()" class="px-5 py-2 text-xs font-semibold bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-lg hover:bg-[var(--border)] transition-all">
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- === [AKHIR PERUBAHAN] === -->
+
+
+  <!-- ========================================================== -->
+  <!-- LOGIKA PEMROGRAMAN REDIRECT & CORE SYSTEM -->
+  <!-- ========================================================== -->
+  <script>
+    // ==========================================================
+    // SISTEM TEMA: GELAP / TERANG (DARK & LIGHT MODE)
+    // ==========================================================
+    const themeToggleBtn = document.getElementById('themeToggle');
+    
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+    // === [MULAILAH PERUBAHAN: DATA ALL_TOOLS UNTUK QUICK ACCESS MENU] ===
+    // Array yang berisi data menu pintas semua tools
+    const ALL_TOOLS = [
+        { name: 'Converter File', desc: 'Pengkonversi berkas PDF, Word, Teks, & Gambar', icon: 'fa-solid fa-file', url: 'converter-file.html' },
+        { name: 'Fake Post X', desc: 'Pembuat screenshot postingan media sosial X secara instan', icon: 'fa-brands fa-x-twitter', url: 'fake-post-x.html' },
+        { name: 'Favicon Maker', desc: 'Pembuat & kompresor Favicon modern terlengkap (.ico & .png)', icon: 'fa-solid fa-file-image', url: 'favicon-maker.html' },
+        { name: 'Generator QR Code', desc: 'Pembuat QR Code premium dengan warna & logo kustom', icon: 'fa-solid fa-qrcode', url: 'generator-qr-code.html' },
+        { name: 'Google Dorking Tools', desc: 'Advanced Google Dork & OSINT Intelligence Generator', icon: 'fa-brands fa-google', url: 'google-dorking.html' },
+        { name: 'Image Compressor', desc: 'Pengkompres ukuran dimensi & kapasitas kilobyte gambar', icon: 'fa-regular fa-images', url: 'image-compresor.html' },
+        { name: 'Invoice Maker', desc: 'Pembuat berkas tagihan (Invoice) praktis terkompresi PDF', icon: 'fa-solid fa-file-invoice', url: 'invoice-maker.html' },
+        { name: 'Prompt Generator', desc: 'Pembuat format prompt siap pakai untuk optimasi ChatGPT/Claude', icon: 'fa-regular fa-keyboard', url: 'prompt-generator.html' },
+        { name: 'Scraping Link FB Reels', desc: 'Ekstraktor tautan (URL) reel profil publik dari Facebook', icon: 'fa-brands fa-facebook', url: 'scraping-fb-reels.html' },
+        { name: 'Smart HPP', desc: 'Kalkulator HPP & Harga Jual Anti Boncos bagi pemilik bisnis', icon: 'fa-solid fa-calculator', url: 'smart-hpp.html' },
+        { name: 'URL Shortener', desc: 'Pangkas URL panjang menjadi ringkas dan mudah dibagikan', icon: 'fa-solid fa-link', url: 'url-shortener.html' },
+        { name: 'WA Link Generator', desc: 'Pembuat link pesan instan WhatsApp otomatis', icon: 'fa-brands fa-whatsapp', url: 'wa-link-generator.html' },
+    ];
+    // === [AKHIR PERUBAHAN] ===
+    // ==========================================================
+    // NOTIFIKASI TOAST (GAYA PREMIUM 296TOOLS)
+    // ==========================================================
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `transform translate-y-2 opacity-0 transition-all duration-300 ease-out flex items-center p-4 min-w-[280px] max-w-sm rounded-2xl shadow-xl border text-xs font-semibold pointer-events-auto ${
+        type === 'success' 
+          ? 'bg-emerald-500/10 border-emerald-500/20 text-brand-emerald dark:text-emerald-400 backdrop-blur-md' 
+          : type === 'error' 
+            ? 'bg-rose-500/10 border-rose-500/20 text-brand-rose dark:text-red-400 backdrop-blur-md' 
+            : 'bg-[var(--bg-surface)] border-[var(--border)] text-[var(--text-primary)] backdrop-blur-md'
+      }`;
+      
+      const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+      toast.innerHTML = `<span class="mr-3 text-sm">${icon}</span><span class="flex-grow">${message}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+      setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // ==========================================================
+    // CUSTOM MODAL CONFIRMATION (REPLACING confirm())
+    // ==========================================================
+    let confirmCallback = null;
+    function triggerConfirm(msg, callback) {
+      confirmCallback = callback;
+      const confirmBox = document.getElementById('customConfirm');
+      const confirmCard = document.getElementById('customConfirmCard');
+      document.getElementById('confirmMessage').innerText = msg;
+      
+      confirmBox.classList.remove('hidden');
+      setTimeout(() => {
+        confirmBox.classList.remove('opacity-0');
+        confirmCard.classList.remove('scale-95');
+        confirmCard.classList.add('scale-100');
+      }, 50);
+    }
+
+    function closeConfirm(approved) {
+      const confirmBox = document.getElementById('customConfirm');
+      const confirmCard = document.getElementById('customConfirmCard');
+      confirmBox.classList.add('opacity-0');
+      confirmCard.classList.remove('scale-100');
+      confirmCard.classList.add('scale-95');
+      setTimeout(() => {
+        confirmBox.classList.add('hidden');
+        if (confirmCallback) {
+          confirmCallback(approved);
+          confirmCallback = null;
+        }
+      }, 300);
+    }
+
+    // ==========================================================
+    // INITIAL SYSTEM & VARIABLE STATE
+    // ==========================================================
+    let appUrls = JSON.parse(localStorage.getItem('pangkas_urls')) || [];
+    let activeShortUrl = '';
+    let qrInstance = null;
+
+    // DOM References
+    const toggleCustomBtn = document.getElementById('toggle-custom-btn');
+    const customFields = document.getElementById('custom-fields');
+    const customArrow = document.getElementById('custom-arrow');
+    const detectedDomainBadge = document.getElementById('detected-domain-badge');
+    
+    const shortenForm = document.getElementById('shorten-form');
+    const longUrlInput = document.getElementById('long-url');
+    const customAliasInput = document.getElementById('custom-alias');
+    
+    const resultBox = document.getElementById('result-box');
+    const shortUrlResult = document.getElementById('short-url-result');
+    const originalUrlPreview = document.getElementById('original-url-preview');
+    const copyBtn = document.getElementById('copy-btn');
+    const qrBtn = document.getElementById('qr-btn');
+    const openBtn = document.getElementById('open-btn');
+    
+    const historyEmpty = document.getElementById('history-empty');
+    const historyList = document.getElementById('history-list');
+    const clearAllBtn = document.getElementById('clear-all-btn');
+    
+    const qrModal = document.getElementById('qr-modal');
+    const closeQrBtn = document.getElementById('close-qr-btn');
+    const qrcodeContainer = document.getElementById('qrcode-container');
+    const qrLinkText = document.getElementById('qr-link-text');
+    const downloadQrBtn = document.getElementById('download-qr-btn');
+
+    // Automatically resolve relative routing parameters
+    function getActiveBaseUrl() {
+        let path = window.location.origin + window.location.pathname;
+        if (!path.endsWith('/')) {
+            path = path + '/';
+        }
+        return path;
+    }
+
+    const currentActiveDomain = getActiveBaseUrl();
+    detectedDomainBadge.textContent = currentActiveDomain;
+
+    // Toggle Custom Alias Section
+    toggleCustomBtn.addEventListener('click', () => {
+        customFields.classList.toggle('hidden');
+        customArrow.classList.toggle('rotate-180');
+    });
+
+    // Process Form Shortener Submission
+    shortenForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const longUrl = longUrlInput.value.trim();
+        const customAlias = customAliasInput.value.trim();
+
+        let code = customAlias.replace(/\s+/g, '-');
+        if (!code) {
+            const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            for (let i = 0; i < 6; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
             }
-            return path;
         }
 
-        // Tampilkan domain yang terdeteksi di UI (hanya sebagai informasi di panel kustom)
-        const currentActiveDomain = getActiveBaseUrl();
-        detectedDomainBadge.textContent = currentActiveDomain;
+        // Validate local duplicates
+        const isDuplicate = appUrls.some(item => item.code === code);
+        if (isDuplicate && customAlias) {
+            showToast('Alias kustom sudah digunakan, silakan buat alias lain.', 'error');
+            return;
+        }
 
-        // Inisialisasi Tema (Dark/Light)
-        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-            themeToggleLightIcon.classList.remove('hidden');
+        // Craft functional virtual redirection loop path
+        const functionalUrl = `${currentActiveDomain}?r=${code}`;
+        
+        // Push record array state
+        const newUrlItem = {
+            id: Date.now(),
+            code: code,
+            longUrl: longUrl,
+            shortUrl: functionalUrl,
+            clicks: 0,
+            date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+        };
+
+        appUrls.unshift(newUrlItem);
+        localStorage.setItem('pangkas_urls', JSON.stringify(appUrls));
+
+        // Display results
+        activeShortUrl = functionalUrl;
+        shortUrlResult.textContent = functionalUrl;
+        originalUrlPreview.textContent = `Tujuan Asli: ${longUrl}`;
+        
+        resultBox.classList.remove('hidden');
+        resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        // Clean values
+        customAliasInput.value = '';
+        longUrlInput.value = '';
+        
+        updateHistoryUI();
+        showToast('Tautan baru berhasil dipangkas!', 'success');
+    });
+
+    // Copy URL Action Handler
+    copyBtn.addEventListener('click', () => {
+        const textarea = document.createElement('textarea');
+        textarea.value = activeShortUrl;
+        textarea.style.position = 'fixed';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+            document.execCommand('copy');
+            showToast('Tautan disalin ke papan klip!', 'success');
+        } catch {
+            showToast('Gagal menyalin tautan.', 'error');
+        }
+        document.body.removeChild(textarea);
+    });
+
+    // Launch active compiled target
+    openBtn.addEventListener('click', () => {
+        window.open(activeShortUrl, '_blank');
+    });
+
+    // QR Code generation
+    qrBtn.addEventListener('click', () => {
+        qrcodeContainer.innerHTML = '';
+        qrLinkText.textContent = activeShortUrl;
+        
+        qrInstance = new QRCode(qrcodeContainer, {
+            text: activeShortUrl,
+            width: 160,
+            height: 160,
+            colorDark : "#0f172a",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+
+        // Trigger transition opening
+        qrModal.classList.remove('hidden');
+    });
+
+    closeQrBtn.addEventListener('click', () => {
+        qrModal.classList.add('hidden');
+    });
+
+    // Download QR Code file as image
+    downloadQrBtn.addEventListener('click', () => {
+        const qrImg = qrcodeContainer.querySelector('img');
+        if (qrImg) {
+            const a = document.createElement('a');
+            a.href = qrImg.src;
+            a.download = `relink_qrcode_${Date.now()}.png`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            showToast('QR Code berhasil diunduh!', 'success');
         } else {
-            document.documentElement.classList.remove('dark');
-            themeToggleDarkIcon.classList.remove('hidden');
+            showToast('QR Code belum siap untuk diunduh.', 'error');
         }
+    });
 
-        // Toggle Tema
-        themeToggleBtn.addEventListener('click', function() {
-            themeToggleDarkIcon.classList.toggle('hidden');
-            themeToggleLightIcon.classList.toggle('hidden');
-
-            if (localStorage.getItem('color-theme')) {
-                if (localStorage.getItem('color-theme') === 'light') {
-                    document.documentElement.classList.add('dark');
-                    localStorage.setItem('color-theme', 'dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                    localStorage.setItem('color-theme', 'light');
-                }
-            } else {
-                if (document.documentElement.classList.contains('dark')) {
-                    document.documentElement.classList.remove('dark');
-                    localStorage.setItem('color-theme', 'light');
-                } else {
-                    document.documentElement.classList.add('dark');
-                    localStorage.setItem('color-theme', 'dark');
-                }
-            }
-        });
-
-        // Toggle Kustom Alias Panel
-        toggleCustomBtn.addEventListener('click', () => {
-            customFields.classList.toggle('hidden');
-            customArrow.classList.toggle('rotate-180');
-        });
-
-        // Trigger Notifikasi Toast
-        function showToast(message) {
-            toastMessage.textContent = message;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            toast.classList.add('translate-y-0', 'opacity-100');
-            
-            setTimeout(() => {
-                toast.classList.remove('translate-y-0', 'opacity-100');
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 2500);
-        }
-
-        // Jalankan Form Submit Pemendekan
-        shortenForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const longUrl = longUrlInput.value.trim();
-            const customAlias = customAliasInput.value.trim();
-
-            // Membuat kode unik alias
-            let code = customAlias.replace(/\s+/g, '-');
-            if (!code) {
-                const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-                for (let i = 0; i < 6; i++) {
-                    code += chars.charAt(Math.floor(Math.random() * chars.length));
-                }
-            }
-
-            // Validasi alias duplikat lokal
-            const isDuplicate = appUrls.some(item => item.code === code);
-            if (isDuplicate && customAlias) {
-                showToast('Alias kustom sudah digunakan, buat alias lain.');
-                return;
-            }
-
-            // Gabungkan domain aktif dengan parameter query '?r='
-            const functionalUrl = `${currentActiveDomain}?r=${code}`;
-            
-            // Simpan data baru
-            const newUrlItem = {
-                id: Date.now(),
-                code: code,
-                longUrl: longUrl,
-                shortUrl: functionalUrl,
-                clicks: 0,
-                date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
-            };
-
-            appUrls.unshift(newUrlItem);
-            localStorage.setItem('pangkas_urls', JSON.stringify(appUrls));
-
-            // Tampilkan hasil pemendekan
-            activeShortUrl = functionalUrl;
-            
-            shortUrlResult.textContent = functionalUrl;
-            originalUrlPreview.textContent = `Tujuan Asli: ${longUrl}`;
-            
-            resultBox.classList.remove('hidden');
-            resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-            // Reset Form input
-            customAliasInput.value = '';
-            
-            updateHistoryUI();
-            showToast('Tautan baru berhasil dipangkas!');
-            lucide.createIcons();
-        });
-
-        // Aksi Salin URL
-        copyBtn.addEventListener('click', () => {
-            const el = document.createElement('textarea');
-            el.value = activeShortUrl;
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
-            showToast('Tautan aktif berhasil disalin!');
-        });
-
-        // Uji coba pengalihan langsung
-        openBtn.addEventListener('click', () => {
-            window.open(activeShortUrl, '_blank');
-        });
-
-        // Tampilkan Modal QR Code
-        qrBtn.addEventListener('click', () => {
-            qrcodeContainer.innerHTML = '';
-            qrLinkText.textContent = activeShortUrl;
-            
-            qrInstance = new QRCode(qrcodeContainer, {
-                text: activeShortUrl,
-                width: 180,
-                height: 180,
-                colorDark : "#0f172a",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
-            });
-
-            qrModal.classList.remove('hidden');
-        });
-
-        // Tutup Modal QR Code
-        closeQrBtn.addEventListener('click', () => {
+    // Auto-dismiss modal overlay clicks
+    qrModal.addEventListener('click', (e) => {
+        if (e.target === qrModal) {
             qrModal.classList.add('hidden');
-        });
+        }
+    });
 
-        // Download QR Code
-        downloadQrBtn.addEventListener('click', () => {
-            const qrImage = qrcodeContainer.querySelector('img');
-            if (qrImage) {
-                const link = document.createElement('a');
-                link.href = qrImage.src;
-                link.download = `pangkaslink-qr.png`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
-        });
-
-        // Menutup modal jika area luar diklik
-        qrModal.addEventListener('click', (e) => {
-            if (e.target === qrModal) {
-                qrModal.classList.add('hidden');
-            }
-        });
-
-        // Format Tautan dan Render Riwayat
-        function updateHistoryUI() {
-            if (appUrls.length === 0) {
-                historyEmpty.classList.remove('hidden');
-                historyList.classList.add('hidden');
-                clearAllBtn.classList.add('hidden');
-                return;
-            }
-
-            historyEmpty.classList.add('hidden');
-            historyList.classList.remove('hidden');
-            clearAllBtn.classList.remove('hidden');
-
-            historyList.innerHTML = '';
-
-            appUrls.forEach(item => {
-                const historyCard = document.createElement('div');
-                historyCard.className = "bg-white dark:bg-slate-800/40 rounded-xl p-5 border border-slate-100 dark:border-slate-800/80 hover:border-slate-200 dark:hover:border-slate-700 transition-all shadow-sm relative group";
-                
-                // Jika tautan lama tidak menggunakan domain aktif saat ini, sesuaikan domainnya
-                const currentShortUrl = `${currentActiveDomain}?r=${item.code}`;
-
-                historyCard.innerHTML = `
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                        <div class="space-y-1.5 max-w-[80%]">
-                            <div class="flex items-center gap-2 flex-wrap">
-                                <a href="${currentShortUrl}" target="_blank" class="text-sm font-bold text-slate-950 dark:text-white hover:text-sky-500 transition-colors break-all">
-                                    ${currentShortUrl}
-                                </a>
-                                <span class="text-[9px] px-2 py-0.5 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded-full font-semibold">
-                                    ${item.date}
-                                </span>
-                            </div>
-                            <p class="text-xs text-slate-400 dark:text-slate-500 truncate max-w-sm md:max-w-xl" title="${item.longUrl}">
-                                Asli: ${item.longUrl}
-                            </p>
-                        </div>
-                        
-                        <!-- Panel Aksi -->
-                        <div class="flex items-center gap-2 w-full md:w-auto justify-end border-t border-slate-50 dark:border-slate-800/50 pt-3 md:pt-0 md:border-0">
-                            <!-- Indikator Klik -->
-                            <div class="flex items-center gap-1 text-xs font-semibold text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/60 px-2.5 py-1.5 rounded-lg mr-2" title="Total Klik Terdeteksi">
-                                <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-primary-500"></i>
-                                <span>${item.clicks || 0} Klik</span>
-                            </div>
-
-                            <button onclick="copyLinkFromHistory('${currentShortUrl}')" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white rounded-lg transition-all" title="Salin Tautan">
-                                <i data-lucide="copy" class="w-4 h-4"></i>
-                            </button>
-                            <button onclick="simulateClick('${item.id}')" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-primary-500 rounded-lg transition-all" title="Buka Tautan Aktif">
-                                <i data-lucide="external-link" class="w-4 h-4"></i>
-                            </button>
-                            <button onclick="deleteLink(${item.id})" class="p-2 hover:bg-rose-50 dark:hover:bg-rose-950/30 text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 rounded-lg transition-all" title="Hapus Tautan">
-                                <i data-lucide="trash-2" class="w-4 h-4"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
-                historyList.appendChild(historyCard);
-            });
-
-            lucide.createIcons();
+    // Update Local History lists UI
+    function updateHistoryUI() {
+        if (appUrls.length === 0) {
+            historyEmpty.classList.remove('hidden');
+            historyList.classList.add('hidden');
+            clearAllBtn.classList.add('hidden');
+            return;
         }
 
-        // Salin tautan dari riwayat
-        window.copyLinkFromHistory = function(url) {
-            const el = document.createElement('textarea');
-            el.value = url;
-            document.body.appendChild(el);
-            el.select();
+        historyEmpty.classList.add('hidden');
+        historyList.classList.remove('hidden');
+        clearAllBtn.classList.remove('hidden');
+
+        historyList.innerHTML = '';
+
+        appUrls.forEach(item => {
+            const historyCard = document.createElement('div');
+            historyCard.className = "bg-[var(--bg-surface)] rounded-xl p-4 sm:p-5 border border-[var(--border)] hover:border-brand-light/30 transition-all shadow-sm relative group text-xs";
+            
+            // Recalculate context domains correctly dynamically
+            const currentShortUrl = `${currentActiveDomain}?r=${item.code}`;
+
+            historyCard.innerHTML = `
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div class="space-y-1 w-full md:max-w-[70%]">
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <a href="${currentShortUrl}" target="_blank" class="font-bold font-mono text-[var(--text-primary)] hover:text-brand-light transition-colors break-all">
+                                ${currentShortUrl}
+                            </a>
+                            <span class="text-[9px] px-2 py-0.5 bg-[var(--bg-card)] text-[var(--text-secondary)] rounded-full font-bold">
+                                ${item.date}
+                            </span>
+                        </div>
+                        <p class="text-[10px] text-[var(--text-muted)] truncate max-w-sm md:max-w-xl font-mono" title="${item.longUrl}">
+                            Asli: ${item.longUrl}
+                        </p>
+                    </div>
+                    
+                    <!-- Action Row -->
+                    <div class="flex items-center gap-2 w-full md:w-auto justify-end border-t md:border-0 border-[var(--border)] pt-3 md:pt-0 shrink-0">
+                        <!-- Click Counters -->
+                        <div class="flex items-center gap-1 text-[10px] font-bold text-[var(--text-secondary)] bg-[var(--bg-card)] px-2.5 py-1 rounded-lg" title="Jumlah Klik Terbaca">
+                            <i class="fa-solid fa-chart-simple text-brand-light"></i>
+                            <span>${item.clicks || 0} Klik</span>
+                        </div>
+
+                        <button onclick="copyLinkFromHistory('${currentShortUrl}')" class="p-2 hover:bg-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-lg transition-all" title="Salin Tautan">
+                            <i class="fa-solid fa-copy"></i>
+                        </button>
+                        <button onclick="simulateClick('${item.id}')" class="p-2 hover:bg-[var(--border)] text-[var(--text-secondary)] hover:text-brand-light rounded-lg transition-all" title="Buka Tautan">
+                            <i class="fa-solid fa-up-right-from-square"></i>
+                        </button>
+                        <button onclick="triggerDeleteLink(${item.id})" class="p-2 hover:bg-brand-rose/10 text-[var(--text-muted)] hover:text-brand-rose rounded-lg transition-all" title="Hapus">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            historyList.appendChild(historyCard);
+        });
+    }
+
+    window.copyLinkFromHistory = function(url) {
+        const textarea = document.createElement('textarea');
+        textarea.value = url;
+        textarea.style.position = 'fixed';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
             document.execCommand('copy');
-            document.body.removeChild(el);
-            showToast('Tautan berhasil disalin!');
-        };
+            showToast('Tautan berhasil disalin!', 'success');
+        } catch {
+            showToast('Gagal menyalin.', 'error');
+        }
+        document.body.removeChild(textarea);
+    };
 
-        // Simulasi hitungan klik & arahkan
-        window.simulateClick = function(id) {
-            const foundItem = appUrls.find(item => item.id == id);
-            if (foundItem) {
-                const targetUrl = `${currentActiveDomain}?r=${foundItem.code}`;
-                window.open(targetUrl, '_blank');
+    window.simulateClick = function(id) {
+        const foundItem = appUrls.find(item => item.id == id);
+        if (foundItem) {
+            const targetUrl = `${currentActiveDomain}?r=${foundItem.code}`;
+            window.open(targetUrl, '_blank');
+        }
+    };
+
+    window.triggerDeleteLink = function(id) {
+        triggerConfirm('Apakah Anda yakin ingin menghapus tautan pendek ini?', (approved) => {
+            if (approved) {
+                appUrls = appUrls.filter(item => item.id !== id);
+                localStorage.setItem('pangkas_urls', JSON.stringify(appUrls));
+                updateHistoryUI();
+                showToast('Tautan berhasil dihapus dari riwayat.', 'success');
             }
-        };
+        });
+    };
 
-        // Hapus tautan tunggal
-        window.deleteLink = function(id) {
-            appUrls = appUrls.filter(item => item.id !== id);
-            localStorage.setItem('pangkas_urls', JSON.stringify(appUrls));
-            updateHistoryUI();
-            showToast('Tautan berhasil dihapus dari riwayat.');
-        };
-
-        // Hapus semua riwayat
-        clearAllBtn.addEventListener('click', () => {
-            if (confirm('Apakah Anda yakin ingin menghapus semua riwayat pemendekan tautan?')) {
+    function triggerResetAllHistory() {
+        triggerConfirm('Apakah Anda yakin ingin menghapus seluruh riwayat pemendekan tautan?', (approved) => {
+            if (approved) {
                 appUrls = [];
                 localStorage.setItem('pangkas_urls', JSON.stringify(appUrls));
                 resultBox.classList.add('hidden');
                 updateHistoryUI();
-                showToast('Semua riwayat berhasil dibersihkan.');
+                showToast('Seluruh riwayat berhasil dibersihkan.', 'success');
             }
         });
+    }
 
-        // Muat Riwayat Pertama Kali
-        document.addEventListener('DOMContentLoaded', () => {
-            updateHistoryUI();
-            lucide.createIcons();
-        });
-    </script>
+    clearAllBtn.addEventListener('click', triggerResetAllHistory);
+
+    // ==========================================================
+    // ABOUT US MODAL SYSTEM
+    // ==========================================================
+    const aboutModal = document.getElementById('aboutModal');
+    const aboutModalCard = document.getElementById('aboutModalCard');
+
+    function openAboutModal() {
+      aboutModal.classList.remove('hidden');
+      setTimeout(() => {
+        aboutModal.classList.add('opacity-100');
+        aboutModalCard.classList.remove('scale-95');
+        aboutModalCard.classList.add('scale-100');
+      }, 50);
+    }
+
+    function closeAboutModal() {
+      aboutModal.classList.remove('opacity-100');
+      aboutModalCard.classList.remove('scale-100');
+      aboutModalCard.classList.add('scale-95');
+      setTimeout(() => {
+        aboutModal.classList.add('hidden');
+      }, 300);
+    }
+
+    window.addEventListener('click', (e) => {
+      if (e.target === aboutModal) closeAboutModal();
+    });
+
+    // Render lists on initialization
+    window.addEventListener('DOMContentLoaded', () => {
+        updateHistoryUI();
+    });
+	
+	    // === [MULAILAH PERUBAHAN: LOGIKA PEMROGRAMAN UNTUK TOOLS MODAL (QUICK ACCESS)] ===
+    const toolsMenuModal = document.getElementById('toolsMenuModal');
+    const toolsMenuCard = document.getElementById('toolsMenuCard');
+    const modalToolsList = document.getElementById('modalToolsList');
+
+    // Buka Modal Daftar Macam-Macam Tools
+    function openToolsModal() {
+        // Melakukan render menu secara dinamis menggunakan Javascript
+        modalToolsList.innerHTML = ALL_TOOLS.map(t => `
+            <a href="${t.url}" class="flex items-center gap-3 p-3 rounded-xl border border-[var(--border)] hover:bg-[var(--bg-card)] transition-all">
+                <div class="w-8 h-8 rounded-lg bg-brand-light/10 text-brand-light flex items-center justify-center text-sm">
+                    <i class="${t.icon}"></i>
+                </div>
+                <div class="flex-grow">
+                    <h4 class="text-xs font-bold text-[var(--text-primary)]">${t.name}</h4>
+                    <p class="text-[10px] text-[var(--text-muted)] truncate max-w-[200px] sm:max-w-md">${t.desc}</p>
+                </div>
+            </a>
+        `).join('');
+
+        toolsMenuModal.classList.remove('hidden');
+        setTimeout(() => {
+            toolsMenuModal.classList.add('opacity-100');
+            toolsMenuCard.classList.remove('scale-95');
+            toolsMenuCard.classList.add('scale-100');
+        }, 50);
+    }
+
+    // Tutup Modal Daftar Macam-Macam Tools
+    function closeToolsModal() {
+        toolsMenuModal.classList.remove('opacity-100');
+        toolsMenuCard.classList.remove('scale-100');
+        toolsMenuCard.classList.add('scale-95');
+        setTimeout(() => {
+            toolsMenuModal.classList.add('hidden');
+        }, 300);
+    }
+
+    // Listener klik area luar modal untuk menutup
+    window.addEventListener('click', (e) => {
+      if (e.target === aboutModal) closeAboutModal();
+      if (e.target === toolsMenuModal) closeToolsModal();
+    });
+    // === [AKHIR PERUBAHAN] ===
+	
+  </script>
 </body>
 </html>
