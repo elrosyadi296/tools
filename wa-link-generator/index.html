@@ -1,192 +1,867 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>296Tools - WhatsApp Link Generator</title>
+    <title>296Tools - WhatsApp Link & QR Code Generator Pintar</title>
+    
+    <!-- Font Family Premium -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- Tailwind CSS with custom configuration matching the smart converter -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-	<!-- --- FAVICON (SVG Crown Emoji) --- -->
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                light: '#6c63ff',
+                dark: '#a78bfa',
+                accent: '#38bdf8',
+                emerald: '#34d399',
+                wa: '#25D366',
+                waDark: '#128C7E'
+              }
+            },
+            fontFamily: {
+              clash: ['Clash Display', 'sans-serif'],
+              bricolage: ['Bricolage Grotesque', 'sans-serif'],
+            }
+          }
+        }
+      }
+    </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- FAVICON -->
     <link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
     
-	
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .wa-green { background-color: #25D366; }
-        .wa-green-dark { background-color: #128C7E; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* CSS Variables matching converter design system */
+        :root {
+            --bg: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-card: #f1f5f9;
+            --border: rgba(15, 23, 42, 0.08);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --shadow-premium: 0 10px 30px -10px rgba(108, 99, 255, 0.1);
         }
-        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+
+        .dark {
+            --bg: #0b0c10;
+            --bg-surface: #13141a;
+            --bg-card: #1e2029;
+            --border: rgba(255, 255, 255, 0.07);
+            --text-primary: #f0f0f5;
+            --text-secondary: #9899a8;
+            --text-muted: #5a5b6a;
+            --shadow-premium: 0 10px 40px rgba(0,0,0,0.5), 0 0 40px rgba(108,99,255,0.15);
+        }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Noise Overlay for premium paper texture */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.5;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #6c63ff 0%, #38bdf8 100%);
+        }
+
+        .wa-gradient-bg {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+        }
+
+        /* Customized scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen">
+<body class="flex flex-col">
 
-    <div class="max-w-4xl mx-auto px-4 py-12">
-        <header class="text-center mb-12 animate-fade-in">
-            <div class="inline-flex items-center justify-center w-16 h-16 wa-green text-white rounded-2xl shadow-lg mb-4">
-                <i class="fab fa-whatsapp text-3xl"></i>
+    <!-- Navigasi / Header -->
+    <header class="sticky top-0 z-40 w-full bg-[var(--bg)]/80 backdrop-blur-md border-b border-[var(--border)] transition-all">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <a href="homepage.html" class="flex items-center gap-3">
+                <div class="w-9 h-9 bg-gradient-to-tr from-brand-light to-brand-accent rounded-lg flex items-center justify-center shadow-lg animate-pulse">
+                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" class="w-6 h-6 object-contain" alt="Logo 296">
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-clash text-base font-bold leading-none tracking-tight">296<span class="text-brand-dark">Tools</span></span>
+                    <span class="text-[10px] text-[var(--text-muted)] font-medium mt-0.5">WhatsApp Link Generator</span>
+                </div>
+            </a>
+            
+            <div class="flex items-center gap-3">
+                <div class="hidden md:flex items-center gap-2 text-xs font-semibold text-emerald-600 dark:text-brand-emerald bg-emerald-50 dark:bg-brand-emerald/10 px-3 py-1.5 rounded-full border border-emerald-500/20">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Pemrosesan Lokal (100% Privat)
+                </div>
+
+                <!-- Tombol Pengubah Mode Gelap/Terang -->
+                <button id="themeToggle" class="p-2 rounded-lg bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] transition-all" title="Ubah Tema">
+                    <i class="fa-solid fa-moon dark:hidden text-base"></i>
+                    <i class="fa-solid fa-sun hidden dark:block text-base text-yellow-400"></i>
+                </button>
             </div>
-            <h1 class="text-3xl font-bold text-slate-800">WA Link Generator</h1>
-            <p class="text-slate-500 mt-2 text-lg">Buat tautan pesan WhatsApp dengan teks dan link otomatis.</p>
-        </header>
+        </div>
+    </header>
 
-        <main class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <section class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 animate-fade-in" style="animation-delay: 0.1s">
-                <h2 class="text-xl font-semibold mb-6 text-slate-800 flex items-center">
-                    <i class="fas fa-edit mr-3 text-blue-500"></i> Konfigurasi Pesan
-                </h2>
+    <!-- Konten Utama -->
+    <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-8 relative z-10">
+        <!-- Hero Header -->
+        <div class="text-center md:text-left max-w-3xl mb-8">
+            <h1 class="text-3xl md:text-4xl font-extrabold font-clash tracking-tight text-[var(--text-primary)] mb-2">
+                WhatsApp Link & <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-light to-brand-accent">QR Generator</span>
+            </h1>
+            <p class="text-sm md:text-base text-[var(--text-secondary)] font-light">
+                Tingkatkan konversi penjualan Anda. Buat link chat instan langsung ke WhatsApp dengan custom template pesan dan QR Code secara offline gratis.
+            </p>
+        </div>
 
-                <div class="space-y-5">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Nomor WhatsApp (dengan kode negara)</label>
-                        <input type="text" id="phone" placeholder="Contoh: 628123456789" 
-                               class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all">
-                        <p class="text-xs text-slate-400 mt-1 italic">*Gunakan format 62 (Indonesia), bukan 08.</p>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Left Side: Control & Configuration Forms (7 Cols) -->
+            <div class="lg:col-span-7 space-y-6">
+                
+                <!-- Card Input Utama -->
+                <div class="bg-[var(--bg-surface)] rounded-2xl p-6 shadow-sm border border-[var(--border)] space-y-5">
+                    
+                    <div class="flex items-center gap-2 border-b border-[var(--border)] pb-3">
+                        <div class="w-8 h-8 rounded-lg bg-green-500/10 text-green-500 flex items-center justify-center">
+                            <i class="fa-brands fa-whatsapp text-lg"></i>
+                        </div>
+                        <h2 class="font-clash text-base font-bold">Langkah 1: Konfigurasi Nomor & Pesan</h2>
                     </div>
 
+                    <!-- Input Nomor Telepon -->
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Isi Pesan (Kalimat)</label>
-                        <textarea id="message" rows="3" placeholder="Halo, saya tertarik dengan penawaran Anda..." 
-                                  class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"></textarea>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
+                            Nomor WhatsApp <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
+                                <i class="fa-solid fa-phone text-sm"></i>
+                            </div>
+                            <input type="text" id="phoneInput" placeholder="Contoh: 08123456789 atau 62812345678" 
+                                class="w-full pl-10 pr-4 py-3 bg-[var(--bg-card)] border border-[var(--border)] rounded-xl text-sm font-semibold outline-none focus:border-brand-light focus:ring-1 focus:ring-brand-light transition-all text-[var(--text-primary)]">
+                        </div>
+                        <!-- Validation feedback banner -->
+                        <div id="phoneFeedback" class="mt-2 text-[11px] text-[var(--text-muted)] flex items-center gap-1.5 font-medium">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span id="feedbackText">Gunakan kode negara (62 untuk Indonesia). Angka "0" di awal otomatis dikonversi.</span>
+                        </div>
                     </div>
 
+                    <!-- Preset Pesan Instan -->
                     <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Link Tujuan (URL)</label>
-                        <input type="url" id="targetLink" placeholder="https://website-anda.com/promo" 
-                               class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
+                            Gunakan Template Cepat (Opsional)
+                        </label>
+                        <div class="flex flex-wrap gap-2">
+                            <button type="button" onclick="loadPreset('olshop')" class="px-3 py-2 text-xs bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] rounded-lg font-medium text-[var(--text-secondary)] transition-all">
+                                🛍️ Tanya Orderan
+                            </button>
+                            <button type="button" onclick="loadPreset('cs')" class="px-3 py-2 text-xs bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] rounded-lg font-medium text-[var(--text-secondary)] transition-all">
+                                🤝 Customer Service
+                            </button>
+                            <button type="button" onclick="loadPreset('event')" class="px-3 py-2 text-xs bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] rounded-lg font-medium text-[var(--text-secondary)] transition-all">
+                                📅 Pendaftaran Event
+                            </button>
+                            <button type="button" onclick="loadPreset('empty')" class="px-3 py-2 text-xs bg-[var(--bg-card)] hover:bg-red-500/10 hover:text-red-500 border border-[var(--border)] rounded-lg font-medium text-[var(--text-secondary)] transition-all">
+                                🧹 Bersihkan
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Input Isi Pesan Textarea -->
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">
+                                Tulis Isi Pesan Chat
+                            </label>
+                            
+                            <!-- WhatsApp Formatting Helpers -->
+                            <div class="flex items-center gap-1.5">
+                                <button type="button" onclick="insertFormatting('*')" class="w-7 h-7 bg-[var(--bg-card)] hover:bg-[var(--border)] text-[var(--text-primary)] rounded-md flex items-center justify-center text-xs font-bold transition-all" title="Bold (*teks*)">B</button>
+                                <button type="button" onclick="insertFormatting('_')" class="w-7 h-7 bg-[var(--bg-card)] hover:bg-[var(--border)] text-[var(--text-primary)] rounded-md flex items-center justify-center text-xs italic transition-all" title="Italic (_teks_)">I</button>
+                                <button type="button" onclick="insertFormatting('~')" class="w-7 h-7 bg-[var(--bg-card)] hover:bg-[var(--border)] text-[var(--text-primary)] rounded-md flex items-center justify-center text-xs line-through transition-all" title="Strikethrough (~teks~)">S</button>
+                                <button type="button" onclick="insertFormatting('```')" class="w-7 h-7 bg-[var(--bg-card)] hover:bg-[var(--border)] text-[var(--text-primary)] rounded-md flex items-center justify-center text-[10px] font-mono transition-all" title="Monospace (```teks```)">&lt;&gt;</button>
+                            </div>
+                        </div>
+
+                        <textarea id="messageInput" rows="5" placeholder="Halo Admin, saya tertarik dengan layanan Anda. Boleh tanya lebih lanjut?..." 
+                            class="w-full px-4 py-3 bg-[var(--bg-card)] border border-[var(--border)] rounded-xl text-sm outline-none focus:border-brand-light focus:ring-1 focus:ring-brand-light transition-all text-[var(--text-primary)] resize-y"></textarea>
+                        <p class="text-[11px] text-[var(--text-muted)] mt-1">Anda juga dapat menggunakan bar format di atas untuk memberi gaya pada tulisan Anda.</p>
+                    </div>
+
+                    <!-- Input Tambahan Tautan URL -->
+                    <div>
+                        <label class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)] mb-2">
+                            Sisipkan Tautan Website Tambahan (Opsional)
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
+                                <i class="fa-solid fa-link text-sm"></i>
+                            </div>
+                            <input type="url" id="urlInput" placeholder="https://website-anda.com/produk-spesifik" 
+                                class="w-full pl-10 pr-4 py-3 bg-[var(--bg-card)] border border-[var(--border)] rounded-xl text-sm outline-none focus:border-brand-light focus:ring-1 focus:ring-brand-light transition-all text-[var(--text-primary)]">
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Panduan Tips Sukses WA Marketing -->
+                <div class="bg-gradient-to-br from-slate-900 to-indigo-950 text-white rounded-2xl p-6 shadow-xl relative overflow-hidden">
+                    <div class="absolute -right-10 -bottom-10 opacity-10 text-white">
+                        <i data-lucide="shield-check" class="w-40 h-40"></i>
+                    </div>
+                    <div class="relative z-10 space-y-4">
+                        <div class="p-2.5 bg-white/10 rounded-xl w-fit text-cyan-300">
+                            <i data-lucide="sparkles" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="text-base font-bold font-clash">Mengapa WA Link Generator Kami Spesial?</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed font-light">
+                            Tautan Anda diproses seketika di peramban Anda. Generator ini juga dilengkapi pembersih otomatis nomor telepon untuk meminimalkan kegagalan pengiriman akibat salah ketik format kode negara.
+                        </p>
                     </div>
                 </div>
-            </section>
 
-            <section class="space-y-6 animate-fade-in" style="animation-delay: 0.2s">
-                <!-- Preview WhatsApp Mockup -->
-                <div class="bg-[#E5DDD5] rounded-3xl overflow-hidden shadow-sm border border-slate-200">
-                    <div class="bg-[#075E54] p-4 text-white flex items-center gap-3">
-                        <div class="w-10 h-10 bg-slate-300 rounded-full flex items-center justify-center">
-                            <i class="fas fa-user text-slate-500"></i>
+            </div>
+
+            <!-- Right Side: Live Mockup, Links Box & QR Code Generator (5 Cols) -->
+            <div class="lg:col-span-5 space-y-6">
+                
+                <!-- Live Preview Mockup Box -->
+                <div class="bg-[var(--bg-surface)] rounded-2xl border border-[var(--border)] overflow-hidden shadow-sm">
+                    <!-- WhatsApp Header Mockup -->
+                    <div class="bg-[#075E54] px-4 py-3.5 text-white flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center font-bold text-sm relative">
+                                <span id="mockupInitial">296</span>
+                                <div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 border-2 border-[#075E54] rounded-full"></div>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold leading-tight" id="mockupPhone">Toko Anda / CS</h4>
+                                <p class="text-[10px] text-white/70">Online</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 text-sm text-white/90">
+                            <i class="fa-solid fa-video cursor-pointer hover:text-white"></i>
+                            <i class="fa-solid fa-phone cursor-pointer hover:text-white"></i>
+                            <i class="fa-solid fa-ellipsis-vertical cursor-pointer hover:text-white"></i>
+                        </div>
+                    </div>
+
+                    <!-- WhatsApp Message Body Wall -->
+                    <div class="p-4 bg-[#efeae2] dark:bg-slate-900 min-h-[160px] relative overflow-y-auto" style="background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-repeat: repeat; background-opacity: 0.15;">
+                        <!-- Message Bubble From Client -->
+                        <div class="bg-emerald-100 dark:bg-emerald-900/40 text-slate-800 dark:text-slate-100 p-3 rounded-xl rounded-tr-none shadow-sm max-w-[85%] ml-auto relative transition-all duration-300 animate-fade-up border border-emerald-500/10">
+                            <p id="mockupBubbleText" class="text-xs leading-normal break-words whitespace-pre-wrap">Isi pesan akan disimulasikan secara real-time di sini...</p>
+                            <div class="flex justify-end items-center gap-1 mt-1">
+                                <p class="text-[8px] text-slate-400 dark:text-slate-300">12:00</p>
+                                <i class="fa-solid fa-check-double text-[9px] text-[#34b7f1]"></i>
+                            </div>
+                            <!-- Small Chat Bubble Arrow Right -->
+                            <div class="absolute -right-2 top-0 w-0 h-0 border-t-[8px] border-t-emerald-100 dark:border-t-emerald-900/40 border-r-[8px] border-r-transparent"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hasil Link Yang Digenerate -->
+                <div class="bg-[var(--bg-surface)] rounded-2xl p-6 shadow-sm border border-[var(--border)] space-y-4">
+                    <div class="flex items-center justify-between border-b border-[var(--border)] pb-3">
+                        <h3 class="font-clash text-sm font-bold flex items-center gap-2">
+                            <i class="fa-solid fa-share-nodes text-brand-light"></i> Langkah 2: Dapatkan Tautan
+                        </h3>
+                    </div>
+
+                    <!-- Tautan Output Area -->
+                    <div class="space-y-2">
+                        <label class="block text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)]">Link Hasil Akhir:</label>
+                        <div class="relative">
+                            <div id="linkOutput" class="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-3.5 pr-10 text-xs break-all font-mono text-[var(--text-secondary)] min-h-[50px] leading-relaxed">
+                                Silakan masukkan nomor telepon terlebih dahulu...
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Action Buttons -->
+                    <div class="grid grid-cols-2 gap-3 pt-2">
+                        <button onclick="copyGeneratedLink()" id="copyBtn" class="flex items-center justify-center gap-2 py-3 px-4 bg-[var(--bg-card)] border border-[var(--border)] hover:bg-[var(--border)] text-[var(--text-primary)] font-bold text-xs rounded-xl transition-all cursor-pointer">
+                            <i class="fa-regular fa-copy text-sm"></i>
+                            <span>Salin Tautan</span>
+                        </button>
+                        <button onclick="testGeneratedLink()" id="testBtn" class="flex items-center justify-center gap-2 py-3 px-4 text-white font-bold text-xs rounded-xl wa-gradient-bg hover:opacity-90 transition-all shadow-md shadow-emerald-500/10 cursor-pointer">
+                            <i class="fa-brands fa-whatsapp text-sm"></i>
+                            <span>Uji Coba Chat</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- QR Code Dynamic Generator Widget -->
+                <div class="bg-[var(--bg-surface)] rounded-2xl p-6 shadow-sm border border-[var(--border)] space-y-4 text-center">
+                    <h3 class="font-clash text-sm font-bold text-left border-b border-[var(--border)] pb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-qrcode text-brand-accent"></i> QR Code WhatsApp Otomatis
+                    </h3>
+                    
+                    <div class="flex flex-col items-center justify-center space-y-4">
+                        <div class="p-4 bg-white rounded-xl border border-slate-200 shadow-inner w-fit">
+                            <!-- Live Dynamic QR Code -->
+                            <img id="qrCodeImage" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https%3A%2F%2Fwa.me%2F" alt="QR Code WhatsApp" class="w-40 h-40 object-contain transition-all duration-300 opacity-40 filter grayscale" onerror="handleQrError()">
                         </div>
                         <div>
-                            <p class="font-bold text-sm" id="preview-header">User</p>
-                            <p class="text-[10px] opacity-80">Online</p>
+                            <p class="text-xs text-[var(--text-secondary)] font-medium">Scan QR Code di atas untuk diarahkan langsung ke pesan.</p>
+                            <p class="text-[10px] text-[var(--text-muted)] mt-1">Sangat cocok untuk dicetak di flyer, brosur, atau etalase kasir.</p>
                         </div>
-                    </div>
-                    <div class="p-4 min-h-[150px] relative bg-[url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')]">
-                        <div class="bg-white p-3 rounded-lg rounded-tl-none shadow-sm max-w-[85%] relative">
-                            <p id="preview-bubble" class="text-sm text-slate-800 break-words">Isi pesan akan muncul di sini...</p>
-                            <p class="text-[9px] text-slate-400 text-right mt-1">12:00</p>
-                            <div class="absolute -left-2 top-0 w-0 h-0 border-t-[10px] border-t-white border-l-[10px] border-l-transparent"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Result Box -->
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                    <h2 class="text-lg font-semibold mb-4 text-slate-800">Link yang Dihasilkan:</h2>
-                    <div class="relative group">
-                        <div id="resultLink" class="w-full bg-slate-50 p-4 rounded-xl border border-dashed border-slate-300 text-sm break-all text-slate-600 min-h-[60px]">
-                            Isi formulir untuk membuat link...
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-3 mt-4">
-                        <button onclick="copyLink()" class="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-900 text-white px-4 py-3 rounded-xl transition-all font-medium">
-                            <i class="fas fa-copy"></i> Salin Link
-                        </button>
-                        <button onclick="openWhatsApp()" class="flex items-center justify-center gap-2 wa-green hover:bg-green-600 text-white px-4 py-3 rounded-xl transition-all font-medium">
-                            <i class="fab fa-whatsapp"></i> Test Link
+                        <button onclick="downloadQrCode()" id="downloadQrBtn" class="py-2.5 px-4 bg-brand-light/10 hover:bg-brand-light/20 text-brand-light font-bold text-xs rounded-xl transition-all flex items-center gap-2" disabled>
+                            <i class="fa-solid fa-download"></i> Unduh File QR (.png)
                         </button>
                     </div>
                 </div>
-            </section>
-        </main>
 
-        <!-- Message Toast -->
-        <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-6 py-3 rounded-full shadow-xl opacity-0 transition-all pointer-events-none z-50">
-            Tautan berhasil disalin!
+            </div>
+
+        </div>
+
+        <!-- Custom Toast Notification Container -->
+        <div id="toast" class="fixed bottom-20 md:bottom-5 right-5 z-50 bg-slate-900 text-white px-5 py-3.5 rounded-xl shadow-xl flex items-center gap-3 transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none">
+            <div id="toastIcon" class="text-brand-light">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <span id="toastMessage" class="text-sm font-medium">Mohon tunggu sebentar...</span>
+        </div>
+    </main>
+
+    <!-- Kaki Halaman / Footer -->
+    <footer class="w-full py-8 text-center text-xs text-[var(--text-muted)] border-t border-[var(--border)] mt-12 bg-[var(--bg-surface)] relative z-10 pb-24 md:pb-8">
+        <div class="max-w-6xl mx-auto px-4">
+            <p class="mb-2">&copy; 2026 WhatsApp Link Generator. Semua pemrosesan data dilakukan lokal pada perangkat Anda.</p>
+            <p class="text-[10px] tracking-wide uppercase font-bold text-slate-400">Powered by 296GROUP</p>
+        </div>
+    </footer>
+
+    <!-- BAR NAVIGASI SELULER (Mobile Sticky Bottom Navbar - 3 Tombol) -->
+    <div class="fixed bottom-0 left-0 right-0 z-50 bg-[var(--bg-surface)]/90 backdrop-blur-lg border-t border-[var(--border)] shadow-xl md:hidden block">
+        <div class="flex justify-around items-center h-16">
+            <!-- Tombol Kiri: Pop-up / Daftar Macam Tools -->
+            <button onclick="openToolsModal()" class="flex flex-col items-center justify-center text-[var(--text-secondary)] hover:text-brand-light transition-all flex-1 py-1">
+                <i class="fa-solid fa-compass text-lg mb-1"></i>
+                <span class="text-[10px] font-semibold">Semua Alat</span>
+            </button>
+
+            <!-- Tombol Tengah: Beranda Utama (Homepage) -->
+            <a href="homepage.html" class="flex flex-col items-center justify-center text-brand-light transition-all flex-1 py-1">
+                <div class="w-10 h-10 bg-brand-light text-white rounded-full flex items-center justify-center shadow-lg -mt-5 border-4 border-[var(--bg-surface)]">
+                    <i class="fa-solid fa-house text-sm"></i>
+                </div>
+                <span class="text-[10px] font-semibold mt-1">Beranda</span>
+            </a>
+
+            <!-- Tombol Kanan: About Us Pop-up -->
+            <button onclick="openAboutModal()" class="flex flex-col items-center justify-center text-[var(--text-secondary)] hover:text-brand-light transition-all flex-1 py-1">
+                <i class="fa-solid fa-circle-info text-lg mb-1"></i>
+                <span class="text-[10px] font-semibold">About Us</span>
+            </button>
         </div>
     </div>
 
+    <!-- POP-UP MODAL: ABOUT US -->
+    <div id="aboutModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-300">
+        <div class="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-2xl max-w-md w-full border border-[var(--border)] shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="aboutModalCard">
+            <div class="p-6 space-y-4">
+                <div class="flex justify-between items-center border-b border-[var(--border)] pb-3">
+                    <h3 class="font-clash text-lg font-bold text-brand-light flex items-center gap-2">
+                        <i class="fa-solid fa-address-card"></i> Tentang 296Tools
+                    </h3>
+                    <button onclick="closeAboutModal()" class="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg hover:bg-[var(--bg-card)]">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+                
+                <div class="space-y-3 text-sm leading-relaxed text-[var(--text-secondary)]">
+                    <div class="w-16 h-16 bg-brand-light/10 rounded-2xl mx-auto flex items-center justify-center">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" class="w-10 h-10 object-contain" alt="296 Studios Logo">
+                    </div>
+                    <p class="text-center font-bold text-sm text-[var(--text-primary)]">296GROUP - Solusi Digital Lokal</p>
+                    <p>
+                        <strong>296Tools</strong> adalah direktori & ekosistem micro-apps yang dikembangkan untuk membantu kegiatan digital harian Anda secara produktif. 
+                    </p>
+                    <p>
+                        Seluruh data diproses secara <strong>100% lokal di dalam browser Anda (Client-Side)</strong>. Kami sama sekali tidak mengirim atau menyimpan berkas dokumen atau data sensitif Anda ke server luar. Keamanan privasi Anda terjamin penuh.
+                    </p>
+                </div>
+
+                <div class="pt-2 flex justify-end">
+                    <button onclick="closeAboutModal()" class="px-5 py-2 text-xs font-semibold bg-brand-light text-white rounded-lg hover:bg-opacity-90 transition-all">
+                        Mengerti, Terima Kasih
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- POP-UP MODAL: DAFTAR MACAM-MACAM TOOLS -->
+    <div id="toolsMenuModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-300">
+        <div class="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-2xl max-w-2xl w-full border border-[var(--border)] shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="toolsMenuCard">
+            <div class="p-6 space-y-4">
+                <div class="flex justify-between items-center border-b border-[var(--border)] pb-3">
+                    <h3 class="font-clash text-lg font-bold text-brand-light flex items-center gap-2">
+                        <i class="fa-solid fa-grip"></i> Macam-Macam Alat (Quick Access)
+                    </h3>
+                    <button onclick="closeToolsModal()" class="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg hover:bg-[var(--bg-card)]">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Scrollable list of all tools in modal -->
+                <div class="max-h-[60vh] overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-3 pr-1" id="modalToolsList">
+                    <!-- Dynamic list populated via JS -->
+                </div>
+
+                <div class="pt-2 flex justify-end">
+                    <button onclick="closeToolsModal()" class="px-5 py-2 text-xs font-semibold bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-lg hover:bg-[var(--border)] transition-all">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logika Pemrograman Aplikasi -->
     <script>
-        const phoneInput = document.getElementById('phone');
-        const messageInput = document.getElementById('message');
-        const linkInput = document.getElementById('targetLink');
-        const resultDisplay = document.getElementById('resultLink');
-        const previewBubble = document.getElementById('preview-bubble');
-        const previewHeader = document.getElementById('preview-header');
+        // Mengaktifkan Ikon Lucide
+        lucide.createIcons();
+
+        // ==========================================================
+        // SISTEM TEMA: GELAP / TERANG (DARK & LIGHT MODE)
+        // ==========================================================
+        const themeToggleBtn = document.getElementById('themeToggle');
+        
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // ==========================================================
+        // REGISTER SEMUA ALAT DIRECTORY (PERSIS SEPERTI CONVERTER)
+        // ==========================================================
+        const ALL_TOOLS = [
+            { name: 'Converter File', desc: 'Pengkonversi berkas PDF, Word, Teks, & Gambar', icon: 'fa-solid fa-file', url: 'converter-file.html' },
+            { name: 'Fake Post X', desc: 'Pembuat screenshot postingan media sosial X secara instan', icon: 'fa-brands fa-x-twitter', url: 'fake-post-x.html' },
+            { name: 'Favicon Maker', desc: 'Pembuat & kompresor Favicon modern terlengkap (.ico & .png)', icon: 'fa-solid fa-file-image', url: 'favicon-maker.html' },
+            { name: 'Generator QR Code', desc: 'Pembuat QR Code premium dengan warna & logo kustom', icon: 'fa-solid fa-qrcode', url: 'generator-qr-code.html' },
+            { name: 'Google Dorking Tools', desc: 'Advanced Google Dork & OSINT Intelligence Generator', icon: 'fa-brands fa-google', url: 'google-dorking.html' },
+            { name: 'Image Compressor', desc: 'Pengkompres ukuran dimensi & kapasitas kilobyte gambar', icon: 'fa-regular fa-images', url: 'image-compresor.html' },
+            { name: 'Invoice Maker', desc: 'Pembuat berkas tagihan (Invoice) praktis terkompresi PDF', icon: 'fa-solid fa-file-invoice', url: 'invoice-maker.html' },
+            { name: 'Prompt Generator', desc: 'Pembuat format prompt siap pakai untuk optimasi ChatGPT/Claude', icon: 'fa-regular fa-keyboard', url: 'prompt-generator.html' },
+            { name: 'Scraping Link FB Reels', desc: 'Ekstraktor tautan (URL) reel profil publik dari Facebook', icon: 'fa-brands fa-facebook', url: 'scraping-fb-reels.html' },
+            { name: 'Smart HPP', desc: 'Kalkulator HPP & Harga Jual Anti Boncos bagi pemilik bisnis', icon: 'fa-solid fa-calculator', url: 'smart-hpp.html' },
+            { name: 'URL Shortener', desc: 'Pangkas URL panjang menjadi ringkas dan mudah dibagikan', icon: 'fa-solid fa-link', url: 'url-shortener.html' },
+            { name: 'WA Link Generator', desc: 'Pembuat link pesan instan WhatsApp otomatis', icon: 'fa-brands fa-whatsapp', url: 'wa-link-generator.html' },
+        ];
+
+        // ==========================================================
+        // UTAMA: LOGIKA PEMBUATAN LINK WHATSAPP
+        // ==========================================================
+        const phoneInput = document.getElementById('phoneInput');
+        const messageInput = document.getElementById('messageInput');
+        const urlInput = document.getElementById('urlInput');
+        const linkOutput = document.getElementById('linkOutput');
+        
+        const mockupPhone = document.getElementById('mockupPhone');
+        const mockupInitial = document.getElementById('mockupInitial');
+        const mockupBubbleText = document.getElementById('mockupBubbleText');
+        
+        const qrCodeImage = document.getElementById('qrCodeImage');
+        const downloadQrBtn = document.getElementById('downloadQrBtn');
 
         let generatedURL = "";
 
-        const inputs = [phoneInput, messageInput, linkInput];
-        
-        inputs.forEach(input => {
-            input.addEventListener('input', updateLink);
-        });
+        // Event listener update input real-time
+        phoneInput.addEventListener('input', updateWhatsAppLink);
+        messageInput.addEventListener('input', updateWhatsAppLink);
+        urlInput.addEventListener('input', updateWhatsAppLink);
 
-        function updateLink() {
-            const phone = phoneInput.value.replace(/[^0-9]/g, '');
+        // Parsing dan memperbarui WhatsApp Link & QR Code
+        function updateWhatsAppLink() {
+            let phone = phoneInput.value.trim();
             const message = messageInput.value;
-            const targetLink = linkInput.value;
+            const customUrl = urlInput.value.trim();
 
-            // Update Header Preview
-            previewHeader.innerText = phone || "User";
+            // Sembuhkan format nomor otomatis
+            let originalPhone = phone;
+            phone = cleanPhoneNumber(phone);
 
-            if (!phone && !message && !targetLink) {
-                resultDisplay.innerText = "Isi formulir untuk membuat link...";
-                previewBubble.innerText = "Isi pesan akan muncul di sini...";
+            // Validasi feedback visual ke pengguna
+            const phoneFeedback = document.getElementById('phoneFeedback');
+            const feedbackText = document.getElementById('feedbackText');
+            
+            if (originalPhone === "") {
+                feedbackText.innerText = 'Gunakan kode negara (62 untuk Indonesia). Angka "0" di awal otomatis dikonversi.';
+                phoneFeedback.className = "mt-2 text-[11px] text-[var(--text-muted)] flex items-center gap-1.5 font-medium";
+                mockupPhone.innerText = "Toko Anda / CS";
+                mockupInitial.innerText = "296";
+            } else if (phone.length < 9) {
+                feedbackText.innerText = 'Nomor terlalu pendek. Masukkan nomor telepon yang valid.';
+                phoneFeedback.className = "mt-2 text-[11px] text-yellow-500 flex items-center gap-1.5 font-medium";
+                mockupPhone.innerText = "Sangat Pendek...";
+                mockupInitial.innerText = "⚠️";
+            } else {
+                feedbackText.innerText = `Terdeteksi & diformat sebagai +${phone}`;
+                phoneFeedback.className = "mt-2 text-[11px] text-green-500 dark:text-emerald-400 flex items-center gap-1.5 font-medium";
+                mockupPhone.innerText = `+${phone}`;
+                mockupInitial.innerText = phone.substring(2, 4);
+            }
+
+            // Gabungkan teks dengan URL jika ada
+            let combinedMessage = message;
+            if (customUrl) {
+                combinedMessage += (combinedMessage ? "\n\n🔗 Tautan: " : "") + customUrl;
+            }
+
+            // Interpret formatting tags (*bold*, _italic_, ~strike~, ```mono```) khusus untuk preview mockup saja
+            let previewText = combinedMessage;
+            if (!previewText) {
+                previewText = "Isi pesan akan disimulasikan secara real-time di sini...";
+                mockupBubbleText.innerHTML = previewText;
+            } else {
+                mockupBubbleText.innerHTML = interpretWhatsAppFormatting(previewText);
+            }
+
+            // Jika nomor belum diisi, kosongkan output link
+            if (!phone || phone.length < 9) {
+                linkOutput.innerText = "Silakan masukkan nomor telepon terlebih dahulu untuk membuat tautan aktif...";
+                linkOutput.className = "w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-3.5 pr-10 text-xs break-all font-mono text-[var(--text-muted)] min-h-[50px] leading-relaxed";
                 generatedURL = "";
+                
+                // Matikan tombol QR Code & kurangi opacity
+                qrCodeImage.src = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https%3A%2F%2Fwa.me%2F";
+                qrCodeImage.classList.add('opacity-40', 'grayscale');
+                downloadQrBtn.disabled = true;
                 return;
             }
 
-            // Gabungkan teks dan link
-            const fullMessage = `${message}${message && targetLink ? '\n\n' : ''}${targetLink}`;
-            const encodedMessage = encodeURIComponent(fullMessage);
-            
-            generatedURL = `https://wa.me/${phone}?text=${encodedMessage}`;
-            
-            resultDisplay.innerText = generatedURL;
-            
-            // Update Preview Bubble with line breaks
-            previewBubble.innerHTML = fullMessage.replace(/\n/g, '<br>') || "Mengetik...";
+            // Buat URL final wa.me
+            const encodedText = encodeURIComponent(combinedMessage);
+            generatedURL = `https://wa.me/${phone}${encodedText ? '?text=' + encodedText : ''}`;
+
+            // Perbarui Kotak Output Link
+            linkOutput.innerText = generatedURL;
+            linkOutput.className = "w-full bg-[var(--bg-card)] border border-brand-light/30 rounded-xl p-3.5 pr-10 text-xs break-all font-mono text-brand-light dark:text-brand-dark min-h-[50px] font-bold leading-relaxed";
+
+            // Buat QR Code real-time menggunakan free public server API
+            const encodedQrData = encodeURIComponent(generatedURL);
+            qrCodeImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodedQrData}`;
+            qrCodeImage.classList.remove('opacity-40', 'grayscale');
+            downloadQrBtn.disabled = false;
         }
 
-        function copyLink() {
-            if (!generatedURL) return;
+        // Fungsi pembersih format nomor telepon input
+        function cleanPhoneNumber(num) {
+            // Hapus karakter non-digit seperti +, -, spasi kosong
+            let cleaned = num.replace(/\D/g, '');
             
+            // Konversi awalan 0 menjadi kode negara default Indonesia (62)
+            if (cleaned.startsWith('0')) {
+                cleaned = '62' + cleaned.substring(1);
+            }
+            
+            // Jika pengguna langsung memasukkan angka 8 (misal: 812...), tambahkan 62 di depannya
+            if (cleaned.startsWith('8') && cleaned.length >= 9) {
+                cleaned = '62' + cleaned;
+            }
+            
+            return cleaned;
+        }
+
+        // Sederhana mengonversi kode format whatsapp (*, _, ~, ```) ke HTML tag untuk tampilan live preview
+        function interpretWhatsAppFormatting(text) {
+            let escaped = escapeHtml(text);
+            
+            // Bold (*text*)
+            escaped = escaped.replace(/\*(.*?)\*/g, '<strong>$1</strong>');
+            
+            // Italic (_text_)
+            escaped = escaped.replace(/_(.*?)_/g, '<em>$1</em>');
+            
+            // Strikethrough (~text~)
+            escaped = escaped.replace(/~(.*?)~/g, '<span class="line-through text-slate-400">$1</span>');
+            
+            // Monospace (```text```)
+            escaped = escaped.replace(/```(.*?)```/g, '<code class="bg-black/10 dark:bg-black/30 p-1 rounded font-mono text-[10px]">$1</code>');
+            
+            // Baris baru (new line)
+            return escaped.replace(/\n/g, '<br>');
+        }
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+
+        // ==========================================================
+        // FITUR PRESETS / TEMPLATE ISI CHAT INSTAN
+        // ==========================================================
+        const PRESETS = {
+            olshop: {
+                message: "Halo Kak Admin! *Saya ingin memesan produk ini*\n\n📋 *Formulir Pemesanan*:\n- Nama Lengkap:\n- Alamat Lengkap:\n- Jumlah Pesanan:\n\nMohon konfirmasi ketersediaan stok & ongkos kirim ya, terima kasih! 🙏",
+                url: "https://toko-kita.com/produk-favorit"
+            },
+            cs: {
+                message: "Halo Customer Service 🌟,\nSaya butuh bantuan atau konsultasi lebih lanjut terkait layanan premium Anda. Boleh tahu syarat pendaftarannya?",
+                url: ""
+            },
+            event: {
+                message: "Halo Panitia Acara! 👋\nSaya tertarik untuk mendaftar sebagai peserta *Event Akbar 2026*.\n\nMohon informasi ketersediaan slot kursi dan petunjuk cara pembayarannya. Terima kasih!",
+                url: "https://event-kita.com/daftar"
+            },
+            empty: {
+                message: "",
+                url: ""
+            }
+        };
+
+        function loadPreset(key) {
+            if (PRESETS[key]) {
+                messageInput.value = PRESETS[key].message;
+                urlInput.value = PRESETS[key].url;
+                updateWhatsAppLink();
+                showToast(`Memuat template: ${key === 'empty' ? 'Form dibersihkan' : key.toUpperCase()}`);
+            }
+        }
+
+        // Memasukkan tag format secara langsung di posisi kursor textarea saat ini
+        function insertFormatting(tag) {
+            const start = messageInput.selectionStart;
+            const end = messageInput.selectionEnd;
+            const text = messageInput.value;
+            const selectedText = text.substring(start, end);
+            
+            // Bungkus teks yang terpilih atau buat tag baru jika kosong
+            const formatted = tag + selectedText + tag;
+            messageInput.value = text.substring(0, start) + formatted + text.substring(end);
+            
+            // Set fokus kembali ke kursor semula
+            messageInput.focus();
+            messageInput.selectionStart = start + tag.length;
+            messageInput.selectionEnd = end + tag.length;
+            
+            updateWhatsAppLink();
+        }
+
+        // Salin tautan wa.me ke clipboard lokal
+        function copyGeneratedLink() {
+            if (!generatedURL) {
+                showToast("Gagal! Masukkan nomor telepon terlebih dahulu.", true);
+                return;
+            }
+
             const tempInput = document.createElement('input');
             tempInput.value = generatedURL;
             document.body.appendChild(tempInput);
             tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-
-            showToast("Tautan berhasil disalin ke clipboard!");
+            
+            try {
+                const success = document.execCommand('copy');
+                if (success) {
+                    showToast("Tautan sukses disalin ke clipboard!");
+                } else {
+                    throw new Error("Gagal menyalin otomatis.");
+                }
+            } catch (err) {
+                console.error(err);
+                showToast("Gagal menyalin, silakan salin manual.", true);
+            } finally {
+                document.body.removeChild(tempInput);
+            }
         }
 
-        function openWhatsApp() {
+        // Buka chat tautan whatsapp ke tab baru untuk pengujian langsung
+        function testGeneratedLink() {
             if (!generatedURL) {
-                showToast("Harap isi nomor telepon terlebih dahulu.");
+                showToast("Masukkan nomor telepon terlebih dahulu untuk mencoba chat.", true);
                 return;
             }
             window.open(generatedURL, '_blank');
         }
 
-        function showToast(text) {
-            const toast = document.getElementById('toast');
-            toast.innerText = text;
-            toast.classList.remove('opacity-0');
-            toast.classList.add('opacity-100', '-translate-y-4');
+        // Fungsi pengunduh QR Code (Fetch dari API eksternal dan simpan lokal)
+        async function downloadQrCode() {
+            if (!generatedURL) return;
             
-            setTimeout(() => {
-                toast.classList.add('opacity-0');
-                toast.classList.remove('opacity-100', '-translate-y-4');
-            }, 3000);
+            const qrUrl = qrCodeImage.src;
+            showToast("Sedang mempersiapkan berkas QR...");
+
+            try {
+                const response = await fetch(qrUrl);
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                
+                const downloadLink = document.createElement('a');
+                downloadLink.href = blobUrl;
+                downloadLink.download = `QRCode_WhatsApp_296Tools.png`;
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                
+                document.body.removeChild(downloadLink);
+                URL.revokeObjectURL(blobUrl);
+                showToast("QR Code berhasil diunduh!");
+            } catch (error) {
+                console.error(error);
+                // Jika CORS bermasalah, alternatifnya langsung buka di tab baru
+                window.open(qrUrl, '_blank');
+                showToast("Berhasil dibuka! Silakan klik kanan & simpan gambar.", false);
+            }
         }
 
+        function handleQrError() {
+            qrCodeImage.src = "https://placehold.co/180x180/eaeaea/999999?text=QR+API+Offline";
+            showToast("Koneksi internet lambat / API QR offline.", true);
+        }
+
+        // Tampilkan Notifikasi Toast Mengambang
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+            
+            toastMessage.textContent = message;
+            
+            if (isError) {
+                toastIcon.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-red-500 text-base"></i>`;
+            } else {
+                toastIcon.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500 text-base"></i>`;
+            }
+
+            toast.classList.remove('opacity-0', 'translate-y-20', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-20', 'pointer-events-none');
+                toast.classList.remove('opacity-100', 'translate-y-0');
+            }, 3500);
+        }
+
+        // ==========================================================
+        // MODALS MANAJEMEN & NAVIGASI BAR SELULER
+        // ==========================================================
+        const aboutModal = document.getElementById('aboutModal');
+        const aboutModalCard = document.getElementById('aboutModalCard');
+        const toolsMenuModal = document.getElementById('toolsMenuModal');
+        const toolsMenuCard = document.getElementById('toolsMenuCard');
+        const modalToolsList = document.getElementById('modalToolsList');
+
+        // Buka Modal Tentang Kami (About Us)
+        function openAboutModal() {
+            aboutModal.classList.remove('hidden');
+            setTimeout(() => {
+                aboutModal.classList.add('opacity-100');
+                aboutModalCard.classList.remove('scale-95');
+                aboutModalCard.classList.add('scale-100');
+            }, 50);
+        }
+
+        // Tutup Modal Tentang Kami (About Us)
+        function closeAboutModal() {
+            aboutModal.classList.remove('opacity-100');
+            aboutModalCard.classList.remove('scale-100');
+            aboutModalCard.classList.add('scale-95');
+            setTimeout(() => {
+                aboutModal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Buka Modal Daftar Macam-Macam Tools
+        function openToolsModal() {
+            // Isi data dinamis tools
+            modalToolsList.innerHTML = ALL_TOOLS.map(t => `
+                <a href="${t.url}" class="flex items-center gap-3 p-3 rounded-xl border border-[var(--border)] hover:bg-[var(--bg-card)] transition-all">
+                    <div class="w-8 h-8 rounded-lg bg-brand-light/10 text-brand-light flex items-center justify-center text-sm">
+                        <i class="${t.icon}"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <h4 class="text-xs font-bold text-[var(--text-primary)]">${t.name}</h4>
+                        <p class="text-[10px] text-[var(--text-muted)] truncate max-w-[200px] sm:max-w-md">${t.desc}</p>
+                    </div>
+                </a>
+            `).join('');
+
+            toolsMenuModal.classList.remove('hidden');
+            setTimeout(() => {
+                toolsMenuModal.classList.add('opacity-100');
+                toolsMenuCard.classList.remove('scale-95');
+                toolsMenuCard.classList.add('scale-100');
+            }, 50);
+        }
+
+        // Tutup Modal Daftar Macam-Macam Tools
+        function closeToolsModal() {
+            toolsMenuModal.classList.remove('opacity-100');
+            toolsMenuCard.classList.remove('scale-100');
+            toolsMenuCard.classList.add('scale-95');
+            setTimeout(() => {
+                toolsMenuModal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Klik luar area modal untuk autosave/tutup
+        window.addEventListener('click', (e) => {
+            if (e.target === aboutModal) closeAboutModal();
+            if (e.target === toolsMenuModal) closeToolsModal();
+        });
+
+        // Trigger inisialisasi awal saat window siap
         window.onload = function() {
-            console.log("WA Link Generator loaded successfully.");
+            updateWhatsAppLink();
+            console.log("296Tools - WA Link & QR Generator Loaded.");
         };
     </script>
 </body>
