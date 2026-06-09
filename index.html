@@ -847,7 +847,7 @@ function render() {
     const catLabel = { ai:'AI', design:'Desain', dev:'Dev', seo:'SEO', media:'Media', util:'Util' }[t.cat] || t.cat;
     const delay = Math.min(i * 28, 280);
     return `
-    <a class="tool-card card-${t.cat}" href="${t.url}" target="_blank" rel="noopener noreferrer"
+    <a class="tool-card card-${t.cat}" href="${t.url}" target="_self" rel="noopener noreferrer"
        style="animation-delay:${delay}ms">
       ${badge}
       <div class="tool-icon-wrap icon-${t.cat}">
