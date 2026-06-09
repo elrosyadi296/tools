@@ -1,586 +1,651 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="transition-colors duration-300">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>296Tools - Fake Post X Generator</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<!-- --- FAVICON (SVG Crown Emoji) --- -->
-    <link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+<!-- Font Family Premium -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- Tailwind CSS untuk desain premium -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            light: '#6c63ff',
+            dark: '#a78bfa',
+            accent: '#38bdf8',
+            emerald: '#34d399'
+          }
+        },
+        fontFamily: {
+          clash: ['Clash Display', 'sans-serif'],
+          bricolage: ['Bricolage Grotesque', 'sans-serif'],
+        }
+      }
+    }
+  }
+</script>
+
+<!-- FAVICON -->
+<link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
+
+<style>
+  /* Variabel CSS untuk Mode Terang (Default) */
   :root {
-    --bg: #0f0f0f;
-    --surface: #161616;
-    --card: #1a1a1a;
-    --border: #2a2a2a;
-    --text: #f0f0f0;
-    --sub: #888;
-    --accent: #1d9bf0;
-    --like: #f91880;
-    --green: #00ba7c;
-    --orange: #ff7043;
+    --bg: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-card: #f1f5f9;
+    --border: rgba(15, 23, 42, 0.08);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+  }
+
+  /* Variabel CSS untuk Mode Gelap */
+  .dark {
+    --bg: #0b0c10;
+    --bg-surface: #13141a;
+    --bg-card: #1e2029;
+    --border: rgba(255, 255, 255, 0.07);
+    --text-primary: #f0f0f5;
+    --text-secondary: #9899a8;
+    --text-muted: #5a5b6a;
   }
 
   body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
+    font-family: 'Bricolage Grotesque', sans-serif;
+    background-color: var(--bg);
+    color: var(--text-primary);
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 30px 16px 60px;
+    transition: background-color 0.3s, color 0.3s;
   }
 
-  h1 {
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--sub);
-    margin-bottom: 28px;
+  /* Noise Overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
   }
 
-  /* ===== LAYOUT ===== */
-  .wrap {
-    display: grid;
-    grid-template-columns: 380px 1fr;
-    gap: 28px;
-    width: 100%;
-    max-width: 860px;
-    align-items: start;
-  }
-
-  /* ===== EDITOR PANEL ===== */
-  .editor {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 22px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    position: sticky;
-    top: 30px;
-  }
-
-  .editor-title {
-    font-size: 11px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--sub);
-    margin-bottom: 4px;
-  }
-
-  .field-group { display: flex; flex-direction: column; gap: 5px; }
-  label { font-size: 12px; color: var(--sub); font-weight: 500; }
-
-  input[type=text], input[type=number], textarea, select {
-    background: #111;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    padding: 9px 12px;
-    width: 100%;
-    outline: none;
-    transition: border-color .2s;
-  }
-  input[type=text]:focus, input[type=number]:focus, textarea:focus, select:focus {
-    border-color: var(--accent);
-  }
-  textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
-
-  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-
-  /* Avatar upload */
-  .avatar-pick {
-    display: flex; align-items: center; gap: 12px;
-  }
-  .avatar-preview {
-    width: 52px; height: 52px; border-radius: 50%;
-    background: #222; border: 2px solid var(--border);
-    object-fit: cover; flex-shrink: 0;
-    cursor: pointer;
-  }
-  .avatar-hint { font-size: 11px; color: var(--sub); }
-  #avatarInput { display: none; }
-
-  /* Post image upload */
-  .img-pick {
-    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-  }
-  .img-thumb {
-    width: 64px; height: 48px; border-radius: 8px;
-    object-fit: cover; border: 1px solid var(--border);
-    display: none;
-  }
-  #postImgInput { display: none; }
-  .upload-btn {
-    font-size: 11px; color: var(--accent);
-    border: 1px dashed var(--accent);
-    border-radius: 8px; padding: 6px 12px;
-    cursor: pointer; background: transparent;
-    transition: background .2s;
-  }
-  .upload-btn:hover { background: rgba(29,155,240,.1); }
-  .clear-img-btn {
-    font-size: 11px; color: var(--sub);
-    background: none; border: none; cursor: pointer;
-    display: none;
-  }
-
-  /* Platform toggle */
-  .platform-toggle {
-    display: flex; gap: 8px;
-  }
-  .pt-btn {
-    flex: 1; padding: 7px; border-radius: 8px;
-    border: 1px solid var(--border);
-    background: #111; color: var(--sub);
-    font-size: 12px; font-weight: 600;
-    cursor: pointer; transition: all .2s;
-  }
-  .pt-btn.active {
-    background: var(--accent); color: #fff; border-color: var(--accent);
-  }
-
-  /* Generate button */
-  .gen-btn {
-    background: var(--accent); color: #fff;
-    border: none; border-radius: 10px;
-    padding: 11px; font-family: 'DM Sans', sans-serif;
-    font-size: 13px; font-weight: 700;
-    letter-spacing: .5px;
-    cursor: pointer; transition: opacity .2s;
-    margin-top: 4px;
-  }
-  .gen-btn:hover { opacity: .85; }
-
-  /* Screenshot btn */
-  .ss-btn {
-    background: transparent; color: var(--accent);
-    border: 1px solid var(--accent); border-radius: 10px;
-    padding: 10px; font-family: 'DM Sans', sans-serif;
-    font-size: 12px; font-weight: 600;
-    cursor: pointer; transition: background .2s;
-  }
-  .ss-btn:hover { background: rgba(29,155,240,.1); }
-
-  /* ===== PREVIEW AREA ===== */
-  .preview-area {
-    display: flex; flex-direction: column; gap: 16px;
-  }
-
-  .preview-label {
-    font-size: 11px; letter-spacing: 1.5px;
-    text-transform: uppercase; color: var(--sub);
-  }
-
-  /* ===== CARD ===== */
+  /* KARTU PREVIEW DIISOLASI AGAR SELALU BERGAYA GELAP KHAS X/THREADS SEHINGGA SCREENSHOT MAKSIMAL */
   #postCard {
-    background: #000;
+    background-color: #000000;
     border: 1px solid #2f3336;
-    border-radius: 16px;
-    padding: 20px 20px 16px;
-    max-width: 600px;
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
   }
+  
   #postCard.threads-theme {
-    background: #101010;
+    background-color: #101010;
     border-color: #303030;
-  }
-
-  .card-top {
-    display: flex; gap: 12px; align-items: flex-start;
-  }
-
-  #cardAvatar {
-    width: 44px; height: 44px; border-radius: 50%;
-    object-fit: cover; flex-shrink: 0;
-    background: #333;
-  }
-  .threads-theme #cardAvatar { border-radius: 50%; }
-
-  .card-meta { flex: 1; }
-  .card-name-row {
-    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
-  }
-  .card-meta-stack {
-    display: flex; flex-direction: column; gap: 1px;
-  }
-  .card-name-line {
-    display: flex; align-items: center; gap: 5px;
-  }
-  #cardName {
-    font-size: 15px; font-weight: 700; color: #e7e9ea;
-  }
-  #cardVerified {
-    display: none;
-    width: 18px; height: 18px;
-  }
-  #cardHandle {
-    font-size: 13px; color: #71767b;
-  }
-  #cardTime {
-    font-size: 14px; color: #71767b;
-  }
-  #cardTime::before { content: " · "; }
-
-  /* Threads style meta */
-  .threads-theme #cardName { color: #f5f5f5; font-size: 14px; }
-  .threads-theme #cardHandle { display: none; }
-  .threads-theme #cardTime { font-size: 13px; }
-
-  /* More icon */
-  .card-more {
-    margin-left: auto; color: #71767b;
-    font-size: 18px; cursor: pointer;
-  }
-
-  /* Post content */
-  #cardContent {
-    font-size: 15px; line-height: 1.6;
-    color: #e7e9ea; margin: 12px 0 14px;
-    white-space: pre-wrap; word-break: break-word;
-  }
-  .threads-theme #cardContent { font-size: 14px; color: #f5f5f5; }
-
-  /* Post image */
-  #cardPostImg {
-    width: 100%; border-radius: 14px;
-    object-fit: cover; max-height: 340px;
-    display: none; margin-bottom: 14px;
-    border: 1px solid #2f3336;
-  }
-
-  /* Actions */
-  .card-actions {
-    display: flex; gap: 0; margin-top: 4px;
-  }
-  .action-btn {
-    display: flex; align-items: center; gap: 6px;
-    background: none; border: none;
-    color: #71767b; font-family: 'DM Sans', sans-serif;
-    font-size: 13px; cursor: pointer;
-    padding: 8px 12px 8px 0;
-    border-radius: 999px;
-    transition: color .2s;
-    flex: 1;
-  }
-  .action-btn:hover.like   { color: var(--like); }
-  .action-btn:hover.reply  { color: var(--accent); }
-  .action-btn:hover.repost { color: var(--green); }
-  .action-btn:hover.share  { color: var(--accent); }
-  .action-btn svg { width: 18px; height: 18px; }
-  #likeCount, #replyCount, #repostCount { font-size: 13px; }
-
-  /* Source bar */
-  .card-source {
-    margin-top: 14px; padding-top: 12px;
-    border-top: 1px solid #2f3336;
-    font-size: 13px; color: #71767b;
-    display: flex; align-items: center; gap: 6px;
-  }
-  .threads-theme .card-source { border-color: #303030; }
-
-  /* Platform badge */
-  .platform-badge {
-    display: flex; align-items: center; gap: 5px;
-    margin-left: auto; font-size: 12px; color: #555;
-  }
-  .platform-badge svg { width: 16px; height: 16px; fill: #555; }
-
-  /* ===== RESPONSIVE ===== */
-  @media (max-width: 680px) {
-    .wrap { grid-template-columns: 1fr; }
-    .editor { position: static; }
   }
 </style>
 </head>
-<body>
+<body class="flex flex-col">
 
-<h1>✦ Fake Post Generator</h1>
-
-<div class="wrap">
-
-  <!-- EDITOR -->
-  <div class="editor">
-    <div class="editor-title">Pengaturan Post</div>
-
-    <!-- Platform -->
-    <div class="field-group">
-      <label>Platform</label>
-      <div class="platform-toggle">
-        <button class="pt-btn active" onclick="setPlatform('x')" id="btnX">𝕏 (X)</button>
-        <button class="pt-btn" onclick="setPlatform('threads')" id="btnT">Threads</button>
-      </div>
+  <!-- Header / Topbar -->
+  <header class="sticky top-0 z-40 w-full bg-[var(--bg)]/80 backdrop-blur-md border-b border-[var(--border)] transition-all">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="homepage.html" class="flex items-center gap-3">
+        <div class="w-9 h-9 bg-gradient-to-tr from-brand-light to-brand-accent rounded-lg flex items-center justify-center shadow-lg">
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" class="w-6 h-6 object-contain" alt="Logo 296">
+        </div>
+        <div class="flex flex-col">
+          <span class="font-clash text-base font-bold leading-none tracking-tight">296<span class="text-brand-dark">Tools</span></span>
+          <span class="text-[10px] text-[var(--text-muted)] font-medium mt-0.5">Fake Post X Generator</span>
+        </div>
+      </a>
+      
+      <!-- Tombol Pengubah Mode Gelap/Terang -->
+      <button id="themeToggle" class="p-2 rounded-lg bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] transition-all" title="Ubah Tema">
+        <i class="fa-solid fa-moon dark:hidden text-base"></i>
+        <i class="fa-solid fa-sun hidden dark:block text-base text-yellow-400"></i>
+      </button>
     </div>
+  </header>
 
-    <!-- Avatar -->
-    <div class="field-group">
-      <label>Foto Profil</label>
-      <div class="avatar-pick">
-        <img id="avatarPreview" class="avatar-preview"
-          src="https://api.dicebear.com/8.x/thumbs/svg?seed=default"
-          onclick="document.getElementById('avatarInput').click()" />
-        <input type="file" id="avatarInput" accept="image/*" onchange="loadAvatar(this)">
-        <span class="avatar-hint">Klik gambar<br>untuk ganti</span>
-      </div>
-    </div>
+  <!-- Konten Utama (Layout Grid) -->
+  <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-8 relative z-10">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- SISI KIRI: PANEL FORM PENGATURAN (7 Kolom) -->
+      <section class="lg:col-span-7 bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl p-6 shadow-sm space-y-6">
+        <div class="border-b border-[var(--border)] pb-3">
+          <h2 class="font-clash text-base font-bold text-brand-light flex items-center gap-2">
+            <i class="fa-solid fa-sliders"></i> Pengaturan Postingan
+          </h2>
+        </div>
 
-    <!-- Name & Handle -->
-    <div class="row2">
-      <div class="field-group">
-        <label>Nama</label>
-        <input type="text" id="inputName" value="Ahmad Fauzi" oninput="update()">
-      </div>
-      <div class="field-group">
-        <label>Username</label>
-        <input type="text" id="inputHandle" value="@ahmadfauzi" oninput="update()">
-      </div>
-    </div>
+        <!-- Platform Select -->
+        <div class="space-y-2">
+          <label class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Platform Media Sosial</label>
+          <div class="grid grid-cols-2 gap-3">
+            <button class="py-2.5 rounded-xl border font-bold text-sm transition-all text-white bg-brand-light border-brand-light shadow-md shadow-brand-light/20 cursor-pointer" onclick="setPlatform('x')" id="btnX">
+              𝕏 (Twitter)
+            </button>
+            <button class="py-2.5 rounded-xl border font-bold text-sm transition-all border-[var(--border)] text-[var(--text-secondary)] bg-[var(--bg-card)] hover:bg-[var(--border)] cursor-pointer" onclick="setPlatform('threads')" id="btnT">
+              Threads
+            </button>
+          </div>
+        </div>
 
-    <!-- Verified -->
-    <div class="field-group">
-      <label>Centang Biru</label>
-      <select id="inputVerified" onchange="update()">
-        <option value="no">Tidak</option>
-        <option value="yes">Ya (Verified)</option>
-      </select>
-    </div>
-
-    <!-- Time -->
-    <div class="row2">
-      <div class="field-group">
-        <label>Waktu (di atas)</label>
-        <input type="text" id="inputTime" value="2j" placeholder="cth: 2j / 15 Mar" oninput="update()">
-      </div>
-      <div class="field-group">
-        <label>Tanggal &amp; Jam (bawah)</label>
-        <input type="datetime-local" id="inputDateTime" oninput="update()">
-      </div>
-    </div>
-
-    <!-- Content -->
-    <div class="field-group">
-      <label>Isi Postingan</label>
-      <textarea id="inputContent" oninput="update()">Alhamdulillah, hari ini bisa belajar hal baru yang sangat bermanfaat. Semoga ilmunya berkah dan bermanfaat bagi banyak orang. 🌿 #belajar #berkah</textarea>
-    </div>
-
-    <!-- Post Image -->
-    <div class="field-group">
-      <label>Gambar Postingan (opsional)</label>
-      <div class="img-pick">
-        <input type="file" id="postImgInput" accept="image/*" onchange="loadPostImg(this)">
-        <button class="upload-btn" onclick="document.getElementById('postImgInput').click()">+ Upload Gambar</button>
-        <img id="imgThumb" class="img-thumb">
-        <button class="clear-img-btn" id="clearImgBtn" onclick="clearPostImg()">✕ Hapus</button>
-      </div>
-    </div>
-
-    <!-- Stats -->
-    <div class="row3">
-      <div class="field-group">
-        <label>❤ Like</label>
-        <input type="text" id="inputLike" value="1.2K" oninput="update()">
-      </div>
-      <div class="field-group">
-        <label>💬 Komen</label>
-        <input type="text" id="inputReply" value="48" oninput="update()">
-      </div>
-      <div class="field-group">
-        <label>🔁 Repost</label>
-        <input type="text" id="inputRepost" value="320" oninput="update()">
-      </div>
-    </div>
-
-    <button class="gen-btn" onclick="update()">↻ Refresh Preview</button>
-    <button class="ss-btn" onclick="takeScreenshot()">📸 Download Screenshot</button>
-  </div>
-
-  <!-- PREVIEW -->
-  <div class="preview-area">
-    <span class="preview-label">Preview</span>
-
-    <div id="postCard">
-      <!-- Top row -->
-      <div class="card-top">
-        <img id="cardAvatar" src="https://api.dicebear.com/8.x/thumbs/svg?seed=default" alt="avatar">
-        <div class="card-meta">
-          <div class="card-meta-stack">
-            <div class="card-name-line">
-              <span id="cardName">Ahmad Fauzi</span>
-              <svg id="cardVerified" viewBox="0 0 24 24" fill="#1d9bf0">
-                <path d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.2-2.9-.81-3.91-1.01-1-2.52-1.27-3.91-.81C14.67 2.88 13.43 2 12 2s-2.67.88-3.34 2.19c-1.39-.46-2.9-.2-3.91.81-1 1.01-1.27 2.52-.81 3.91C2.88 9.33 2 10.57 2 12s.88 2.67 2.19 3.34c-.46 1.39-.2 2.9.81 3.91 1.01 1 2.52 1.27 3.91.81C9.33 21.12 10.57 22 12 22s2.67-.88 3.34-2.19c1.39.46 2.9.2 3.91-.81 1-1.01 1.27-2.52.81-3.91 1.31-.67 2.19-1.91 2.19-3.34zm-11.71 4.2L6.8 12.46l1.41-1.42 2.26 2.26 4.8-5.23 1.47 1.36-6.2 6.77z"/>
-              </svg>
+        <!-- Foto Profil (Avatar) -->
+        <div class="space-y-2">
+          <label class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Foto Profil (Avatar)</label>
+          <div class="flex items-center gap-4 p-3 bg-[var(--bg-card)] rounded-xl border border-[var(--border)]">
+            <div class="relative group">
+              <img id="avatarPreview" class="w-14 h-14 rounded-full object-cover bg-slate-800 border-2 border-brand-light cursor-pointer"
+                src="https://api.dicebear.com/8.x/thumbs/svg?seed=default"
+                onclick="document.getElementById('avatarInput').click()" />
+              <div class="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer pointer-events-none text-white text-[10px]">
+                <i class="fa-solid fa-camera"></i>
+              </div>
             </div>
+            <input type="file" id="avatarInput" accept="image/*" class="hidden" onchange="loadAvatar(this)">
             <div>
-              <span id="cardHandle">@ahmadfauzi</span><span id="cardTime">2j</span>
+              <button onclick="document.getElementById('avatarInput').click()" class="text-xs bg-brand-light text-white font-semibold py-1.5 px-3 rounded-lg hover:bg-opacity-95 transition-all">Upload Foto</button>
+              <p class="text-[10px] text-[var(--text-muted)] mt-1">Gunakan rasio 1:1 persegi untuk hasil terbaik</p>
             </div>
           </div>
         </div>
-        <span class="card-more">···</span>
-      </div>
 
-      <!-- Content -->
-      <div id="cardContent">Alhamdulillah, hari ini bisa belajar hal baru yang sangat bermanfaat. Semoga ilmunya berkah dan bermanfaat bagi banyak orang. 🌿 #belajar #berkah</div>
+        <!-- Nama & Username -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label for="inputName" class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Nama Profil</label>
+            <input type="text" id="inputName" value="Ahmad Fauzi" oninput="update()" class="w-full px-4 py-2.5 bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl focus:border-brand-light focus:outline-none text-sm">
+          </div>
+          <div class="space-y-2">
+            <label for="inputHandle" class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Username (@)</label>
+            <input type="text" id="inputHandle" value="@ahmadfauzi" oninput="update()" class="w-full px-4 py-2.5 bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl focus:border-brand-light focus:outline-none text-sm">
+          </div>
+        </div>
 
-      <!-- Post image -->
-      <img id="cardPostImg" alt="post image">
+        <!-- Verified Badge -->
+        <div class="space-y-2">
+          <label for="inputVerified" class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Centang Biru (Verified)</label>
+          <select id="inputVerified" onchange="update()" class="w-full px-4 py-2.5 bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl focus:border-brand-light focus:outline-none text-sm">
+            <option value="no">Tidak</option>
+            <option value="yes">Ya (Verified)</option>
+          </select>
+        </div>
 
-      <!-- Actions -->
-      <div class="card-actions">
-        <button class="action-btn reply">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M1.75 1.75h20.5v14.5H13l-5.25 5v-5H1.75V1.75z"/>
-          </svg>
-          <span id="replyCount">48</span>
-        </button>
-        <button class="action-btn repost">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 .85.693 1.5 1.5 1.5h6v2H7c-1.93 0-3.5-1.57-3.5-3.5V7.55L1.432 9.48.068 8.02 4.5 3.88z"/>
-            <path d="M19.5 20.12l-4.432-4.14 1.364-1.46 2.068 1.93V8c0-.85-.693-1.5-1.5-1.5h-6v-2h6c1.93 0 3.5 1.57 3.5 3.5v8.45l2.068-1.93 1.364 1.46L19.5 20.12z"/>
-          </svg>
-          <span id="repostCount">320</span>
-        </button>
-        <button class="action-btn like">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.95 1.09-.94-1.09c-1.211-1.65-2.668-2.22-3.89-2.16-1.815.09-3.227 1.58-3.227 3.39 0 .382.08.794.248 1.15C4.782 13.196 8.777 17.085 12 19.85c3.22-2.765 7.217-6.654 8.85-9.81.17-.356.25-.768.25-1.15 0-1.81-1.412-3.3-3.403-3.39z"/>
-          </svg>
-          <span id="likeCount">1.2K</span>
-        </button>
-        <button class="action-btn share">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path d="M12 2.59l5.7 5.7-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.41-1.42L12 2.59zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.12 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15h2z"/>
-          </svg>
-        </button>
-      </div>
+        <!-- Waktu & Tanggal -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label for="inputTime" class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Waktu Singkat (cth: 2j, 15 Mar)</label>
+            <input type="text" id="inputTime" value="2j" placeholder="cth: 2j / 15 Mar" oninput="update()" class="w-full px-4 py-2.5 bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl focus:border-brand-light focus:outline-none text-sm">
+          </div>
+          <div class="space-y-2">
+            <label for="inputDateTime" class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Tanggal Detail (Bawah)</label>
+            <input type="datetime-local" id="inputDateTime" oninput="update()" class="w-full px-4 py-2.5 bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl focus:border-brand-light focus:outline-none text-sm bg-transparent">
+          </div>
+        </div>
 
-      <!-- Source -->
-      <div class="card-source">
-        <span id="sourceText" style="color:#555;font-size:12px;">11.24 PM · 15 Mei 2025</span>
-        <div class="platform-badge" id="platformBadge">
-          <!-- X icon -->
-          <svg id="xIcon" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        <!-- Isi Postingan -->
+        <div class="space-y-2">
+          <label for="inputContent" class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Isi Postingan</label>
+          <textarea id="inputContent" oninput="update()" class="w-full px-4 py-2.5 bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl focus:border-brand-light focus:outline-none text-sm h-28 resize-none">Alhamdulillah, hari ini bisa belajar hal baru yang sangat bermanfaat. Semoga ilmunya berkah dan bermanfaat bagi banyak orang. 🌿 #belajar #berkah</textarea>
+        </div>
+
+        <!-- Gambar Postingan -->
+        <div class="space-y-2">
+          <label class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">Gambar Lampiran Postingan (Opsional)</label>
+          <div class="flex flex-wrap items-center gap-3 p-3 bg-[var(--bg-card)] rounded-xl border border-[var(--border)]">
+            <input type="file" id="postImgInput" accept="image/*" class="hidden" onchange="loadPostImg(this)">
+            <button class="bg-brand-light text-white font-semibold py-1.5 px-3 rounded-lg hover:bg-opacity-95 transition-all text-xs" onclick="document.getElementById('postImgInput').click()">+ Unggah Gambar</button>
+            <img id="imgThumb" class="w-14 h-10 rounded object-cover border border-[var(--border)] hidden">
+            <button class="text-red-500 hover:text-red-700 text-xs font-bold hidden" id="clearImgBtn" onclick="clearPostImg()">✕ Hapus</button>
+          </div>
+        </div>
+
+        <!-- Statistik Like, Komen, Repost -->
+        <div class="grid grid-cols-3 gap-3">
+          <div class="space-y-2">
+            <label for="inputLike" class="block text-[10px] font-bold uppercase tracking-wider text-[var(--text-secondary)]">❤ Like</label>
+            <input type="text" id="inputLike" value="1.2K" oninput="update()" class="w-full px-3 py-2 bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl focus:border-brand-light focus:outline-none text-xs">
+          </div>
+          <div class="space-y-2">
+            <label for="inputReply" class="block text-[10px] font-bold uppercase tracking-wider text-[var(--text-secondary)]">💬 Komen</label>
+            <input type="text" id="inputReply" value="48" oninput="update()" class="w-full px-3 py-2 bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl focus:border-brand-light focus:outline-none text-xs">
+          </div>
+          <div class="space-y-2">
+            <label for="inputRepost" class="block text-[10px] font-bold uppercase tracking-wider text-[var(--text-secondary)]">🔁 Repost</label>
+            <input type="text" id="inputRepost" value="320" oninput="update()" class="w-full px-3 py-2 bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-xl focus:border-brand-light focus:outline-none text-xs">
+          </div>
+        </div>
+
+        <!-- Tombol Unduh / Screenshot -->
+        <div class="pt-4 border-t border-[var(--border)] flex flex-col sm:flex-row gap-3">
+          <button class="flex-1 py-3 bg-brand-light text-white font-bold rounded-xl shadow-lg shadow-brand-light/20 hover:opacity-95 transition-all text-sm cursor-pointer" onclick="update()">
+            <i class="fa-solid fa-rotate-right mr-2"></i> Refresh Preview
+          </button>
+          <button class="flex-1 py-3 bg-emerald-600 text-white font-bold rounded-xl shadow-lg shadow-emerald-500/10 hover:bg-emerald-700 transition-all text-sm cursor-pointer" onclick="takeScreenshot()">
+            <i class="fa-solid fa-camera mr-2"></i> Unduh Gambar (PNG)
+          </button>
+        </div>
+      </section>
+
+      <!-- SISI KANAN: LIVE PREVIEW SCREENSHOT (5 Kolom) -->
+      <section class="lg:col-span-5 lg:sticky lg:top-24 space-y-6">
+        <div class="flex items-center gap-3">
+          <span class="w-1 h-5 rounded-full bg-brand-light inline-block"></span>
+          <h2 class="font-clash text-xs font-semibold tracking-wider uppercase text-[var(--text-secondary)]">Live Preview</h2>
+        </div>
+
+        <!-- Post Card Container (Isolasi warna gelap autentik) -->
+        <div id="postCard" class="rounded-2xl p-5 shadow-xl">
+          <!-- Top Row (User Info) -->
+          <div class="flex gap-3 items-start">
+            <img id="cardAvatar" src="https://api.dicebear.com/8.x/thumbs/svg?seed=default" alt="avatar" class="w-11 h-11 rounded-full object-cover bg-slate-800 flex-shrink-0">
+            <div class="flex-grow">
+              <div class="flex flex-col">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <span id="cardName" class="text-sm font-bold text-[#e7e9ea] leading-tight">Ahmad Fauzi</span>
+                  <!-- Verified SVG Badge -->
+                  <svg id="cardVerified" viewBox="0 0 24 24" fill="#1d9bf0" class="w-4 h-4 hidden">
+                    <path d="M22.25 12c0-1.43-.88-2.67-2.19-3.34.46-1.39.2-2.9-.81-3.91-1.01-1-2.52-1.27-3.91-.81C14.67 2.88 13.43 2 12 2s-2.67.88-3.34 2.19c-1.39-.46-2.9-.2-3.91.81-1 1.01-1.27 2.52-.81 3.91C2.88 9.33 2 10.57 2 12s.88 2.67 2.19 3.34c-.46 1.39-.2 2.9.81 3.91 1.01 1 2.52 1.27 3.91.81C9.33 21.12 10.57 22 12 22s2.67-.88 3.34-2.19c1.39.46 2.9.2 3.91-.81 1-1.01 1.27-2.52.81-3.91 1.31-.67 2.19-1.91 2.19-3.34zm-11.71 4.2L6.8 12.46l1.41-1.42 2.26 2.26 4.8-5.23 1.47 1.36-6.2 6.77z"/>
+                  </svg>
+                </div>
+                <div class="flex items-center gap-1 text-[13px] text-[#71767b] mt-0.5">
+                  <span id="cardHandle">@ahmadfauzi</span>
+                  <span id="cardTime" class="before:content-['·_']">2j</span>
+                </div>
+              </div>
+            </div>
+            <span class="text-[#71767b] text-base cursor-pointer">···</span>
+          </div>
+
+          <!-- Post Content -->
+          <div id="cardContent" class="text-sm md:text-base leading-relaxed text-[#e7e9ea] mt-3 mb-4 white-space-pre-wrap word-break-break-word">Alhamdulillah, hari ini bisa belajar hal baru yang sangat bermanfaat. Semoga ilmunya berkah dan bermanfaat bagi banyak orang. 🌿 #belajar #berkah</div>
+
+          <!-- Post Image Lampiran -->
+          <img id="cardPostImg" alt="post image" class="w-full border border-[#2f3336] rounded-xl object-cover max-h-80 hidden mb-4">
+
+          <!-- Actions Buttons Bar -->
+          <div class="flex justify-between items-center text-[#71767b] border-t border-[#2f3336]/60 pt-3">
+            <button class="flex items-center gap-2 hover:text-[#1d9bf0] transition-colors text-xs py-1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-4 h-4">
+                <path d="M1.75 1.75h20.5v14.5H13l-5.25 5v-5H1.75V1.75z"/>
+              </svg>
+              <span id="replyCount">48</span>
+            </button>
+            <button class="flex items-center gap-2 hover:text-[#00ba7c] transition-colors text-xs py-1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-4 h-4">
+                <path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 .85.693 1.5 1.5 1.5h6v2H7c-1.93 0-3.5-1.57-3.5-3.5V7.55L1.432 9.48.068 8.02 4.5 3.88z"/>
+                <path d="M19.5 20.12l-4.432-4.14 1.364-1.46 2.068 1.93V8c0-.85-.693-1.5-1.5-1.5h-6v-2h6c1.93 0 3.5 1.57 3.5 3.5v8.45l2.068-1.93 1.364 1.46L19.5 20.12z"/>
+              </svg>
+              <span id="repostCount">320</span>
+            </button>
+            <button class="flex items-center gap-2 hover:text-[#f91880] transition-colors text-xs py-1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-4 h-4">
+                <path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.95 1.09-.94-1.09c-1.211-1.65-2.668-2.22-3.89-2.16-1.815.09-3.227 1.58-3.227 3.39 0 .382.08.794.248 1.15C4.782 13.196 8.777 17.085 12 19.85c3.22-2.765 7.217-6.654 8.85-9.81.17-.356.25-.768.25-1.15 0-1.81-1.412-3.3-3.403-3.39z"/>
+              </svg>
+              <span id="likeCount">1.2K</span>
+            </button>
+            <button class="hover:text-[#1d9bf0] transition-colors py-1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-4 h-4">
+                <path d="M12 2.59l5.7 5.7-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.41-1.42L12 2.59zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.12 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15h2z"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Bottom Source & Brand Badge -->
+          <div class="card-source flex items-center justify-between mt-4 pt-3 border-t border-[#2f3336]/60">
+            <span id="sourceText" class="text-xs text-[#71767b]">11.24 PM · 15 Mei 2025</span>
+            <div id="platformBadge" class="opacity-60">
+              <!-- Default X Logo -->
+              <svg viewBox="0 0 24 24" class="w-4 h-4 fill-[#71767b]"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+    </div>
+  </main>
+
+  <!-- Kaki Halaman / Footer -->
+  <footer class="w-full py-8 text-center text-xs text-[var(--text-muted)] border-t border-[var(--border)] mt-12 bg-[var(--bg-surface)] relative z-10 pb-24 md:pb-8">
+    <div class="max-w-6xl mx-auto px-4">
+      <p class="mb-2">&copy; 2026 Fake Post X. Diproses seluruhnya di perangkat Anda secara aman.</p>
+      <p class="text-[10px] tracking-wide uppercase font-bold text-slate-400">Powered by 296GROUP</p>
+    </div>
+  </footer>
+
+  <!-- ========================================================== -->
+  <!-- BAR NAVIGASI SELULER (Mobile Sticky Bottom Navbar - 3 Tombol) -->
+  <!-- ========================================================== -->
+  <div class="fixed bottom-0 left-0 right-0 z-50 bg-[var(--bg-surface)]/90 backdrop-blur-lg border-t border-[var(--border)] shadow-xl md:hidden block">
+    <div class="flex justify-around items-center h-16">
+      <!-- Tombol Kiri: Pop-up / Daftar Macam Tools -->
+      <button onclick="openToolsModal()" class="flex flex-col items-center justify-center text-[var(--text-secondary)] hover:text-brand-light transition-all flex-1 py-1">
+        <i class="fa-solid fa-compass text-lg mb-1"></i>
+        <span class="text-[10px] font-semibold">Semua Alat</span>
+      </button>
+
+      <!-- Tombol Tengah: Beranda Utama (Homepage) -->
+      <a href="homepage.html" class="flex flex-col items-center justify-center text-brand-light transition-all flex-1 py-1">
+        <div class="w-10 h-10 bg-brand-light text-white rounded-full flex items-center justify-center shadow-lg -mt-5 border-4 border-[var(--bg-surface)]">
+          <i class="fa-solid fa-house text-sm"></i>
+        </div>
+        <span class="text-[10px] font-semibold mt-1">Beranda</span>
+      </a>
+
+      <!-- Tombol Kanan: About Us Pop-up -->
+      <button onclick="openAboutModal()" class="flex flex-col items-center justify-center text-[var(--text-secondary)] hover:text-brand-light transition-all flex-1 py-1">
+        <i class="fa-solid fa-circle-info text-lg mb-1"></i>
+        <span class="text-[10px] font-semibold">About Us</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================== -->
+  <!-- POP-UP MODAL: ABOUT US -->
+  <!-- ========================================================== -->
+  <div id="aboutModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-300">
+    <div class="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-2xl max-w-md w-full border border-[var(--border)] shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="aboutModalCard">
+      <div class="p-6 space-y-4">
+        <div class="flex justify-between items-center border-b border-[var(--border)] pb-3">
+          <h3 class="font-clash text-lg font-bold text-brand-light flex items-center gap-2">
+            <i class="fa-solid fa-address-card"></i> Tentang 296Tools
+          </h3>
+          <button onclick="closeAboutModal()" class="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg hover:bg-[var(--bg-card)]">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+        
+        <div class="space-y-3 text-sm leading-relaxed text-[var(--text-secondary)]">
+          <div class="w-16 h-16 bg-brand-light/10 rounded-2xl mx-auto flex items-center justify-center">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" class="w-10 h-10 object-contain" alt="296 Studios Logo">
+          </div>
+          <p class="text-center font-bold text-sm text-[var(--text-primary)]">296GROUP - Solusi Digital Lokal</p>
+          <p>
+            <strong>296Tools</strong> adalah direktori & ekosistem micro-apps yang dikembangkan untuk membantu kegiatan digital harian Anda secara produktif. 
+          </p>
+          <p>
+            Seluruh data diproses secara <strong>100% lokal di dalam browser Anda (Client-Side)</strong>. Kami sama sekali tidak mengirim atau menyimpan berkas dokumen atau data sensitif Anda ke server luar. Keamanan privasi Anda terjamin penuh.
+          </p>
+        </div>
+
+        <div class="pt-2 flex justify-end">
+          <button onclick="closeAboutModal()" class="px-5 py-2 text-xs font-semibold bg-brand-light text-white rounded-lg hover:bg-opacity-90 transition-all">
+            Mengerti, Terima Kasih
+          </button>
         </div>
       </div>
     </div>
-
   </div>
-</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script>
-let platform = 'x';
-let postImgData = null;
-let avatarData = null;
+  <!-- ========================================================== -->
+  <!-- POP-UP MODAL: DAFTAR MACAM-MACAM TOOLS -->
+  <!-- ========================================================== -->
+  <div id="toolsMenuModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-300">
+    <div class="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-2xl max-w-2xl w-full border border-[var(--border)] shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="toolsMenuCard">
+      <div class="p-6 space-y-4">
+        <div class="flex justify-between items-center border-b border-[var(--border)] pb-3">
+          <h3 class="font-clash text-lg font-bold text-brand-light flex items-center gap-2">
+            <i class="fa-solid fa-grid-2"></i> Macam-Macam Alat (Quick Access)
+          </h3>
+          <button onclick="closeToolsModal()" class="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg hover:bg-[var(--bg-card)]">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
 
-function setPlatform(p) {
-  platform = p;
-  document.getElementById('btnX').classList.toggle('active', p === 'x');
-  document.getElementById('btnT').classList.toggle('active', p === 'threads');
-  const card = document.getElementById('postCard');
-  card.classList.toggle('threads-theme', p === 'threads');
-  const badge = document.getElementById('platformBadge');
-  if (p === 'threads') {
-    badge.innerHTML = `<svg viewBox="0 0 50 50" width="16" height="16" fill="#555"><path d="M 25 5 C 13.972656 5 5 13.972656 5 25 C 5 36.027344 13.972656 45 25 45 C 36.027344 45 45 36.027344 45 25 C 45 13.972656 36.027344 5 25 5 Z M 25 7 C 34.941406 7 43 15.058594 43 25 C 43 34.941406 34.941406 43 25 43 C 15.058594 43 7 34.941406 7 25 C 7 15.058594 15.058594 7 25 7 Z M 25 12 C 18.382813 12 13 17.382813 13 24 C 13 28.265625 15.238281 32.003906 18.59375 34.1875 C 17.964844 31.882813 17.945313 29.554688 18.84375 27.375 C 19.25 26.398438 19.863281 25.527344 20.65625 24.84375 C 21.449219 24.160156 22.410156 23.679688 23.46875 23.46875 C 22.921875 22.390625 22.460938 21.238281 22.15625 20 C 21.648438 17.929688 21.617188 15.652344 22.65625 13.625 C 23.394531 12.132813 24.597656 12 25 12 Z M 25.40625 14.03125 C 25.117188 14.105469 24.761719 14.425781 24.4375 15.0625 C 23.617188 16.714844 23.660156 18.660156 24.125 20.5 C 24.347656 21.382813 24.679688 22.222656 25.09375 23 C 26.140625 22.980469 27.191406 23.09375 28.1875 23.375 C 30.132813 23.917969 31.777344 25.070313 32.84375 26.75 C 33.675781 28.082031 34.058594 29.679688 33.9375 31.28125 C 33.816406 32.882813 33.191406 34.394531 32.15625 35.5625 C 33.847656 34.394531 35.09375 32.652344 35.71875 30.65625 C 36.515625 28.140625 36.238281 25.335938 34.96875 23.03125 C 33.699219 20.726563 31.46875 18.957031 28.84375 18.15625 C 28.03125 17.910156 27.183594 17.773438 26.34375 17.71875 C 26.070313 16.394531 25.925781 15.019531 25.40625 14.03125 Z M 24.28125 24.59375 C 23.492188 24.742188 22.761719 25.097656 22.15625 25.625 C 21.550781 26.152344 21.082031 26.832031 20.78125 27.59375 C 20.074219 29.347656 20.179688 31.394531 20.875 33.1875 C 21.09375 33.742188 21.363281 34.273438 21.6875 34.75 C 22.757813 34.917969 23.867188 35 25 35 C 26.542969 35 28.015625 34.773438 29.40625 34.34375 C 30.363281 33.238281 30.875 31.71875 30.96875 30.21875 C 31.058594 28.792969 30.734375 27.386719 29.96875 26.1875 C 29.203125 24.988281 28.011719 24.214844 26.5625 23.8125 C 25.835938 23.613281 25.054688 23.546875 24.28125 24.59375 Z"/></svg>`;
-  } else {
-    badge.innerHTML = `<svg viewBox="0 0 24 24" fill="#555"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`;
-  }
-  update();
-}
+        <!-- Scrollable list of all tools in modal -->
+        <div class="max-h-[60vh] overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-3 pr-1" id="modalToolsList">
+          <!-- Daftar dinamis akan di-populate oleh JS -->
+        </div>
 
-function loadAvatar(input) {
-  if (!input.files[0]) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    avatarData = e.target.result;
-    document.getElementById('avatarPreview').src = avatarData;
-    document.getElementById('cardAvatar').src = avatarData;
-  };
-  reader.readAsDataURL(input.files[0]);
-}
+        <div class="pt-2 flex justify-end">
+          <button onclick="closeToolsModal()" class="px-5 py-2 text-xs font-semibold bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-lg hover:bg-[var(--border)] transition-all">
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-function loadPostImg(input) {
-  if (!input.files[0]) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    postImgData = e.target.result;
-    document.getElementById('imgThumb').src = postImgData;
-    document.getElementById('imgThumb').style.display = 'block';
-    document.getElementById('clearImgBtn').style.display = 'inline';
-    document.getElementById('cardPostImg').src = postImgData;
-    document.getElementById('cardPostImg').style.display = 'block';
-  };
-  reader.readAsDataURL(input.files[0]);
-}
+  <!-- HTML2Canvas Library untuk Generator Screenshot -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  
+  <!-- Logika Pemrograman Aplikasi -->
+  <script>
+    // ==========================================================
+    // SISTEM TEMA: GELAP / TERANG (DARK & LIGHT MODE)
+    // ==========================================================
+    const themeToggleBtn = document.getElementById('themeToggle');
+    
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.remove('dark');
+    }
 
-function clearPostImg() {
-  postImgData = null;
-  document.getElementById('imgThumb').style.display = 'none';
-  document.getElementById('clearImgBtn').style.display = 'none';
-  document.getElementById('cardPostImg').style.display = 'none';
-  document.getElementById('postImgInput').value = '';
-}
+    themeToggleBtn.addEventListener('click', () => {
+        if (document.documentElement.classList.contains('dark')) {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        } else {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        }
+    });
 
-function update() {
-  const name    = document.getElementById('inputName').value || 'Nama User';
-  const handle  = document.getElementById('inputHandle').value || '@username';
-  const time    = document.getElementById('inputTime').value || '1j';
-  const content = document.getElementById('inputContent').value;
-  const like    = document.getElementById('inputLike').value || '0';
-  const reply   = document.getElementById('inputReply').value || '0';
-  const repost  = document.getElementById('inputRepost').value || '0';
-  const verified = document.getElementById('inputVerified').value === 'yes';
+    // ==========================================================
+    // PETUNJUK PENAMBAHAN ALAT / LAMAN BARU:
+    // Jika Anda ingin mendaftarkan tools baru ke dalam pop-up modal,
+    // silakan tambahkan objek baru ke dalam array "ALL_TOOLS" di bawah ini.
+    // ==========================================================
+    const ALL_TOOLS = [
+        { name: 'Converter File', desc: 'Pengkonversi berkas PDF, Word, Teks, & Gambar', icon: 'fa-solid fa-file', url: 'converter-file.html' },
+        { name: 'Fake Post X', desc: 'Pembuat screenshot postingan media sosial X secara instan', icon: 'fa-brands fa-x-twitter', url: 'fake-post-x.html' },
+        { name: 'Favicon Maker', desc: 'Pembuat & kompresor Favicon modern terlengkap (.ico & .png)', icon: 'fa-solid fa-file-image', url: 'favicon-maker.html' },
+        { name: 'Generator QR Code', desc: 'Pembuat QR Code premium dengan warna & logo kustom', icon: 'fa-solid fa-qrcode', url: 'generator-qr-code.html' },
+        { name: 'Google Dorking Tools', desc: 'Advanced Google Dork & OSINT Intelligence Generator', icon: 'fa-brands fa-google', url: 'google-dorking.html' },
+        { name: 'Image Compressor', desc: 'Pengkompres ukuran dimensi & kapasitas kilobyte gambar', icon: 'fa-regular fa-images', url: 'image-compresor.html' },
+        { name: 'Invoice Maker', desc: 'Pembuat berkas tagihan (Invoice) praktis terkompresi PDF', icon: 'fa-solid fa-file-invoice', url: 'invoice-maker.html' },
+        { name: 'Prompt Generator', desc: 'Pembuat format prompt siap pakai untuk optimasi ChatGPT/Claude', icon: 'fa-regular fa-keyboard', url: 'prompt-generator.html' },
+        { name: 'Scraping Link FB Reels', desc: 'Ekstraktor tautan (URL) reel profil publik dari Facebook', icon: 'fa-brands fa-facebook', url: 'scraping-fb-reels.html' },
+        { name: 'Smart HPP', desc: 'Kalkulator HPP & Harga Jual Anti Boncos bagi pemilik bisnis', icon: 'fa-solid fa-calculator', url: 'smart-hpp.html' },
+        { name: 'URL Shortener', desc: 'Pangkas URL panjang menjadi ringkas dan mudah dibagikan', icon: 'fa-solid fa-link', url: 'url-shortener.html' },
+        { name: 'WA Link Generator', desc: 'Pembuat link pesan instan WhatsApp otomatis', icon: 'fa-brands fa-whatsapp', url: 'wa-link-generator.html' },
+    ];
 
-  document.getElementById('cardName').textContent    = name;
-  document.getElementById('cardHandle').textContent  = handle;
-  document.getElementById('cardTime').textContent    = time;
-  document.getElementById('cardContent').textContent = content;
-  document.getElementById('likeCount').textContent   = like;
-  document.getElementById('replyCount').textContent  = reply;
-  document.getElementById('repostCount').textContent = repost;
-  document.getElementById('cardVerified').style.display = verified ? 'inline' : 'none';
+    let platform = 'x';
+    let postImgData = null;
+    let avatarData = null;
 
-  const dtInput = document.getElementById('inputDateTime').value;
-  let sourceStr = '';
-  if (dtInput) {
-    const dt = new Date(dtInput);
-    sourceStr = dt.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}) + ' · ' +
-      dt.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
-  } else {
-    const now = new Date();
-    sourceStr = now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}) + ' · ' +
-      now.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
-  }
-  document.getElementById('sourceText').textContent = sourceStr;
+    function setPlatform(p) {
+      platform = p;
+      const btnX = document.getElementById('btnX');
+      const btnT = document.getElementById('btnT');
+      const card = document.getElementById('postCard');
+      
+      if (p === 'x') {
+        btnX.className = "py-2.5 rounded-xl border font-bold text-sm transition-all text-white bg-brand-light border-brand-light shadow-md shadow-brand-light/20 cursor-pointer";
+        btnT.className = "py-2.5 rounded-xl border font-bold text-sm transition-all border-[var(--border)] text-[var(--text-secondary)] bg-[var(--bg-card)] hover:bg-[var(--border)] cursor-pointer";
+        card.classList.remove('threads-theme');
+      } else {
+        btnT.className = "py-2.5 rounded-xl border font-bold text-sm transition-all text-white bg-brand-light border-brand-light shadow-md shadow-brand-light/20 cursor-pointer";
+        btnX.className = "py-2.5 rounded-xl border font-bold text-sm transition-all border-[var(--border)] text-[var(--text-secondary)] bg-[var(--bg-card)] hover:bg-[var(--border)] cursor-pointer";
+        card.classList.add('threads-theme');
+      }
 
-  if (avatarData) document.getElementById('cardAvatar').src = avatarData;
-}
+      const badge = document.getElementById('platformBadge');
+      if (p === 'threads') {
+        badge.innerHTML = `<svg viewBox="0 0 50 50" width="16" height="16" fill="#71767b"><path d="M 25 5 C 13.972656 5 5 13.972656 5 25 C 5 36.027344 13.972656 45 25 45 C 36.027344 45 45 36.027344 45 25 C 45 13.972656 36.027344 5 25 5 Z M 25 7 C 34.941406 7 43 15.058594 43 25 C 43 34.941406 34.941406 43 25 43 C 15.058594 43 7 34.941406 7 25 C 7 15.058594 15.058594 7 25 7 Z M 25 12 C 18.382813 12 13 17.382813 13 24 C 13 28.265625 15.238281 32.003906 18.59375 34.1875 C 17.964844 31.882813 17.945313 29.554688 18.84375 27.375 C 19.25 26.398438 19.863281 25.527344 20.65625 24.84375 C 21.449219 24.160156 22.410156 23.679688 23.46875 23.46875 C 22.921875 22.390625 22.460938 21.238281 22.15625 20 C 21.648438 17.929688 21.617188 15.652344 22.65625 13.625 C 23.394531 12.132813 24.597656 12 25 12 Z M 25.40625 14.03125 C 25.117188 14.105469 24.761719 14.425781 24.4375 15.0625 C 23.617188 16.714844 23.660156 18.660156 24.125 20.5 C 24.347656 21.382813 24.679688 22.222656 25.09375 23 C 26.140625 22.980469 27.191406 23.09375 28.1875 23.375 C 30.132813 23.917969 31.777344 25.070313 32.84375 26.75 C 33.675781 28.082031 34.058594 29.679688 33.9375 31.28125 C 33.816406 32.882813 33.191406 34.394531 32.15625 35.5625 C 33.847656 34.394531 35.09375 32.652344 35.71875 30.65625 C 36.515625 28.140625 36.238281 25.335938 34.96875 23.03125 C 33.699219 20.726563 31.46875 18.957031 28.84375 18.15625 C 28.03125 17.910156 27.183594 17.773438 26.34375 17.71875 C 26.070313 16.394531 25.925781 15.019531 25.40625 14.03125 Z M 24.28125 24.59375 C 23.492188 24.742188 22.761719 25.097656 22.15625 25.625 C 21.550781 26.152344 21.082031 26.832031 20.78125 27.59375 C 20.074219 29.347656 20.179688 31.394531 20.875 33.1875 C 21.09375 33.742188 21.363281 34.273438 21.6875 34.75 C 22.757813 34.917969 23.867188 35 25 35 C 26.542969 35 28.015625 34.773438 29.40625 34.34375 C 30.363281 33.238281 30.875 31.71875 30.96875 30.21875 C 31.058594 28.792969 30.734375 27.386719 29.96875 26.1875 C 29.203125 24.988281 28.011719 24.214844 26.5625 23.8125 C 25.835938 23.613281 25.054688 23.546875 24.28125 24.59375 Z"/></svg>`;
+      } else {
+        badge.innerHTML = `<svg viewBox="0 0 24 24" class="w-4 h-4 fill-[#71767b]"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`;
+      }
+      update();
+    }
 
-function takeScreenshot() {
-  const card = document.getElementById('postCard');
-  html2canvas(card, {
-    backgroundColor: null,
-    scale: 2,
-    useCORS: true,
-    allowTaint: true,
-    logging: false
-  }).then(canvas => {
-    const a = document.createElement('a');
-    a.download = 'fake-post-' + Date.now() + '.png';
-    a.href = canvas.toDataURL('image/png');
-    a.click();
-  });
-}
+    function loadAvatar(input) {
+      if (!input.files[0]) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        avatarData = e.target.result;
+        document.getElementById('avatarPreview').src = avatarData;
+        document.getElementById('cardAvatar').src = avatarData;
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
 
-// Init
-update();
-</script>
+    function loadPostImg(input) {
+      if (!input.files[0]) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        postImgData = e.target.result;
+        document.getElementById('imgThumb').src = postImgData;
+        document.getElementById('imgThumb').style.display = 'block';
+        document.getElementById('clearImgBtn').style.display = 'inline';
+        document.getElementById('cardPostImg').src = postImgData;
+        document.getElementById('cardPostImg').style.display = 'block';
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+
+    function clearPostImg() {
+      postImgData = null;
+      document.getElementById('imgThumb').style.display = 'none';
+      document.getElementById('clearImgBtn').style.display = 'none';
+      document.getElementById('cardPostImg').style.display = 'none';
+      document.getElementById('postImgInput').value = '';
+    }
+
+    function update() {
+      const name    = document.getElementById('inputName').value || 'Nama User';
+      const handle  = document.getElementById('inputHandle').value || '@username';
+      const time    = document.getElementById('inputTime').value || '1j';
+      const content = document.getElementById('inputContent').value;
+      const like    = document.getElementById('inputLike').value || '0';
+      const reply   = document.getElementById('inputReply').value || '0';
+      const repost  = document.getElementById('inputRepost').value || '0';
+      const verified = document.getElementById('inputVerified').value === 'yes';
+
+      document.getElementById('cardName').textContent    = name;
+      document.getElementById('cardHandle').textContent  = handle;
+      document.getElementById('cardTime').textContent    = time;
+      document.getElementById('cardContent').textContent = content;
+      document.getElementById('likeCount').textContent   = like;
+      document.getElementById('replyCount').textContent  = reply;
+      document.getElementById('repostCount').textContent = repost;
+      document.getElementById('cardVerified').style.display = verified ? 'inline' : 'none';
+
+      const dtInput = document.getElementById('inputDateTime').value;
+      let sourceStr = '';
+      if (dtInput) {
+        const dt = new Date(dtInput);
+        sourceStr = dt.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}) + ' · ' +
+          dt.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+      } else {
+        const now = new Date();
+        sourceStr = now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}) + ' · ' +
+          now.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+      }
+      document.getElementById('sourceText').textContent = sourceStr;
+
+      if (avatarData) document.getElementById('cardAvatar').src = avatarData;
+    }
+
+    function takeScreenshot() {
+      const card = document.getElementById('postCard');
+      html2canvas(card, {
+        backgroundColor: null,
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        logging: false
+      }).then(canvas => {
+        const a = document.createElement('a');
+        a.download = 'fake-post-' + Date.now() + '.png';
+        a.href = canvas.toDataURL('image/png');
+        a.click();
+      });
+    }
+
+    // ==========================================================
+    // MANAJEMEN MODAL & SISTEM NAVIGASI SELULER
+    // ==========================================================
+    const aboutModal = document.getElementById('aboutModal');
+    const aboutModalCard = document.getElementById('aboutModalCard');
+    const toolsMenuModal = document.getElementById('toolsMenuModal');
+    const toolsMenuCard = document.getElementById('toolsMenuCard');
+    const modalToolsList = document.getElementById('modalToolsList');
+
+    // Buka Modal About Us
+    function openAboutModal() {
+        aboutModal.classList.remove('hidden');
+        setTimeout(() => {
+            aboutModal.classList.add('opacity-100');
+            aboutModalCard.classList.remove('scale-95');
+            aboutModalCard.classList.add('scale-100');
+        }, 50);
+    }
+
+    // Tutup Modal About Us
+    function closeAboutModal() {
+        aboutModal.classList.remove('opacity-100');
+        aboutModalCard.classList.remove('scale-100');
+        aboutModalCard.classList.add('scale-95');
+        setTimeout(() => {
+            aboutModal.classList.add('hidden');
+        }, 300);
+    }
+
+    // Buka Modal Daftar Macam-Macam Tools
+    function openToolsModal() {
+        // Populate list dynamic
+        modalToolsList.innerHTML = ALL_TOOLS.map(t => `
+            <a href="${t.url}" class="flex items-center gap-3 p-3 rounded-xl border border-[var(--border)] hover:bg-[var(--bg-card)] transition-all">
+                <div class="w-8 h-8 rounded-lg bg-brand-light/10 text-brand-light flex items-center justify-center text-sm">
+                    <i class="${t.icon}"></i>
+                </div>
+                <div class="flex-grow">
+                    <h4 class="text-xs font-bold text-[var(--text-primary)]">${t.name}</h4>
+                    <p class="text-[10px] text-[var(--text-muted)] truncate max-w-[200px] sm:max-w-md">${t.desc}</p>
+                </div>
+            </a>
+        `).join('');
+
+        toolsMenuModal.classList.remove('hidden');
+        setTimeout(() => {
+            toolsMenuModal.classList.add('opacity-100');
+            toolsMenuCard.classList.remove('scale-95');
+            toolsMenuCard.classList.add('scale-100');
+        }, 50);
+    }
+
+    // Tutup Modal Daftar Macam-Macam Tools
+    function closeToolsModal() {
+        toolsMenuModal.classList.remove('opacity-100');
+        toolsMenuCard.classList.remove('scale-100');
+        toolsMenuCard.classList.add('scale-95');
+        setTimeout(() => {
+            toolsMenuModal.classList.add('hidden');
+        }, 300);
+    }
+
+    // Klik di luar area modal untuk menutup modal
+    window.addEventListener('click', (e) => {
+        if (e.target === aboutModal) closeAboutModal();
+        if (e.target === toolsMenuModal) closeToolsModal();
+    });
+
+    // Inisialisasi awal
+    update();
+  </script>
 </body>
 </html>
