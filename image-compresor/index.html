@@ -1,669 +1,889 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="transition-colors duration-300">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>296Kompresor Gambar</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- --- FAVICON (SVG Crown Emoji) --- -->
-    <link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0f7ff',
-                            100: '#e0effe',
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            700: '#1d4ed8',
-                            900: '#1e3a8a',
-                        }
-                    }
-                }
-            }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Compressor — 296Tools</title>
+<!-- ========================================================== -->
+<!-- META TAG UMUM (Untuk SEO Dasar & Browser) -->
+<!-- ========================================================== -->
+<meta name="description" content="Kompres ukuran gambar Anda secara instan langsung dari browser. 100% lokal, aman, dan tanpa upload data ke server.">
+<meta name="robots" content="index, follow">
+
+<!-- Font Family Premium -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- Favicon -->
+<link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
+
+<!-- Tailwind CSS Setup -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            light: '#6c63ff',
+            dark: '#a78bfa',
+            accent: '#38bdf8',
+            emerald: '#34d399'
+          }
+        },
+        fontFamily: {
+          clash: ['Clash Display', 'sans-serif'],
+          bricolage: ['Bricolage Grotesque', 'sans-serif'],
         }
-    </script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-        }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-    </style>
+      }
+    }
+  }
+</script>
+
+<style>
+  /* Variabel CSS untuk Mode Terang (Default) */
+  :root {
+    --bg: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-card: #f1f5f9;
+    --border: rgba(15, 23, 42, 0.08);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --shadow-premium: 0 10px 30px -10px rgba(108, 99, 255, 0.1);
+  }
+
+  /* Variabel CSS untuk Mode Gelap */
+  .dark {
+    --bg: #0b0c10;
+    --bg-surface: #13141a;
+    --bg-card: #1e2029;
+    --border: rgba(255, 255, 255, 0.07);
+    --text-primary: #f0f0f5;
+    --text-secondary: #9899a8;
+    --text-muted: #5a5b6a;
+    --shadow-premium: 0 10px 40px rgba(0,0,0,0.5), 0 0 40px rgba(108,99,255,0.15);
+  }
+
+  body {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    background-color: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  /* Noise Overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* Hero Gradient Blur */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+  .blob-1 {
+    width: 400px; height: 250px;
+    background: rgba(108,99,255,0.12);
+    top: -40px; left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* Animasi Transisi Halaman */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-up {
+    animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+</style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
+<body class="flex flex-col">
 
-    <!-- Header / Navbar -->
-    <header class="bg-white border-b border-slate-100 sticky top-0 z-10 backdrop-blur-md bg-white/95">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="bg-brand-500 text-white p-2 rounded-xl shadow-md shadow-brand-500/20">
-                    <!-- Icon: Image -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold tracking-tight text-slate-900">Slim<span class="text-brand-500">Pic</span></h1>
-                    <p class="text-xs text-slate-500">Kompresor Gambar Cepat & Aman</p>
-                </div>
-            </div>
-            <div class="text-xs text-slate-400 bg-slate-100 px-3 py-1.5 rounded-full font-medium">
-                🔒 100% Offline & Privat
-            </div>
+  <!-- Header / Topbar -->
+  <header class="sticky top-0 z-40 w-full bg-[var(--bg)]/80 backdrop-blur-md border-b border-[var(--border)] transition-all">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="homepage_296tools.html" class="flex items-center gap-3">
+        <div class="w-9 h-9 bg-gradient-to-tr from-brand-light to-brand-accent rounded-lg flex items-center justify-center shadow-lg">
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" class="w-6 h-6 object-contain" alt="Logo 296">
         </div>
-    </header>
+        <span class="font-clash text-lg font-bold tracking-tight">296<span class="text-brand-dark">Tools</span></span>
+      </a>
 
-    <!-- Main Content -->
-    <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full">
-        <!-- Toast Notification Container -->
-        <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+      <!-- Menu Aksi Samping Kanan (Theme Toggle) -->
+      <div class="flex items-center gap-4">
+        <span class="hidden md:inline-block text-xs font-semibold text-[var(--text-secondary)] bg-[var(--bg-card)] px-3 py-1.5 rounded-full border border-[var(--border)]">
+          🔒 100% Lokal & Privat
+        </span>
+        <!-- Tombol Pengubah Mode Gelap/Terang -->
+        <button id="themeToggle" class="p-2.5 rounded-lg bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] transition-all" title="Ubah Tema">
+          <i class="fa-solid fa-moon dark:hidden text-lg"></i>
+          <i class="fa-solid fa-sun hidden dark:block text-lg text-yellow-400"></i>
+        </button>
+      </div>
+    </div>
+  </header>
 
-        <!-- Hero Section (Visible when no image uploaded) -->
-        <div id="hero-section" class="text-center max-w-2xl mx-auto my-8 space-y-4">
-            <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
-                Kompres Gambar Anda Tanpa Kehilangan Kualitas
-            </h2>
-            <p class="text-slate-600 text-base md:text-lg">
-                Ubah ukuran dan kurangi ukuran file gambar secara instan langsung di peramban Anda. Tidak ada data yang diunggah ke server.
+  <!-- Konten Utama -->
+  <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-8 relative z-10 animate-fade-up">
+    
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Hero / Judul Halaman -->
+    <section class="text-center py-8 relative overflow-hidden" id="hero-section">
+      <div class="blob blob-1"></div>
+      
+      <div class="inline-flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-brand-dark bg-brand-light/10 border border-brand-light/20 rounded-full px-4 py-1.5 mb-4">
+        <i class="fa-solid fa-images"></i> Image Compressor
+      </div>
+
+      <h1 class="font-clash text-3xl md:text-5xl font-bold tracking-tight leading-none mb-4">
+        Slim<span class="bg-gradient-to-r from-brand-light via-brand-accent to-brand-emerald bg-clip-text text-transparent">Pic</span>
+      </h1>
+
+      <p class="text-xs md:text-sm text-[var(--text-secondary)] max-w-lg mx-auto font-light leading-relaxed">
+        Ubah resolusi dan perkecil ukuran kilobyte gambar Anda secara instan. Seluruh proses dilakukan lokal di browser, menjamin privasi penuh.
+      </p>
+    </section>
+
+    <!-- Upload Dropzone Area -->
+    <div id="dropzone-container" class="max-w-2xl mx-auto transition-all duration-300">
+      <div id="dropzone" class="border-2 border-dashed border-[var(--border)] hover:border-brand-light bg-[var(--bg-surface)] rounded-3xl p-8 md:p-12 text-center cursor-pointer transition-all shadow-sm hover:shadow-md group relative">
+        <input type="file" id="file-input" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*">
+        
+        <div class="space-y-4 pointer-events-none">
+          <!-- Icon Upload -->
+          <div class="mx-auto w-16 h-16 bg-[var(--bg-card)] group-hover:bg-brand-light/10 text-[var(--text-muted)] group-hover:text-brand-light rounded-2xl flex items-center justify-center transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+          </div>
+          
+          <div class="space-y-1">
+            <p class="text-base font-semibold text-[var(--text-primary)]">
+              Tarik & lepas gambar Anda di sini
             </p>
+            <p class="text-xs text-[var(--text-secondary)]">
+              atau <span class="text-brand-dark font-semibold group-hover:underline">pilih file</span> dari perangkat Anda
+            </p>
+          </div>
+          
+          <p class="text-[10px] text-[var(--text-muted)]">
+            Mendukung PNG, JPEG, WebP, dan HEIC hingga 20MB
+          </p>
         </div>
+      </div>
+    </div>
 
-        <!-- Upload Dropzone Area -->
-        <div id="dropzone-container" class="max-w-2xl mx-auto transition-all duration-300">
-            <div id="dropzone" class="border-2 border-dashed border-slate-300 hover:border-brand-500 bg-white rounded-3xl p-8 md:p-12 text-center cursor-pointer transition-all shadow-sm hover:shadow-md group relative">
-                <input type="file" id="file-input" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*">
-                
-                <div class="space-y-4 pointer-events-none">
-                    <!-- Icon Upload -->
-                    <div class="mx-auto w-16 h-16 bg-slate-50 group-hover:bg-brand-50 text-slate-400 group-hover:text-brand-500 rounded-2xl flex items-center justify-center transition-all">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                        </svg>
-                    </div>
-                    
-                    <div class="space-y-1">
-                        <p class="text-lg font-semibold text-slate-800">
-                            Tarik & lepas gambar Anda di sini
-                        </p>
-                        <p class="text-sm text-slate-500">
-                            atau <span class="text-brand-500 font-semibold group-hover:underline">pilih file</span> dari perangkat Anda
-                        </p>
-                    </div>
-                    
-                    <p class="text-xs text-slate-400">
-                        Mendukung PNG, JPEG, WebP, dan HEIC hingga 20MB
-                    </p>
-                </div>
+    <!-- Compression Studio (Hidden default, muncul setelah upload) -->
+    <div id="studio-section" class="hidden space-y-6 mt-2">
+      <!-- Back Button -->
+      <button id="btn-back" class="flex items-center gap-2 text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] bg-[var(--bg-card)] px-3 py-2 rounded-xl border border-[var(--border)] transition-all">
+        <i class="fa-solid fa-arrow-left"></i>
+        <span>Unggah Gambar Lain</span>
+      </button>
+
+      <!-- Layout Studio: Kiri Controls, Kanan Preview -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Kolom Kiri: Controls (Khas 296Tools style) -->
+        <div class="lg:col-span-4 space-y-4">
+          <div class="bg-[var(--bg-surface)] p-5 rounded-2xl border border-[var(--border)] shadow-sm space-y-5">
+            <h3 class="font-clash font-bold text-[var(--text-primary)] text-sm border-b border-[var(--border)] pb-3 flex items-center gap-2">
+              <i class="fa-solid fa-sliders text-brand-light"></i>
+              Pengaturan Kompresi
+            </h3>
+
+            <!-- Slider Kualitas -->
+            <div class="space-y-2">
+              <div class="flex justify-between items-center text-xs">
+                <label for="quality-range" class="font-semibold text-[var(--text-secondary)]">Kualitas Gambar</label>
+                <span id="quality-val" class="bg-brand-light/15 text-brand-dark px-2.5 py-0.5 rounded-full font-bold text-[11px]">80%</span>
+              </div>
+              <input type="range" id="quality-range" min="1" max="100" value="80" class="w-full h-1.5 bg-[var(--bg-card)] rounded-lg appearance-none cursor-pointer accent-brand-light">
+              <div class="flex justify-between text-[10px] text-[var(--text-muted)]">
+                <span>Kecil (Rendah)</span>
+                <span>Kualitas Tinggi</span>
+              </div>
             </div>
-        </div>
 
-        <!-- Compression Studio (Hidden by default, shown after upload) -->
-        <div id="studio-section" class="hidden space-y-6 mt-2">
-            <!-- Back Button -->
-            <button id="btn-back" class="flex items-center space-x-2 text-sm text-slate-500 hover:text-slate-800 transition-colors font-medium">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                <span>Unggah Gambar Lain</span>
+            <!-- Selektor Format -->
+            <div class="space-y-2">
+              <label for="format-select" class="block text-xs font-semibold text-[var(--text-secondary)]">Format Output</label>
+              <select id="format-select" class="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-3 py-2.5 text-xs text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-brand-light">
+                <option value="image/jpeg">JPEG (Direkomendasikan)</option>
+                <option value="image/webp">WebP (Format Modern)</option>
+                <option value="image/png">PNG (Transparan / Lossless)</option>
+              </select>
+            </div>
+
+            <!-- Akordion Ubah Ukuran (Resize) -->
+            <div class="border-t border-[var(--border)] pt-4">
+              <button id="toggle-resize" class="flex justify-between items-center w-full text-left text-xs font-semibold text-[var(--text-secondary)] focus:outline-none">
+                <span class="flex items-center gap-2">
+                  <i class="fa-solid fa-expand text-[var(--text-muted)]"></i>
+                  Ubah Ukuran Gambar (Opsional)
+                </span>
+                <i id="resize-arrow" class="fa-solid fa-chevron-down transform transition-transform duration-200"></i>
+              </button>
+
+              <!-- Resize Controls -->
+              <div id="resize-container" class="hidden space-y-3 mt-3 pt-1">
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label for="resize-width" class="block text-[10px] text-[var(--text-muted)] mb-1">Lebar (px)</label>
+                    <input type="number" id="resize-width" class="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-3 py-2 text-xs text-[var(--text-primary)] focus:outline-none" placeholder="Lebar">
+                  </div>
+                  <div>
+                    <label for="resize-height" class="block text-[10px] text-[var(--text-muted)] mb-1">Tinggi (px)</label>
+                    <input type="number" id="resize-height" class="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-3 py-2 text-xs text-[var(--text-primary)] focus:outline-none" placeholder="Tinggi">
+                  </div>
+                </div>
+                <label class="flex items-center gap-2 text-[10px] text-[var(--text-secondary)] cursor-pointer select-none">
+                  <input type="checkbox" id="aspect-ratio-lock" checked class="rounded border-[var(--border)] text-brand-light focus:ring-brand-light h-3.5 w-3.5">
+                  <span>Kunci Rasio Aspek (<span id="aspect-ratio-val">1:1</span>)</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Ringkasan Hasil Kompresi -->
+            <div class="bg-[var(--bg-card)] p-4 rounded-xl border border-[var(--border)] space-y-2.5">
+              <div class="flex justify-between items-center text-[11px]">
+                <span class="text-[var(--text-secondary)]">Ukuran Akhir:</span>
+                <span id="est-size" class="font-bold text-[var(--text-primary)]">-</span>
+              </div>
+              <div class="flex justify-between items-center text-[11px] border-t border-[var(--border)] pt-2">
+                <span class="text-[var(--text-secondary)]">Penghematan:</span>
+                <span id="est-saving" class="font-bold text-emerald-500">-</span>
+              </div>
+            </div>
+
+            <!-- Tombol Utama -->
+            <button id="btn-download" class="w-full bg-brand-light hover:bg-opacity-90 text-white font-semibold py-3 px-4 rounded-xl text-xs transition-all flex items-center justify-center gap-2 shadow-md shadow-brand-light/10">
+              <i class="fa-solid fa-download"></i>
+              <span>Unduh Gambar Kompresi</span>
             </button>
-
-            <!-- Main Layout: Sidebar & Content -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                
-                <!-- Left Column: Controls (4 cols on large screen) -->
-                <div class="lg:col-span-4 space-y-6">
-                    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-6">
-                        <h3 class="font-bold text-slate-900 text-lg border-b border-slate-100 pb-3 flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                            </svg>
-                            Pengaturan Kompresi
-                        </h3>
-
-                        <!-- Quality Slider -->
-                        <div class="space-y-2">
-                            <div class="flex justify-between items-center text-sm">
-                                <label for="quality-range" class="font-semibold text-slate-700">Kualitas Gambar</label>
-                                <span id="quality-val" class="bg-brand-50 text-brand-600 px-2 py-0.5 rounded-full font-bold">80%</span>
-                            </div>
-                            <input type="range" id="quality-range" min="1" max="100" value="80" class="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-brand-500">
-                            <div class="flex justify-between text-xs text-slate-400">
-                                <span>Ukuran Kecil (Kualitas Rendah)</span>
-                                <span>Kualitas Tinggi</span>
-                            </div>
-                        </div>
-
-                        <!-- Format Selector -->
-                        <div class="space-y-2">
-                            <label for="format-select" class="block text-sm font-semibold text-slate-700">Format Output</label>
-                            <select id="format-select" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-800">
-                                <option value="image/jpeg">JPEG (Sangat Direkomendasikan)</option>
-                                <option value="image/webp">WebP (Format Modern)</option>
-                                <option value="image/png">PNG (Transparansi / Lossless)</option>
-                            </select>
-                        </div>
-
-                        <!-- Resize Options Accordion Toggle -->
-                        <div class="border-t border-slate-100 pt-4">
-                            <button id="toggle-resize" class="flex justify-between items-center w-full text-left text-sm font-semibold text-slate-700 focus:outline-none">
-                                <span class="flex items-center gap-2">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                                    </svg>
-                                    Ubah Ukuran Gambar (Opsional)
-                                </span>
-                                <svg id="resize-arrow" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transform transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                                </svg>
-                            </button>
-
-                            <!-- Resize Controls Container -->
-                            <div id="resize-container" class="hidden space-y-4 mt-3 pt-1 transition-all">
-                                <div class="grid grid-cols-2 gap-3">
-                                    <div>
-                                        <label for="resize-width" class="block text-xs text-slate-500 mb-1">Lebar (px)</label>
-                                        <input type="number" id="resize-width" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-800" placeholder="Lebar">
-                                    </div>
-                                    <div>
-                                        <label for="resize-height" class="block text-xs text-slate-500 mb-1">Tinggi (px)</label>
-                                        <input type="number" id="resize-height" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-800" placeholder="Tinggi">
-                                    </div>
-                                </div>
-                                <label class="flex items-center space-x-2 text-xs text-slate-600 cursor-pointer">
-                                    <input type="checkbox" id="aspect-ratio-lock" checked class="rounded text-brand-500 focus:ring-brand-500 h-4 w-4 border-slate-300">
-                                    <span>Kunci Rasio Aspek (<span id="aspect-ratio-val">1:1</span>)</span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Compression Summary Action Card -->
-                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-3">
-                            <div class="flex justify-between items-center text-xs">
-                                <span class="text-slate-500">Ukuran Akhir (Estimasi):</span>
-                                <span id="est-size" class="font-bold text-slate-800">-</span>
-                            </div>
-                            <div class="flex justify-between items-center text-xs border-t border-slate-200/60 pt-2">
-                                <span class="text-slate-500">Penghematan Ruang:</span>
-                                <span id="est-saving" class="font-bold text-emerald-600">-</span>
-                            </div>
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div class="space-y-2 pt-2">
-                            <button id="btn-download" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-md shadow-brand-500/10 flex items-center justify-center space-x-2 hover:-translate-y-0.5 active:translate-y-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                </svg>
-                                <span>Unduh Gambar Kompresi</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Column: Previews (8 cols on large screen) -->
-                <div class="lg:col-span-8 space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        
-                        <!-- Original Preview Card -->
-                        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
-                            <div class="bg-slate-50 px-4 py-3 border-b border-slate-100 flex justify-between items-center">
-                                <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Gambar Asli</span>
-                                <span id="orig-size-tag" class="text-xs bg-slate-200 text-slate-700 px-2.5 py-1 rounded-full font-semibold">0 KB</span>
-                            </div>
-                            <div class="p-4 flex-grow flex items-center justify-center bg-slate-100/50 min-h-[300px] max-h-[450px]">
-                                <img id="orig-preview" class="max-w-full max-h-[380px] object-contain rounded-lg shadow-sm" alt="Original preview fallback">
-                            </div>
-                            <div class="p-3 border-t border-slate-50 text-center text-xs text-slate-400" id="orig-dimensions">
-                                Dimensi: -
-                            </div>
-                        </div>
-
-                        <!-- Compressed Preview Card -->
-                        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col relative">
-                            <div class="bg-brand-50/50 px-4 py-3 border-b border-slate-100 flex justify-between items-center">
-                                <span class="text-xs font-bold uppercase tracking-wider text-brand-600">Hasil Kompresi</span>
-                                <div class="flex items-center space-x-2">
-                                    <span id="comp-size-tag" class="text-xs bg-brand-500 text-white px-2.5 py-1 rounded-full font-semibold">0 KB</span>
-                                </div>
-                            </div>
-                            
-                            <!-- Main Compressed View Area -->
-                            <div class="p-4 flex-grow flex items-center justify-center bg-slate-100/50 min-h-[300px] max-h-[450px] relative">
-                                <img id="comp-preview" class="max-w-full max-h-[380px] object-contain rounded-lg shadow-sm transition-all" alt="Compressed preview fallback">
-                                
-                                <!-- Loading Spinner Overlay -->
-                                <div id="comp-loading" class="absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center space-y-3 hidden">
-                                    <div class="animate-spin rounded-full h-10 w-10 border-4 border-slate-200 border-t-brand-500"></div>
-                                    <span class="text-sm text-slate-600 font-medium">Mengompres gambar...</span>
-                                </div>
-                            </div>
-                            <div class="p-3 border-t border-slate-50 text-center text-xs text-slate-400" id="comp-dimensions">
-                                Dimensi: -
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
+          </div>
         </div>
-    </main>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-100 py-6 mt-12">
-        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p class="text-sm text-slate-400">
-                &copy; 2026 SlimPic. Semua pemrosesan terjadi di perangkat Anda.
-            </p>
-            <div class="flex space-x-6 text-sm">
-                <a href="#" onclick="showTerms()" class="text-slate-400 hover:text-slate-600 transition-colors">Kebijakan Privasi</a>
-                <a href="#" onclick="showTerms()" class="text-slate-400 hover:text-slate-600 transition-colors">Ketentuan Layanan</a>
+        <!-- Kolom Kanan: Pratinjau (Original vs Kompresi) -->
+        <div class="lg:col-span-8 space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <!-- Kartu Gambar Asli -->
+            <div class="bg-[var(--bg-surface)] rounded-2xl border border-[var(--border)] shadow-sm overflow-hidden flex flex-col">
+              <div class="bg-[var(--bg-card)] px-4 py-3 border-b border-[var(--border)] flex justify-between items-center">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-[var(--text-secondary)]">Gambar Asli</span>
+                <span id="orig-size-tag" class="text-[10px] bg-slate-300/40 text-[var(--text-primary)] px-2.5 py-1 rounded-full font-semibold">0 KB</span>
+              </div>
+              <div class="p-4 flex-grow flex items-center justify-center bg-[var(--bg)] min-h-[250px] max-h-[350px]">
+                <img id="orig-preview" class="max-w-full max-h-[240px] object-contain rounded-lg shadow-sm" alt="Pratinjau Asli">
+              </div>
+              <div class="p-3 border-t border-[var(--border)] text-center text-[11px] text-[var(--text-muted)]" id="orig-dimensions">
+                Dimensi: -
+              </div>
             </div>
+
+            <!-- Kartu Hasil Kompresi -->
+            <div class="bg-[var(--bg-surface)] rounded-2xl border border-[var(--border)] shadow-sm overflow-hidden flex flex-col relative">
+              <div class="bg-brand-light/10 px-4 py-3 border-b border-[var(--border)] flex justify-between items-center">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-brand-light">Hasil Kompresi</span>
+                <span id="comp-size-tag" class="text-[10px] bg-brand-light text-white px-2.5 py-1 rounded-full font-semibold">0 KB</span>
+              </div>
+              
+              <div class="p-4 flex-grow flex items-center justify-center bg-[var(--bg)] min-h-[250px] max-h-[350px] relative">
+                <img id="comp-preview" class="max-w-full max-h-[240px] object-contain rounded-lg shadow-sm" alt="Pratinjau Hasil">
+                
+                <!-- Loading Overlay -->
+                <div id="comp-loading" class="absolute inset-0 bg-[var(--bg-surface)]/80 backdrop-blur-sm flex flex-col items-center justify-center space-y-3 hidden">
+                  <div class="animate-spin rounded-full h-8 w-8 border-4 border-[var(--border)] border-t-brand-light"></div>
+                  <span class="text-xs text-[var(--text-secondary)] font-medium">Mengompres...</span>
+                </div>
+              </div>
+              <div class="p-3 border-t border-[var(--border)] text-center text-[11px] text-[var(--text-muted)]" id="comp-dimensions">
+                Dimensi: -
+              </div>
+            </div>
+
+          </div>
         </div>
-    </footer>
 
-    <!-- Hidden canvas for image manipulation -->
-    <canvas id="canvas" class="hidden"></canvas>
+      </div>
+    </div>
+  </main>
 
-    <!-- JS App Logic -->
-    <script>
-        // DOM Elements
-        const dropzone = document.getElementById('dropzone');
-        const fileInput = document.getElementById('file-input');
-        const heroSection = document.getElementById('hero-section');
-        const dropzoneContainer = document.getElementById('dropzone-container');
-        const studioSection = document.getElementById('studio-section');
-        const btnBack = document.getElementById('btn-back');
+  <!-- Kaki Halaman (Footer Persis Homepage) -->
+  <footer class="w-full py-8 text-center text-xs text-[var(--text-muted)] border-t border-[var(--border)] mt-12 bg-[var(--bg-surface)] relative z-10 pb-24 md:pb-8">
+    <div class="max-w-6xl mx-auto px-4">
+      <p class="mb-2">Dibuat dengan <i class="fa-solid fa-heart text-red-500 animate-pulse"></i> oleh <a href="https://296.web.id" class="text-brand-dark hover:underline font-semibold" target="_blank">296GROUP</a></p>
+      <p class="text-[10px] tracking-wide uppercase font-bold text-slate-400">Powered by 296GROUP</p>
+    </div>
+  </footer>
+
+  <!-- ========================================================== -->
+  <!-- BAR NAVIGASI SELULER (Mobile Sticky Bottom Navbar) -->
+  <!-- ========================================================== -->
+  <div class="fixed bottom-0 left-0 right-0 z-50 bg-[var(--bg-surface)]/90 backdrop-blur-lg border-t border-[var(--border)] shadow-xl md:hidden block">
+    <div class="flex justify-around items-center h-16">
+      
+      <!-- === [MULAILAH PERUBAHAN: NAVIGASI KIRI "SEMUA ALAT"] === -->
+      <!-- Mengubah link a href menjadi button onclick agar memicu modal pop-up -->
+      <button onclick="openToolsModal()" class="flex flex-col items-center justify-center text-[var(--text-secondary)] hover:text-brand-light transition-all flex-1 py-1">
+        <i class="fa-solid fa-compass text-lg mb-1"></i>
+        <span class="text-[10px] font-semibold">Semua Alat</span>
+      </button>
+      <!-- === [AKHIR PERUBAHAN] === -->
+
+      <!-- Tombol Tengah: Beranda Utama (Homepage) -->
+      <a href="homepage_296tools.html" class="flex flex-col items-center justify-center text-brand-light transition-all flex-1 py-1">
+        <div class="w-10 h-10 bg-brand-light text-white rounded-full flex items-center justify-center shadow-lg -mt-5 border-4 border-[var(--bg-surface)]">
+          <i class="fa-solid fa-house text-sm"></i>
+        </div>
+        <span class="text-[10px] font-semibold mt-1">Beranda</span>
+      </a>
+
+      <!-- Tombol Kanan: About Us Pop-up -->
+      <button onclick="openAboutModal()" class="flex flex-col items-center justify-center text-[var(--text-secondary)] hover:text-brand-light transition-all flex-1 py-1">
+        <i class="fa-solid fa-circle-info text-lg mb-1"></i>
+        <span class="text-[10px] font-semibold">About Us</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================== -->
+  <!-- POP-UP MODAL: ABOUT US (Persis Homepage) -->
+  <!-- ========================================================== -->
+  <div id="aboutModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-300">
+    <div class="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-2xl max-w-md w-full border border-[var(--border)] shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="aboutModalCard">
+      <div class="p-6 space-y-4">
+        <div class="flex justify-between items-center border-b border-[var(--border)] pb-3">
+          <h3 class="font-clash text-base font-bold text-brand-light flex items-center gap-2">
+            <i class="fa-solid fa-address-card"></i> Tentang 296Tools
+          </h3>
+          <button onclick="closeAboutModal()" class="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg hover:bg-[var(--bg-card)]">
+            <i class="fa-solid fa-xmark text-base"></i>
+          </button>
+        </div>
         
-        // Settings Elements
-        const qualityRange = document.getElementById('quality-range');
-        const qualityVal = document.getElementById('quality-val');
-        const formatSelect = document.getElementById('format-select');
+        <div class="space-y-3 text-xs leading-relaxed text-[var(--text-secondary)]">
+          <div class="w-16 h-16 bg-brand-light/10 rounded-2xl mx-auto flex items-center justify-center">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" class="w-10 h-10 object-contain" alt="296 Studios Logo">
+          </div>
+          <p class="text-center font-bold text-xs text-[var(--text-primary)]">296GROUP - Solusi Digital Lokal</p>
+          <p>
+            <strong>296Tools</strong> adalah direktori & ekosistem micro-apps yang dikembangkan untuk membantu kegiatan digital harian Anda secara produktif. 
+          </p>
+          <p>
+            Seluruh data diproses secara <strong>100% lokal di dalam browser Anda (Client-Side)</strong>. Kami sama sekali tidak mengirim atau menyimpan berkas dokumen atau data sensitif Anda ke server luar. Keamanan privasi Anda terjamin penuh.
+          </p>
+          <div class="p-3 bg-[var(--bg-card)] rounded-xl border border-[var(--border)] text-[10px] text-[var(--text-muted)] text-center">
+            Misi kami adalah menyediakan alat bantu cepat, ringan, bersih tanpa pop-up iklan mengganggu.
+          </div>
+        </div>
+
+        <div class="pt-2 flex justify-end">
+          <button onclick="closeAboutModal()" class="px-5 py-2 text-xs font-semibold bg-brand-light text-white rounded-lg hover:bg-opacity-90 transition-all">
+            Mengerti, Terima Kasih
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- === [MULAILAH PERUBAHAN: STRUKTUR HTML MODAL DAFTAR MACAM-MACAM TOOLS] === -->
+  <!-- ========================================================== -->
+  <!-- POP-UP MODAL: DAFTAR MACAM-MACAM TOOLS (QUICK ACCESS) -->
+  <!-- ========================================================== -->
+  <div id="toolsMenuModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-300">
+    <div class="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-2xl max-w-2xl w-full border border-[var(--border)] shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="toolsMenuCard">
+      <div class="p-6 space-y-4">
+        <div class="flex justify-between items-center border-b border-[var(--border)] pb-3">
+          <h3 class="font-clash text-base font-bold text-brand-light flex items-center gap-2">
+            <i class="fa-solid fa-grid-2"></i> Macam-Macam Alat (Quick Access)
+          </h3>
+          <button onclick="closeToolsModal()" class="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg hover:bg-[var(--bg-card)]">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+
+        <!-- Wadah List Grid Dinamis Tools -->
+        <div class="max-h-[60vh] overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-3 pr-1" id="modalToolsList">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <div class="pt-2 flex justify-end">
+          <button onclick="closeToolsModal()" class="px-5 py-2 text-xs font-semibold bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-lg hover:bg-[var(--border)] transition-all">
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- === [AKHIR PERUBAHAN] === -->
+
+  <!-- Hidden canvas for compression -->
+  <canvas id="canvas" class="hidden"></canvas>
+
+  <!-- ========================================================== -->
+  <!-- LOGIKA PEMROGRAMAN IMAGE COMPRESSOR -->
+  <!-- ========================================================== -->
+  <script>
+    // ==========================================================
+    // SISTEM TEMA: GELAP / TERANG (DARK & LIGHT MODE)
+    // ==========================================================
+    const themeToggleBtn = document.getElementById('themeToggle');
+    
+    // Inisialisasi Deteksi Tema Tersimpan atau Sistem Pengguna
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+
+    // === [MULAILAH PERUBAHAN: DATA ALL_TOOLS UNTUK QUICK ACCESS MENU] ===
+    // Array yang berisi data menu pintas semua tools
+    const ALL_TOOLS = [
+        { name: 'Converter File', desc: 'Pengkonversi berkas PDF, Word, Teks, & Gambar', icon: 'fa-solid fa-file', url: 'converter-file.html' },
+        { name: 'Fake Post X', desc: 'Pembuat screenshot postingan media sosial X secara instan', icon: 'fa-brands fa-x-twitter', url: 'fake-post-x.html' },
+        { name: 'Favicon Maker', desc: 'Pembuat & kompresor Favicon modern terlengkap (.ico & .png)', icon: 'fa-solid fa-file-image', url: 'favicon-maker.html' },
+        { name: 'Generator QR Code', desc: 'Pembuat QR Code premium dengan warna & logo kustom', icon: 'fa-solid fa-qrcode', url: 'generator-qr-code.html' },
+        { name: 'Google Dorking Tools', desc: 'Advanced Google Dork & OSINT Intelligence Generator', icon: 'fa-brands fa-google', url: 'google-dorking.html' },
+        { name: 'Image Compressor', desc: 'Pengkompres ukuran dimensi & kapasitas kilobyte gambar', icon: 'fa-regular fa-images', url: 'image-compresor.html' },
+        { name: 'Invoice Maker', desc: 'Pembuat berkas tagihan (Invoice) praktis terkompresi PDF', icon: 'fa-solid fa-file-invoice', url: 'invoice-maker.html' },
+        { name: 'Prompt Generator', desc: 'Pembuat format prompt siap pakai untuk optimasi ChatGPT/Claude', icon: 'fa-regular fa-keyboard', url: 'prompt-generator.html' },
+        { name: 'Scraping Link FB Reels', desc: 'Ekstraktor tautan (URL) reel profil publik dari Facebook', icon: 'fa-brands fa-facebook', url: 'scraping-fb-reels.html' },
+        { name: 'Smart HPP', desc: 'Kalkulator HPP & Harga Jual Anti Boncos bagi pemilik bisnis', icon: 'fa-solid fa-calculator', url: 'smart-hpp.html' },
+        { name: 'URL Shortener', desc: 'Pangkas URL panjang menjadi ringkas dan mudah dibagikan', icon: 'fa-solid fa-link', url: 'url-shortener.html' },
+        { name: 'WA Link Generator', desc: 'Pembuat link pesan instan WhatsApp otomatis', icon: 'fa-brands fa-whatsapp', url: 'wa-link-generator.html' },
+    ];
+    // === [AKHIR PERUBAHAN] ===
+
+    // ==========================================================
+    // DEKLARASI ELEMEN DOM & STATE
+    // ==========================================================
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('file-input');
+    const heroSection = document.getElementById('hero-section');
+    const dropzoneContainer = document.getElementById('dropzone-container');
+    const studioSection = document.getElementById('studio-section');
+    const btnBack = document.getElementById('btn-back');
+    
+    const qualityRange = document.getElementById('quality-range');
+    const qualityVal = document.getElementById('quality-val');
+    const formatSelect = document.getElementById('format-select');
+    
+    const toggleResize = document.getElementById('toggle-resize');
+    const resizeContainer = document.getElementById('resize-container');
+    const resizeArrow = document.getElementById('resize-arrow');
+    const resizeWidthInput = document.getElementById('resize-width');
+    const resizeHeightInput = document.getElementById('resize-height');
+    const aspectRatioLock = document.getElementById('aspect-ratio-lock');
+    const aspectRatioValText = document.getElementById('aspect-ratio-val');
+    
+    const estSize = document.getElementById('est-size');
+    const estSaving = document.getElementById('est-saving');
+    const btnDownload = document.getElementById('btn-download');
+    const canvas = document.getElementById('canvas');
+    const compLoading = document.getElementById('comp-loading');
+
+    const origPreview = document.getElementById('orig-preview');
+    const origSizeTag = document.getElementById('orig-size-tag');
+    const origDimensions = document.getElementById('orig-dimensions');
+    const compPreview = document.getElementById('comp-preview');
+    const compSizeTag = document.getElementById('comp-size-tag');
+    const compDimensions = document.getElementById('comp-dimensions');
+
+    let originalImage = null;
+    let fileType = '';
+    let fileName = '';
+    let originalSize = 0;
+    let originalWidth = 0;
+    let originalHeight = 0;
+    let aspectRatio = 1;
+    let compressedBlob = null;
+    let isCompressing = false;
+    let isProgrammaticInput = false;
+
+    // Toast Notification
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `transform translate-y-2 opacity-0 transition-all duration-300 ease-out flex items-center p-4 min-w-[280px] max-w-sm rounded-2xl shadow-xl border text-xs font-semibold ${
+        type === 'success' 
+          ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500 dark:text-emerald-400 backdrop-blur-md' 
+          : type === 'error' 
+            ? 'bg-red-500/10 border-red-500/20 text-red-500 dark:text-red-400 backdrop-blur-md' 
+            : 'bg-[var(--bg-surface)] border-[var(--border)] text-[var(--text-primary)] backdrop-blur-md'
+      }`;
+      
+      const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+      toast.innerHTML = `<span class="mr-3 text-sm">${icon}</span><span class="flex-grow">${message}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+      setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Drag and Drop
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropzone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        dropzone.classList.add('border-brand-light', 'bg-brand-light/5');
+      }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropzone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('border-brand-light', 'bg-brand-light/5');
+      }, false);
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      const files = e.dataTransfer.files;
+      if (files.length > 0) handleFile(files[0]);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) handleFile(e.target.files[0]);
+    });
+
+    btnBack.addEventListener('click', () => {
+      studioSection.classList.add('hidden');
+      heroSection.classList.remove('hidden');
+      dropzoneContainer.classList.remove('hidden');
+      fileInput.value = '';
+      originalImage = null;
+    });
+
+    // Resize Accordion
+    toggleResize.addEventListener('click', () => {
+      const isHidden = resizeContainer.classList.contains('hidden');
+      if (isHidden) {
+        resizeContainer.classList.remove('hidden');
+        resizeArrow.classList.add('rotate-180');
+      } else {
+        resizeContainer.classList.add('hidden');
+        resizeArrow.classList.remove('rotate-180');
+      }
+    });
+
+    // Handling Image File
+    function handleFile(file) {
+      if (!file.type.startsWith('image/')) {
+        showToast('Format berkas tidak didukung! Pilih berkas JPG, PNG, atau WebP.', 'error');
+        return;
+      }
+
+      fileType = file.type;
+      fileName = file.name;
+      originalSize = file.size;
+      origSizeTag.textContent = formatBytes(originalSize);
+
+      showToast('Memproses file gambar...', 'info');
+
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function(event) {
+        originalImage = new Image();
+        originalImage.src = event.target.result;
         
-        // Resize Elements
-        const toggleResize = document.getElementById('toggle-resize');
-        const resizeContainer = document.getElementById('resize-container');
-        const resizeArrow = document.getElementById('resize-arrow');
-        const resizeWidthInput = document.getElementById('resize-width');
-        const resizeHeightInput = document.getElementById('resize-height');
-        const aspectRatioLock = document.getElementById('aspect-ratio-lock');
-        const aspectRatioValText = document.getElementById('aspect-ratio-val');
+        originalImage.onload = function() {
+          originalWidth = originalImage.width;
+          originalHeight = originalImage.height;
+          aspectRatio = originalWidth / originalHeight;
+
+          origPreview.src = event.target.result;
+          origDimensions.textContent = `Dimensi: ${originalWidth} × ${originalHeight} px`;
+
+          isProgrammaticInput = true;
+          resizeWidthInput.value = originalWidth;
+          resizeHeightInput.value = originalHeight;
+          aspectRatioValText.textContent = getRatioDescription(originalWidth, originalHeight);
+          isProgrammaticInput = false;
+
+          heroSection.classList.add('hidden');
+          dropzoneContainer.classList.add('hidden');
+          studioSection.classList.remove('hidden');
+
+          if (fileType === 'image/png' || fileType === 'image/jpeg' || fileType === 'image/webp') {
+            formatSelect.value = fileType;
+          } else {
+            formatSelect.value = 'image/jpeg';
+          }
+
+          compressImage();
+        };
+      };
+    }
+
+    qualityRange.addEventListener('input', (e) => {
+      qualityVal.textContent = e.target.value + '%';
+    });
+
+    qualityRange.addEventListener('change', () => {
+      compressImage();
+    });
+
+    formatSelect.addEventListener('change', (e) => {
+      if (e.target.value === 'image/png') {
+        qualityRange.disabled = true;
+        qualityRange.classList.add('opacity-50');
+        showToast('Format PNG bersifat lossless. Kompresi dilakukan dengan penyesuaian dimensi.', 'info');
+      } else {
+        qualityRange.disabled = false;
+        qualityRange.classList.remove('opacity-50');
+      }
+      compressImage();
+    });
+
+    resizeWidthInput.addEventListener('input', (e) => {
+      if (isProgrammaticInput || !originalImage) return;
+      let val = parseInt(e.target.value);
+      if (!val || val <= 0) return;
+
+      if (aspectRatioLock.checked) {
+        isProgrammaticInput = true;
+        resizeHeightInput.value = Math.round(val / aspectRatio);
+        isProgrammaticInput = false;
+      }
+      debounceCompress();
+    });
+
+    resizeHeightInput.addEventListener('input', (e) => {
+      if (isProgrammaticInput || !originalImage) return;
+      let val = parseInt(e.target.value);
+      if (!val || val <= 0) return;
+
+      if (aspectRatioLock.checked) {
+        isProgrammaticInput = true;
+        resizeWidthInput.value = Math.round(val * aspectRatio);
+        isProgrammaticInput = false;
+      }
+      debounceCompress();
+    });
+
+    let compressTimeout;
+    function debounceCompress() {
+      clearTimeout(compressTimeout);
+      compressTimeout = setTimeout(() => {
+        compressImage();
+      }, 500);
+    }
+
+    // Inti Proses Kompresi
+    function compressImage() {
+      if (!originalImage || isCompressing) return;
+
+      isCompressing = true;
+      compLoading.classList.remove('hidden');
+
+      const quality = parseFloat(qualityRange.value) / 100;
+      const format = formatSelect.value;
+      
+      let targetWidth = parseInt(resizeWidthInput.value) || originalWidth;
+      let targetHeight = parseInt(resizeHeightInput.value) || originalHeight;
+
+      targetWidth = Math.max(10, targetWidth);
+      targetHeight = Math.max(10, targetHeight);
+
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+      const ctx = canvas.getContext('2d');
+
+      if (format === 'image/jpeg') {
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, targetWidth, targetHeight);
+      }
+
+      ctx.drawImage(originalImage, 0, 0, targetWidth, targetHeight);
+
+      canvas.toBlob((blob) => {
+        if (blob) {
+          compressedBlob = blob;
+          const compUrl = URL.createObjectURL(blob);
+          
+          compPreview.onload = () => {
+            URL.revokeObjectURL(compUrl);
+          };
+          compPreview.src = compUrl;
+          
+          const size = blob.size;
+          compSizeTag.textContent = formatBytes(size);
+          compDimensions.textContent = `Dimensi: ${targetWidth} × ${targetHeight} px`;
+
+          estSize.textContent = formatBytes(size);
+          const diff = originalSize - size;
+          
+          if (diff > 0) {
+            const savedPercent = Math.round((diff / originalSize) * 100);
+            estSaving.textContent = `-${savedPercent}% (Sisa ${formatBytes(diff)})`;
+            estSaving.className = "font-bold text-emerald-500";
+            compSizeTag.className = "text-[10px] bg-emerald-500 text-white px-2.5 py-1 rounded-full font-semibold";
+          } else if (diff < 0) {
+            estSaving.textContent = `Bertambah (+${Math.round((Math.abs(diff) / originalSize) * 100)}%)`;
+            estSaving.className = "font-bold text-red-500";
+            compSizeTag.className = "text-[10px] bg-red-500 text-white px-2.5 py-1 rounded-full font-semibold";
+          } else {
+            estSaving.textContent = "Sama";
+            estSaving.className = "font-bold text-[var(--text-secondary)]";
+            compSizeTag.className = "text-[10px] bg-[var(--text-muted)] text-white px-2.5 py-1 rounded-full font-semibold";
+          }
+        } else {
+          showToast('Gagal memproses kompresi gambar!', 'error');
+        }
         
-        // Info/Actions Elements
-        const estSize = document.getElementById('est-size');
-        const estSaving = document.getElementById('est-saving');
-        const btnDownload = document.getElementById('btn-download');
-        const canvas = document.getElementById('canvas');
-        const compLoading = document.getElementById('comp-loading');
+        compLoading.classList.add('hidden');
+        isCompressing = false;
+      }, format, quality);
+    }
 
-        // Preview Elements
-        const origPreview = document.getElementById('orig-preview');
-        const origSizeTag = document.getElementById('orig-size-tag');
-        const origDimensions = document.getElementById('orig-dimensions');
-        const compPreview = document.getElementById('comp-preview');
-        const compSizeTag = document.getElementById('comp-size-tag');
-        const compDimensions = document.getElementById('comp-dimensions');
+    // Fungsi Download
+    btnDownload.addEventListener('click', () => {
+      if (!compressedBlob) {
+        showToast('Gambar belum siap diunduh!', 'error');
+        return;
+      }
 
-        // State variables
-        let originalImage = null; // Image Object
-        let fileType = '';
-        let fileName = '';
-        let originalSize = 0;
-        let originalWidth = 0;
-        let originalHeight = 0;
-        let aspectRatio = 1;
-        let compressedBlob = null;
-        let isCompressing = false;
-        let isProgrammaticInput = false;
+      const format = formatSelect.value;
+      const extension = format.split('/')[1];
+      const cleanOriginalName = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
+      const downloadName = `${cleanOriginalName}_compressed.${extension}`;
 
-        // Toast Toast Notification Utility
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `transform translate-y-2 opacity-0 transition-all duration-300 ease-out flex items-center p-4 min-w-[300px] max-w-sm rounded-2xl shadow-xl border text-sm font-medium ${
-                type === 'success' 
-                    ? 'bg-emerald-50 border-emerald-100 text-emerald-800' 
-                    : type === 'error' 
-                        ? 'bg-rose-50 border-rose-100 text-rose-800' 
-                        : 'bg-white border-slate-100 text-slate-800'
-            }`;
-            
-            const icon = type === 'success' 
-                ? '✅' 
-                : type === 'error' 
-                    ? '❌' 
-                    : 'ℹ️';
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(compressedBlob);
+      link.download = downloadName;
+      
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
 
-            toast.innerHTML = `<span class="mr-3 text-lg">${icon}</span><span class="flex-grow">${message}</span>`;
-            container.appendChild(toast);
+      showToast('Gambar berhasil disimpan!', 'success');
+    });
 
-            // Trigger animation
-            setTimeout(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            }, 10);
+    // Helper formatter bytes & ratio
+    function formatBytes(bytes, decimals = 2) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const dm = decimals < 0 ? 0 : decimals;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
 
-            // Auto dismiss after 3s
-            setTimeout(() => {
-                toast.classList.add('translate-y-2', 'opacity-0');
-                setTimeout(() => {
-                    toast.remove();
-                }, 300);
-            }, 3000);
-        }
+    function getRatioDescription(w, h) {
+      const gcd = (a, b) => b ? gcd(b, a % b) : a;
+      const divider = gcd(w, h);
+      const ratioW = w / divider;
+      const ratioH = h / divider;
+      if (ratioW > 20 || ratioH > 20) {
+        return (w / h).toFixed(2) + ':1';
+      }
+      return `${ratioW}:${ratioH}`;
+    }
 
-        // Show terms modal fallback
-        function showTerms() {
-            showToast("Aplikasi ini beroperasi 100% lokal. Tidak ada data yang dikirim ke server luar.", "info");
-        }
+    // ==========================================================
+    // FUNGSI MODAL ABOUT US
+    // ==========================================================
+    const aboutModal = document.getElementById('aboutModal');
+    const aboutModalCard = document.getElementById('aboutModalCard');
 
-        // Setup Drag & Drop Listeners
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropzone.addEventListener(eventName, (e) => {
-                e.preventDefault();
-                dropzone.classList.add('border-brand-500', 'bg-brand-50/50');
-            }, false);
-        });
+    function openAboutModal() {
+      aboutModal.classList.remove('hidden');
+      setTimeout(() => {
+        aboutModal.classList.add('opacity-100');
+        aboutModalCard.classList.remove('scale-95');
+        aboutModalCard.classList.add('scale-100');
+      }, 50);
+    }
 
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropzone.addEventListener(eventName, (e) => {
-                e.preventDefault();
-                dropzone.classList.remove('border-brand-500', 'bg-brand-50/50');
-            }, false);
-        });
+    function closeAboutModal() {
+      aboutModal.classList.remove('opacity-100');
+      aboutModalCard.classList.remove('scale-100');
+      aboutModalCard.classList.add('scale-95');
+      setTimeout(() => {
+        aboutModal.classList.add('hidden');
+      }, 300);
+    }
 
-        dropzone.addEventListener('drop', (e) => {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-            if (files.length > 0) {
-                handleFile(files[0]);
-            }
-        });
+    // === [MULAILAH PERUBAHAN: LOGIKA PEMROGRAMAN UNTUK TOOLS MODAL (QUICK ACCESS)] ===
+    const toolsMenuModal = document.getElementById('toolsMenuModal');
+    const toolsMenuCard = document.getElementById('toolsMenuCard');
+    const modalToolsList = document.getElementById('modalToolsList');
 
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleFile(e.target.files[0]);
-            }
-        });
+    // Buka Modal Daftar Macam-Macam Tools
+    function openToolsModal() {
+        // Melakukan render menu secara dinamis menggunakan Javascript
+        modalToolsList.innerHTML = ALL_TOOLS.map(t => `
+            <a href="${t.url}" class="flex items-center gap-3 p-3 rounded-xl border border-[var(--border)] hover:bg-[var(--bg-card)] transition-all">
+                <div class="w-8 h-8 rounded-lg bg-brand-light/10 text-brand-light flex items-center justify-center text-sm">
+                    <i class="${t.icon}"></i>
+                </div>
+                <div class="flex-grow">
+                    <h4 class="text-xs font-bold text-[var(--text-primary)]">${t.name}</h4>
+                    <p class="text-[10px] text-[var(--text-muted)] truncate max-w-[200px] sm:max-w-md">${t.desc}</p>
+                </div>
+            </a>
+        `).join('');
 
-        // Back to upload screen
-        btnBack.addEventListener('click', () => {
-            studioSection.classList.add('hidden');
-            heroSection.classList.remove('hidden');
-            dropzoneContainer.classList.remove('hidden');
-            fileInput.value = ''; // Reset input file
-            originalImage = null;
-        });
+        toolsMenuModal.classList.remove('hidden');
+        setTimeout(() => {
+            toolsMenuModal.classList.add('opacity-100');
+            toolsMenuCard.classList.remove('scale-95');
+            toolsMenuCard.classList.add('scale-100');
+        }, 50);
+    }
 
-        // Toggle Resize Section Accordion
-        toggleResize.addEventListener('click', () => {
-            const isHidden = resizeContainer.classList.contains('hidden');
-            if (isHidden) {
-                resizeContainer.classList.remove('hidden');
-                resizeArrow.classList.add('rotate-180');
-            } else {
-                resizeContainer.classList.add('hidden');
-                resizeArrow.classList.remove('rotate-180');
-            }
-        });
+    // Tutup Modal Daftar Macam-Macam Tools
+    function closeToolsModal() {
+        toolsMenuModal.classList.remove('opacity-100');
+        toolsMenuCard.classList.remove('scale-100');
+        toolsMenuCard.classList.add('scale-95');
+        setTimeout(() => {
+            toolsMenuModal.classList.add('hidden');
+        }, 300);
+    }
 
-        // Handle the incoming image file
-        function handleFile(file) {
-            if (!file.type.startsWith('image/')) {
-                showToast('Harap pilih berkas gambar yang valid (JPEG, PNG, WebP, dll)!', 'error');
-                return;
-            }
-
-            fileType = file.type;
-            fileName = file.name;
-            originalSize = file.size;
-
-            origSizeTag.textContent = formatBytes(originalSize);
-
-            // Display loading / transition state
-            showToast('Memuat berkas gambar...', 'info');
-
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = function(event) {
-                originalImage = new Image();
-                originalImage.src = event.target.result;
-                
-                originalImage.onload = function() {
-                    originalWidth = originalImage.width;
-                    originalHeight = originalImage.height;
-                    aspectRatio = originalWidth / originalHeight;
-
-                    // Set preview of original
-                    origPreview.src = event.target.result;
-                    origDimensions.textContent = `Dimensi: ${originalWidth} × ${originalHeight} px`;
-
-                    // Update resize input placeholders & values
-                    isProgrammaticInput = true;
-                    resizeWidthInput.value = originalWidth;
-                    resizeHeightInput.value = originalHeight;
-                    aspectRatioValText.textContent = getRationDescription(originalWidth, originalHeight);
-                    isProgrammaticInput = false;
-
-                    // Update UI Views
-                    heroSection.classList.add('hidden');
-                    dropzoneContainer.classList.add('hidden');
-                    studioSection.classList.remove('hidden');
-
-                    // Match input select options with original file format
-                    if (fileType === 'image/png' || fileType === 'image/jpeg' || fileType === 'image/webp') {
-                        formatSelect.value = fileType;
-                    } else {
-                        formatSelect.value = 'image/jpeg'; // Fallback
-                    }
-
-                    // Run initial compression
-                    compressImage();
-                };
-            };
-
-            reader.onerror = function() {
-                showToast('Gagal membaca file gambar!', 'error');
-            };
-        }
-
-        // Quality slider update logic
-        qualityRange.addEventListener('input', (e) => {
-            qualityVal.textContent = e.target.value + '%';
-        });
-
-        qualityRange.addEventListener('change', () => {
-            compressImage();
-        });
-
-        formatSelect.addEventListener('change', (e) => {
-            // PNG does not support quality compression well via API (lossless), warn users nicely.
-            if (e.target.value === 'image/png') {
-                qualityRange.disabled = true;
-                qualityRange.classList.add('opacity-50');
-                showToast('Kompresi format PNG bersifat lossless. Atur ulang resolusi jika ingin mengecilkan ukuran.', 'info');
-            } else {
-                qualityRange.disabled = false;
-                qualityRange.classList.remove('opacity-50');
-            }
-            compressImage();
-        });
-
-        // Resize Logic with Link Aspect Ratio
-        resizeWidthInput.addEventListener('input', (e) => {
-            if (isProgrammaticInput || !originalImage) return;
-            let val = parseInt(e.target.value);
-            if (!val || val <= 0) return;
-
-            if (aspectRatioLock.checked) {
-                isProgrammaticInput = true;
-                resizeHeightInput.value = Math.round(val / aspectRatio);
-                isProgrammaticInput = false;
-            }
-            debounceCompress();
-        });
-
-        resizeHeightInput.addEventListener('input', (e) => {
-            if (isProgrammaticInput || !originalImage) return;
-            let val = parseInt(e.target.value);
-            if (!val || val <= 0) return;
-
-            if (aspectRatioLock.checked) {
-                isProgrammaticInput = true;
-                resizeWidthInput.value = Math.round(val * aspectRatio);
-                isProgrammaticInput = false;
-            }
-            debounceCompress();
-        });
-
-        // Debounce timer for compression when typing sizes
-        let compressTimeout;
-        function debounceCompress() {
-            clearTimeout(compressTimeout);
-            compressTimeout = setTimeout(() => {
-                compressImage();
-            }, 500);
-        }
-
-        // Image compression mechanism
-        function compressImage() {
-            if (!originalImage || isCompressing) return;
-
-            isCompressing = true;
-            compLoading.classList.remove('hidden');
-
-            // Retrieve configuration values
-            const quality = parseFloat(qualityRange.value) / 100;
-            const format = formatSelect.value;
-            
-            let targetWidth = parseInt(resizeWidthInput.value) || originalWidth;
-            let targetHeight = parseInt(resizeHeightInput.value) || originalHeight;
-
-            // Constrain minimum boundary to 10px to avoid crash
-            targetWidth = Math.max(10, targetWidth);
-            targetHeight = Math.max(10, targetHeight);
-
-            // Draw to Canvas
-            canvas.width = targetWidth;
-            canvas.height = targetHeight;
-            const ctx = canvas.getContext('2d');
-
-            // Set background color for JPEGs to avoid black transparency backgrounds
-            if (format === 'image/jpeg') {
-                ctx.fillStyle = '#FFFFFF';
-                ctx.fillRect(0, 0, targetWidth, targetHeight);
-            }
-
-            ctx.drawImage(originalImage, 0, 0, targetWidth, targetHeight);
-
-            // Process to Blob (Async)
-            canvas.toBlob((blob) => {
-                if (blob) {
-                    compressedBlob = blob;
-                    
-                    // Display preview & metadata
-                    const compUrl = URL.createObjectURL(blob);
-                    
-                    compPreview.onload = () => {
-                        URL.revokeObjectURL(compUrl); // Release object URL safely
-                    };
-                    compPreview.src = compUrl;
-                    
-                    // Display and calculate details
-                    const size = blob.size;
-                    compSizeTag.textContent = formatBytes(size);
-                    compDimensions.textContent = `Dimensi: ${targetWidth} × ${targetHeight} px`;
-
-                    // Estimate UI calculations
-                    estSize.textContent = formatBytes(size);
-                    const diff = originalSize - size;
-                    
-                    if (diff > 0) {
-                        const savedPercent = Math.round((diff / originalSize) * 100);
-                        estSaving.textContent = `-${savedPercent}% (${formatBytes(diff)})`;
-                        estSaving.className = "font-bold text-emerald-600";
-                        compSizeTag.className = "text-xs bg-emerald-500 text-white px-2.5 py-1 rounded-full font-semibold";
-                    } else if (diff < 0) {
-                        estSaving.textContent = `Bertambah (+${Math.round((Math.abs(diff) / originalSize) * 100)}%)`;
-                        estSaving.className = "font-bold text-rose-500";
-                        compSizeTag.className = "text-xs bg-rose-500 text-white px-2.5 py-1 rounded-full font-semibold";
-                    } else {
-                        estSaving.textContent = "Sama";
-                        estSaving.className = "font-bold text-slate-500";
-                        compSizeTag.className = "text-xs bg-slate-500 text-white px-2.5 py-1 rounded-full font-semibold";
-                    }
-                } else {
-                    showToast('Gagal mengompres gambar!', 'error');
-                }
-                
-                // Hide spinner
-                compLoading.classList.add('hidden');
-                isCompressing = false;
-            }, format, quality);
-        }
-
-        // Download Action
-        btnDownload.addEventListener('click', () => {
-            if (!compressedBlob) {
-                showToast('Gambar belum siap untuk diunduh!', 'error');
-                return;
-            }
-
-            const format = formatSelect.value;
-            const extension = format.split('/')[1];
-            const cleanOriginalName = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
-            const downloadName = `${cleanOriginalName}_compressed.${extension}`;
-
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(compressedBlob);
-            link.download = downloadName;
-            
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            showToast('Gambar berhasil diunduh!', 'success');
-        });
-
-        // Utility: Size Formatter
-        function formatBytes(bytes, decimals = 2) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const dm = decimals < 0 ? 0 : decimals;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-        }
-
-        // Utility: Aspect Ratio descriptor
-        function getRationDescription(w, h) {
-            const gcd = (a, b) => b ? gcd(b, a % b) : a;
-            const divider = gcd(w, h);
-            const ratioW = w / divider;
-            const ratioH = h / divider;
-            if (ratioW > 20 || ratioH > 20) {
-                return (w / h).toFixed(2) + ':1';
-            }
-            return `${ratioW}:${ratioH}`;
-        }
-    </script>
+    // Listener klik area luar modal untuk menutup
+    window.addEventListener('click', (e) => {
+      if (e.target === aboutModal) closeAboutModal();
+      if (e.target === toolsMenuModal) closeToolsModal();
+    });
+    // === [AKHIR PERUBAHAN] ===
+  </script>
 </body>
 </html>
