@@ -1,751 +1,1053 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="transition-colors duration-300">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>296Invoice Maker</title>
-  <!-- --- FAVICON (SVG Crown Emoji) --- -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invoice Maker — 296Tools</title>
+<!-- ========================================================== -->
+<!-- META TAG UMUM (Untuk SEO Dasar & Browser) -->
+<!-- ========================================================== -->
+<meta name="description" content="Buat & kompres berkas tagihan (Invoice) praktis terkompresi PDF secara instan langsung dari browser. 100% lokal, aman, dan privat.">
+<meta name="robots" content="index, follow">
+
+<!-- Font Family Premium -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<!-- Favicon -->
 <link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- html2pdf.js untuk export PDF berkualitas tinggi -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+
+<!-- Tailwind CSS Setup -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            light: '#6c63ff',
+            dark: '#a78bfa',
+            accent: '#38bdf8',
+            emerald: '#34d399'
+          }
+        },
+        fontFamily: {
+          clash: ['Clash Display', 'sans-serif'],
+          bricolage: ['Bricolage Grotesque', 'sans-serif'],
         }
-        /* Custom print styling */
-        @media print {
-            body {
-                background: white;
-            }
-            .no-print {
-                display: none !important;
-            }
-            .print-shadow-none {
-                box-shadow: none !important;
-            }
-        }
-        /* Glassmorphism scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-    </style>
+      }
+    }
+  }
+</script>
+
+<!-- html2pdf.js untuk export PDF berkualitas tinggi -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+  /* Variabel CSS untuk Mode Terang (Default) */
+  :root {
+    --bg: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-card: #f1f5f9;
+    --border: rgba(15, 23, 42, 0.08);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --shadow-premium: 0 10px 30px -10px rgba(108, 99, 255, 0.1);
+  }
+
+  /* Variabel CSS untuk Mode Gelap */
+  .dark {
+    --bg: #0b0c10;
+    --bg-surface: #13141a;
+    --bg-card: #1e2029;
+    --border: rgba(255, 255, 255, 0.07);
+    --text-primary: #f0f0f5;
+    --text-secondary: #9899a8;
+    --text-muted: #5a5b6a;
+    --shadow-premium: 0 10px 40px rgba(0,0,0,0.5), 0 0 40px rgba(108,99,255,0.15);
+  }
+
+  body {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    background-color: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  /* Noise Overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* Hero Gradient Blur */
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+  .blob-1 {
+    width: 400px; height: 250px;
+    background: rgba(108,99,255,0.12);
+    top: -40px; left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* Custom Print Styling */
+  @media print {
+    body {
+      background: white !important;
+      color: #0f172a !important;
+    }
+    body::before {
+      display: none !important;
+    }
+    .no-print {
+      display: none !important;
+    }
+    .print-shadow-none {
+      box-shadow: none !important;
+      border: none !important;
+      background: white !important;
+    }
+    #invoice-container {
+      border: none !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      background: white !important;
+      color: #0f172a !important;
+    }
+  }
+
+  /* Animasi Transisi Halaman */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-up {
+    animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+</style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased">
+<body class="flex flex-col">
 
-    <!-- Header / Navbar -->
-    <header class="bg-white border-b border-slate-100 sticky top-0 z-50 no-print">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="bg-indigo-600 text-white p-2 rounded-xl shadow-md shadow-indigo-100">
-                    <i data-lucide="receipt" class="w-6 h-6"></i>
-                </div>
-                <div>
-                    <h1 class="text-lg font-bold text-slate-900 leading-tight">296Invoicify</h1>
-                    <p class="text-xs text-slate-500">Maker & Smart Compressor</p>
-                </div>
-            </div>
-            <div class="flex items-center space-x-3">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-100">
-                    <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    Versi Client-Side aman
-                </span>
-            </div>
+  <!-- Header / Topbar -->
+  <header class="sticky top-0 z-40 w-full bg-[var(--bg)]/80 backdrop-blur-md border-b border-[var(--border)] transition-all no-print">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="homepage_296tools.html" class="flex items-center gap-3">
+        <div class="w-9 h-9 bg-gradient-to-tr from-brand-light to-brand-accent rounded-lg flex items-center justify-center shadow-lg">
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" class="w-6 h-6 object-contain" alt="Logo 296">
         </div>
-    </header>
+        <span class="font-clash text-lg font-bold tracking-tight">296<span class="text-brand-dark">Tools</span></span>
+      </a>
 
-    <!-- Main Content -->
-    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        <!-- Sidebar Kiri: Kontrol & Kompresor (no-print) -->
-        <div class="lg:col-span-4 space-y-6 no-print">
-            
-            <!-- Widget Kompresor Gambar Terintegrasi -->
-            <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-                <div class="flex items-center space-x-2.5 mb-4">
-                    <div class="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg">
-                        <i data-lucide="file-image" class="w-5 h-5"></i>
-                    </div>
-                    <h3 class="font-bold text-slate-900">Kompresor Gambar Logo</h3>
-                </div>
-                <p class="text-xs text-slate-500 mb-4 leading-relaxed">
-                    Kompres file logo Anda sebelum dimasukkan ke invoice agar ukuran PDF akhir tetap kecil & cepat dikirim.
-                </p>
-
-                <!-- Area Dropzone -->
-                <div id="dropzone" class="border-2 border-dashed border-slate-200 rounded-xl p-4 text-center hover:border-indigo-400 transition cursor-pointer bg-slate-50/50">
-                    <input type="file" id="image-input" accept="image/*" class="hidden">
-                    <div class="flex flex-col items-center justify-center space-y-2">
-                        <i data-lucide="upload-cloud" class="w-8 h-8 text-slate-400"></i>
-                        <p class="text-xs font-semibold text-slate-700">Pilih atau Seret Foto</p>
-                        <p class="text-[10px] text-slate-400">PNG, JPG, WebP (Maks. 5MB)</p>
-                    </div>
-                </div>
-
-                <!-- Hasil Kompresi (Tersembunyi jika kosong) -->
-                <div id="compression-result" class="mt-4 hidden space-y-3 pt-3 border-t border-slate-100">
-                    <div class="flex items-center justify-between text-xs">
-                        <span class="text-slate-500">Asli: <strong id="orig-size">-</strong></span>
-                        <span class="text-indigo-600 font-bold">Hasil: <strong id="comp-size">-</strong></span>
-                    </div>
-                    <!-- Progress Bar Simpanan -->
-                    <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                        <div id="savings-bar" class="bg-emerald-500 h-full w-0 transition-all duration-500"></div>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span id="savings-percentage" class="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">-</span>
-                        <button id="apply-logo-btn" class="text-xs bg-indigo-600 text-white font-medium px-3 py-1.5 rounded-lg hover:bg-indigo-700 transition flex items-center space-x-1">
-                            <span>Gunakan Logo</span>
-                            <i data-lucide="check" class="w-3.5 h-3.5"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Panel Pengaturan Invoice -->
-            <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
-                <div class="flex items-center space-x-2.5 mb-2">
-                    <div class="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg">
-                        <i data-lucide="settings" class="w-5 h-5"></i>
-                    </div>
-                    <h3 class="font-bold text-slate-900">Pengaturan Biaya</h3>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Mata Uang</label>
-                    <select id="currency-select" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
-                        <option value="IDR">IDR (Rp)</option>
-                        <option value="USD">USD ($)</option>
-                        <option value="EUR">EUR (€)</option>
-                        <option value="SGD">SGD (S$)</option>
-                    </select>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Pajak (%)</label>
-                        <input type="number" id="tax-input" value="11" min="0" max="100" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Diskon (%)</label>
-                        <input type="number" id="discount-input" value="0" min="0" max="100" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500">
-                    </div>
-                </div>
-
-                <div class="pt-2">
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Metode Pembayaran Default</label>
-                    <input type="text" id="payment-method-input" value="Transfer Bank Mandiri - 123456789 a/n Bisnis Saya" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 placeholder-slate-400">
-                </div>
-            </div>
-
-            <!-- Panel Export & Kompresi PDF -->
-            <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4">
-                <div class="flex items-center space-x-2.5 mb-2">
-                    <div class="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg">
-                        <i data-lucide="download" class="w-5 h-5"></i>
-                    </div>
-                    <h3 class="font-bold text-slate-900">Simpan & Kompres PDF</h3>
-                </div>
-                <p class="text-xs text-slate-500 leading-relaxed">
-                    Sistem akan secara cerdas mengatur resolusi dokumen agar ukuran file PDF akhir tetap ringan untuk dikirim via WhatsApp/Email tanpa mengurangi kejelasan teks.
-                </p>
-
-                <!-- Pilihan Kualitas Kompresi PDF -->
-                <div class="space-y-2">
-                    <label class="block text-xs font-semibold text-slate-600">Profil Kompresi PDF</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <label class="border border-indigo-100 bg-indigo-50/40 p-2.5 rounded-xl cursor-pointer flex flex-col justify-between hover:border-indigo-300 transition" id="label-quality-optimal">
-                            <input type="radio" name="pdf-quality" value="optimal" checked class="sr-only">
-                            <span class="text-xs font-bold text-slate-800">Super Kompres</span>
-                            <span class="text-[10px] text-emerald-600 font-semibold mt-1">Ukuran Terkecil</span>
-                        </label>
-                        <label class="border border-slate-200 p-2.5 rounded-xl cursor-pointer flex flex-col justify-between hover:border-slate-300 transition" id="label-quality-high">
-                            <input type="radio" name="pdf-quality" value="high" class="sr-only">
-                            <span class="text-xs font-bold text-slate-800">Resolusi Tinggi</span>
-                            <span class="text-[10px] text-slate-400 mt-1">Standar Cetak</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="pt-2 space-y-2">
-                    <button id="download-pdf-btn" class="w-full bg-indigo-600 text-white font-semibold py-3 px-4 rounded-xl hover:bg-indigo-700 transition flex items-center justify-center space-x-2 shadow-lg shadow-indigo-100">
-                        <i data-lucide="file-text" class="w-5 h-5"></i>
-                        <span>Unduh PDF Ringan</span>
-                    </button>
-                    
-                    <button id="print-btn" class="w-full bg-white text-slate-700 border border-slate-200 font-semibold py-2.5 px-4 rounded-xl hover:bg-slate-50 transition flex items-center justify-center space-x-2">
-                        <i data-lucide="printer" class="w-4.5 h-4.5"></i>
-                        <span>Cetak Langsung</span>
-                    </button>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Area Pengisian & Preview Invoice (Kanan) -->
-        <div class="lg:col-span-8">
-            <div id="invoice-container" class="bg-white p-6 sm:p-10 rounded-3xl border border-slate-100 shadow-xl shadow-slate-100/40 print-shadow-none relative">
-                
-                <!-- Watermark Pratinjau saat di Web -->
-                <div class="absolute top-4 right-4 no-print text-[10px] font-bold tracking-wider uppercase text-indigo-400 bg-indigo-50/50 px-3 py-1 rounded-full">
-                    Preview Live Edit
-                </div>
-
-                <!-- Bagian 1: Header Invoice (Logo & Metadata) -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-8 border-b border-slate-100">
-                    <div class="space-y-4">
-                        <!-- Preview Logo Interaktif -->
-                        <div class="relative group w-36 h-20 bg-slate-50 rounded-xl border border-dashed border-slate-200 flex items-center justify-center overflow-hidden">
-                            <img id="invoice-logo-preview" src="" alt="Logo Bisnis" class="object-contain w-full h-full p-2 hidden">
-                            <div id="logo-placeholder" class="text-center p-2">
-                                <p class="text-xs text-slate-400 font-medium">Belum Ada Logo</p>
-                                <span class="no-print text-[10px] text-indigo-600 underline cursor-pointer mt-1 block hover:text-indigo-800" onclick="document.getElementById('image-input').click()">Unggah & Kompres</span>
-                            </div>
-                            <button id="remove-logo-btn" class="no-print absolute top-1 right-1 bg-rose-500 text-white p-1 rounded-full hidden hover:bg-rose-600 transition shadow">
-                                <i data-lucide="x" class="w-3.5 h-3.5"></i>
-                            </button>
-                        </div>
-                        
-                        <!-- Nama Bisnis & Alamat -->
-                        <div>
-                            <input type="text" id="sender-name" value="NAMA PERUSAHAAN ANDA" class="w-full text-lg font-bold text-slate-900 border-b border-transparent hover:border-slate-200 focus:border-indigo-500 focus:outline-none py-1 placeholder-slate-400 uppercase tracking-wide">
-                            <textarea id="sender-address" rows="3" class="w-full text-xs text-slate-500 border border-transparent hover:border-slate-200 focus:border-indigo-500 focus:outline-none py-1 px-1 mt-1 rounded resize-none placeholder-slate-400 leading-relaxed" placeholder="Alamat pengirim, No. Telp, Email"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="text-left md:text-right space-y-4 flex flex-col justify-between">
-                        <div>
-                            <h2 class="text-3xl font-extrabold text-indigo-600 tracking-tight">INVOICE</h2>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-2 text-xs md:text-right">
-                            <div>
-                                <span class="text-slate-400 font-semibold uppercase tracking-wider block">No. Invoice</span>
-                                <input type="text" id="invoice-number" value="INV/2026/001" class="font-bold text-slate-800 text-right w-full border-b border-transparent hover:border-slate-200 focus:border-indigo-500 focus:outline-none">
-                            </div>
-                            <div>
-                                <span class="text-slate-400 font-semibold uppercase tracking-wider block">Tanggal</span>
-                                <input type="date" id="invoice-date" class="font-semibold text-slate-800 text-right w-full border-b border-transparent hover:border-slate-200 focus:border-indigo-500 focus:outline-none bg-transparent">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bagian 2: Info Penerima -->
-                <div class="py-8 grid grid-cols-1 md:grid-cols-2 gap-6 border-b border-slate-100">
-                    <div>
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-2">Ditagih Kepada:</span>
-                        <input type="text" id="client-name" value="Nama Klien Utama" class="w-full font-bold text-slate-800 text-base border-b border-transparent hover:border-slate-200 focus:border-indigo-500 focus:outline-none py-1 placeholder-slate-400">
-                        <textarea id="client-address" rows="3" class="w-full text-xs text-slate-500 border border-transparent hover:border-slate-200 focus:border-indigo-500 focus:outline-none py-1 px-1 mt-1 rounded resize-none placeholder-slate-400 leading-relaxed" placeholder="Alamat Lengkap Klien, Email, & Telepon"></textarea>
-                    </div>
-                    <div class="flex flex-col justify-end md:items-end">
-                        <div class="w-full md:w-3/4">
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1 md:text-right">Tenggat Pembayaran:</span>
-                            <input type="date" id="invoice-due-date" class="font-bold text-slate-800 md:text-right w-full border-b border-transparent hover:border-slate-200 focus:border-indigo-500 focus:outline-none bg-transparent">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bagian 3: Tabel Item Barang/Jasa -->
-                <div class="py-6 overflow-x-auto">
-                    <table class="w-full min-w-[600px] text-left">
-                        <thead>
-                            <tr class="border-b border-slate-200 text-xs font-bold uppercase text-slate-400 tracking-wider">
-                                <th class="pb-3 w-7/12">Deskripsi Layanan / Barang</th>
-                                <th class="pb-3 w-1/12 text-center">Jumlah</th>
-                                <th class="pb-3 w-2/12 text-right">Harga Satuan</th>
-                                <th class="pb-3 w-2/12 text-right">Total</th>
-                                <th class="pb-3 w-12 no-print"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="invoice-items-body">
-                            <!-- Template Baris (Akan digenerate oleh JS) -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Tombol Tambah Baris (no-print) -->
-                <div class="pb-6 border-b border-slate-100 no-print">
-                    <button id="add-item-btn" class="flex items-center space-x-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-800 transition py-1 px-2 hover:bg-indigo-50 rounded-lg">
-                        <i data-lucide="plus" class="w-4 h-4"></i>
-                        <span>Tambah Item Baru</span>
-                    </button>
-                </div>
-
-                <!-- Bagian 4: Rincian Akhir & Catatan Pembayaran -->
-                <div class="pt-8 grid grid-cols-1 md:grid-cols-12 gap-8">
-                    <!-- Sisi Kiri: Instruksi Pembayaran & Catatan Tambahan -->
-                    <div class="md:col-span-7 space-y-4">
-                        <div>
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Informasi Pembayaran</span>
-                            <p id="payment-method-text" class="text-xs font-medium text-slate-800 whitespace-pre-line bg-slate-50 p-3 rounded-xl border border-slate-100"></p>
-                        </div>
-                        <div>
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Catatan Tambahan / Syarat Ketentuan</span>
-                            <textarea id="invoice-notes" rows="2" class="w-full text-xs text-slate-400 border border-transparent hover:border-slate-200 focus:border-indigo-500 focus:outline-none py-1 px-1 rounded resize-none placeholder-slate-300" placeholder="Terima kasih atas kerja samanya. Pembayaran yang sah wajib menyertakan bukti transfer."></textarea>
-                        </div>
-                    </div>
-
-                    <!-- Sisi Kanan: Subtotal, Diskon, Pajak, Total Keseluruhan -->
-                    <div class="md:col-span-5 space-y-2.5 text-xs">
-                        <div class="flex justify-between text-slate-500">
-                            <span>Subtotal</span>
-                            <span id="summary-subtotal" class="font-semibold">-</span>
-                        </div>
-                        <div class="flex justify-between text-slate-500 items-center">
-                            <span>Diskon (<span id="discount-percent-label">0</span>%)</span>
-                            <span id="summary-discount" class="font-semibold text-rose-600">-</span>
-                        </div>
-                        <div class="flex justify-between text-slate-500 items-center">
-                            <span>Pajak (<span id="tax-percent-label">0</span>%)</span>
-                            <span id="summary-tax" class="font-semibold">-</span>
-                        </div>
-                        <div class="border-t border-slate-100 pt-3 flex justify-between items-center text-slate-900">
-                            <span class="text-sm font-bold">Total Pembayaran</span>
-                            <span id="summary-grand-total" class="text-lg font-extrabold text-indigo-600">-</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Footer Tanda Tangan -->
-                <div class="pt-16 grid grid-cols-2 gap-4 text-center text-xs">
-                    <div></div>
-                    <div class="space-y-12">
-                        <div>
-                            <span class="text-slate-400">Hormat Kami,</span>
-                        </div>
-                        <div class="relative inline-block w-48 border-b border-slate-300">
-                            <input type="text" id="signer-name" value="Manajer Keuangan" class="w-full text-center font-bold text-slate-800 border-b border-transparent focus:outline-none focus:border-indigo-500 py-1 uppercase tracking-wider">
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-    </main>
-
-    <!-- Footer Platform (no-print) -->
-    <footer class="bg-white border-t border-slate-100 py-6 mt-12 no-print">
-        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400 space-y-2">
-            <p>&copy; 2026 296Invoicify. 100% Pemrosesan Klien Aman tanpa Unggah Data ke Server Lain.</p>
-            <p>Dibuat untuk Efisiensi Bisnis Maksimal dengan Fitur Kompresi Gambar & PDF Real-time.</p>
-        </div>
-    </footer>
-
-    <!-- Notifikasi Custom Toast -->
-    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-xl flex items-center space-x-2.5 z-50 transform translate-y-24 opacity-0 transition duration-300 pointer-events-none">
-        <div id="toast-icon-wrapper" class="p-1 rounded-lg bg-emerald-500 text-white">
-            <i data-lucide="check" class="w-4 h-4"></i>
-        </div>
-        <p id="toast-message" class="text-xs font-semibold"></p>
+      <!-- Menu Aksi Samping Kanan (Theme Toggle) -->
+      <div class="flex items-center gap-4">
+        <span class="hidden md:inline-block text-xs font-semibold text-[var(--text-secondary)] bg-[var(--bg-card)] px-3 py-1.5 rounded-full border border-[var(--border)]">
+          🔒 100% Lokal & Privat
+        </span>
+        <!-- Tombol Pengubah Mode Gelap/Terang -->
+        <button id="themeToggle" class="p-2.5 rounded-lg bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] transition-all" title="Ubah Tema">
+          <i class="fa-solid fa-moon dark:hidden text-lg"></i>
+          <i class="fa-solid fa-sun hidden dark:block text-lg text-yellow-400"></i>
+        </button>
+      </div>
     </div>
+  </header>
 
-    <!-- Script Logika Aplikasi -->
-    <script>
-        // Inisialisasi ikon Lucide
-        lucide.createIcons();
+  <!-- Konten Utama -->
+  <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-8 relative z-10 animate-fade-up">
+    
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-        // Data & State Utama
-        let currencySymbol = 'Rp';
-        let currencyFormat = 'IDR';
-        let compressedLogoBase64 = '';
+    <!-- Hero / Judul Halaman -->
+    <section class="text-center py-8 relative overflow-hidden no-print" id="hero-section">
+      <div class="blob blob-1"></div>
+      
+      <div class="inline-flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-brand-dark bg-brand-light/10 border border-brand-light/20 rounded-full px-4 py-1.5 mb-4">
+        <i class="fa-solid fa-file-invoice"></i> Invoice Maker
+      </div>
 
-        // Elemen-Elemen DOM
-        const dropzone = document.getElementById('dropzone');
-        const imageInput = document.getElementById('image-input');
-        const compResult = document.getElementById('compression-result');
-        const origSizeEl = document.getElementById('orig-size');
-        const compSizeEl = document.getElementById('comp-size');
-        const savingsBar = document.getElementById('savings-bar');
-        const savingsPerc = document.getElementById('savings-percentage');
-        const applyLogoBtn = document.getElementById('apply-logo-btn');
-        const logoPreview = document.getElementById('invoice-logo-preview');
-        const logoPlaceholder = document.getElementById('logo-placeholder');
-        const removeLogoBtn = document.getElementById('remove-logo-btn');
+      <h1 class="font-clash text-3xl md:text-5xl font-bold tracking-tight leading-none mb-4">
+        296<span class="bg-gradient-to-r from-brand-light via-brand-accent to-brand-emerald bg-clip-text text-transparent">Invoicify</span>
+      </h1>
 
-        const currencySelect = document.getElementById('currency-select');
-        const taxInput = document.getElementById('tax-input');
-        const discountInput = document.getElementById('discount-input');
-        const paymentMethodInput = document.getElementById('payment-method-input');
-        const paymentMethodText = document.getElementById('payment-method-text');
+      <p class="text-xs md:text-sm text-[var(--text-secondary)] max-w-lg mx-auto font-light leading-relaxed">
+        Buat berkas tagihan (Invoice) profesional dan kompres dokumen PDF akhir secara instan agar ringan dikirim lewat WhatsApp atau Email.
+      </p>
+    </section>
 
-        const subtotalEl = document.getElementById('summary-subtotal');
-        const discountEl = document.getElementById('summary-discount');
-        const discountPercentLabel = document.getElementById('discount-percent-label');
-        const taxEl = document.getElementById('summary-tax');
-        const taxPercentLabel = document.getElementById('tax-percent-label');
-        const grandTotalEl = document.getElementById('summary-grand-total');
+    <!-- Layout Grid Utama: Kiri Kontrol & Kompresor, Kanan Live Preview -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- Sidebar Kiri: Kontrol & Setelan (no-print) -->
+      <div class="lg:col-span-4 space-y-4 no-print">
+        
+        <!-- Widget Kompresor Gambar Logo -->
+        <div class="bg-[var(--bg-surface)] p-5 rounded-2xl border border-[var(--border)] shadow-sm space-y-4">
+          <div class="flex items-center gap-2.5 pb-3 border-b border-[var(--border)]">
+            <div class="w-8 h-8 rounded-lg bg-brand-light/10 text-brand-light flex items-center justify-center text-sm">
+              <i class="fa-solid fa-file-image"></i>
+            </div>
+            <h3 class="font-clash font-bold text-[var(--text-primary)] text-sm">Kompresor Logo</h3>
+          </div>
+          <p class="text-[11px] text-[var(--text-secondary)] leading-relaxed">
+            Kompres ukuran file logo Anda secara otomatis sebelum diletakkan di lembar tagihan agar ukuran akhir dokumen PDF tetap ringan.
+          </p>
 
-        const itemsBody = document.getElementById('invoice-items-body');
-        const addItemBtn = document.getElementById('add-item-btn');
-        const downloadPdfBtn = document.getElementById('download-pdf-btn');
-        const printBtn = document.getElementById('print-btn');
+          <!-- Dropzone -->
+          <div id="dropzone" class="border-2 border-dashed border-[var(--border)] hover:border-brand-light rounded-2xl p-4 text-center cursor-pointer transition-all bg-[var(--bg-card)]/50 group">
+            <input type="file" id="image-input" accept="image/*" class="hidden">
+            <div class="flex flex-col items-center justify-center space-y-2 text-[var(--text-secondary)] group-hover:text-brand-light transition-all">
+              <i class="fa-solid fa-cloud-arrow-up text-2xl opacity-60"></i>
+              <p class="text-[11px] font-semibold">Pilih atau Seret Foto</p>
+              <p class="text-[9px] text-[var(--text-muted)]">PNG, JPG, WebP (Maks. 5MB)</p>
+            </div>
+          </div>
 
-        // Setup Default Tanggal Hari Ini & Tenggat 30 Hari
-        const today = new Date();
-        document.getElementById('invoice-date').value = today.toISOString().split('T')[0];
-        const dueDate = new Date();
-        dueDate.setDate(today.getDate() + 30);
-        document.getElementById('invoice-due-date').value = dueDate.toISOString().split('T')[0];
+          <!-- Hasil Kompresi (Tersembunyi default) -->
+          <div id="compression-result" class="hidden space-y-3 pt-3 border-t border-[var(--border)]">
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="text-[var(--text-secondary)]">Asli: <strong id="orig-size">-</strong></span>
+              <span class="text-brand-light font-bold">Hasil: <strong id="comp-size">-</strong></span>
+            </div>
+            <!-- Progress Bar -->
+            <div class="w-full bg-[var(--bg-card)] h-1.5 rounded-full overflow-hidden">
+              <div id="savings-bar" class="bg-brand-emerald h-full w-0 transition-all duration-500"></div>
+            </div>
+            <div class="flex justify-between items-center pt-1">
+              <span id="savings-percentage" class="text-[10px] font-semibold text-brand-emerald bg-brand-emerald/10 px-2 py-0.5 rounded-md">-</span>
+              <button id="apply-logo-btn" class="text-[10px] bg-brand-light hover:bg-opacity-90 text-white font-semibold px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 shadow-sm">
+                <span>Gunakan Logo</span>
+                <i class="fa-solid fa-check"></i>
+              </button>
+            </div>
+          </div>
+        </div>
 
-        // List Item Default
-        const defaultItems = [
-            { desc: 'Desain Layout Landing Page & Branding Identitas', qty: 1, price: 3500000 },
-            { desc: 'Pengembangan Frontend React & Penyetelan Tailwind CSS', qty: 1, price: 5000000 },
-            { desc: 'Layanan Pemeliharaan Server Bulanan (Desember)', qty: 2, price: 750000 }
-        ];
+        <!-- Panel Setelan Biaya -->
+        <div class="bg-[var(--bg-surface)] p-5 rounded-2xl border border-[var(--border)] shadow-sm space-y-4">
+          <div class="flex items-center gap-2.5 pb-3 border-b border-[var(--border)]">
+            <div class="w-8 h-8 rounded-lg bg-brand-light/10 text-brand-light flex items-center justify-center text-sm">
+              <i class="fa-solid fa-sliders"></i>
+            </div>
+            <h3 class="font-clash font-bold text-[var(--text-primary)] text-sm">Pengaturan Biaya</h3>
+          </div>
 
-        // Tampilkan Toast Notifikasi
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            const msgEl = document.getElementById('toast-message');
-            const iconWrapper = document.getElementById('toast-icon-wrapper');
+          <div class="space-y-3 text-xs">
+            <div>
+              <label class="block font-semibold text-[var(--text-secondary)] mb-1">Mata Uang</label>
+              <select id="currency-select" class="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-3 py-2 text-xs text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-brand-light/35">
+                <option value="IDR">IDR (Rp)</option>
+                <option value="USD">USD ($)</option>
+                <option value="EUR">EUR (€)</option>
+                <option value="SGD">SGD (S$)</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block font-semibold text-[var(--text-secondary)] mb-1">Pajak (%)</label>
+                <input type="number" id="tax-input" value="11" min="0" max="100" class="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-3 py-2 text-xs text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-brand-light/35">
+              </div>
+              <div>
+                <label class="block font-semibold text-[var(--text-secondary)] mb-1">Diskon (%)</label>
+                <input type="number" id="discount-input" value="0" min="0" max="100" class="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-3 py-2 text-xs text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-brand-light/35">
+              </div>
+            </div>
+
+            <div>
+              <label class="block font-semibold text-[var(--text-secondary)] mb-1">Metode Pembayaran Default</label>
+              <input type="text" id="payment-method-input" value="Transfer Bank Mandiri - 123456789 a/n Bisnis Saya" class="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-3 py-2 text-xs text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-brand-light/35 placeholder-[var(--text-muted)]">
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel Eksport & Kompresi PDF -->
+        <div class="bg-[var(--bg-surface)] p-5 rounded-2xl border border-[var(--border)] shadow-sm space-y-4">
+          <div class="flex items-center gap-2.5 pb-3 border-b border-[var(--border)]">
+            <div class="w-8 h-8 rounded-lg bg-brand-light/10 text-brand-light flex items-center justify-center text-sm">
+              <i class="fa-solid fa-download"></i>
+            </div>
+            <h3 class="font-clash font-bold text-[var(--text-primary)] text-sm">Simpan & Kompres PDF</h3>
+          </div>
+          <p class="text-[11px] text-[var(--text-secondary)] leading-relaxed">
+            Pilih opsi kompresi dokumen agar berkas keluaran memiliki resolusi gambar yang efisien untuk langsung dibagikan.
+          </p>
+
+          <div class="space-y-3">
+            <label class="block text-xs font-semibold text-[var(--text-secondary)]">Profil Kompresi PDF</label>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <label class="border border-brand-light/20 bg-brand-light/5 p-2.5 rounded-xl cursor-pointer flex flex-col justify-between hover:border-brand-light/40 transition-all" id="label-quality-optimal">
+                <input type="radio" name="pdf-quality" value="optimal" checked class="sr-only">
+                <span class="font-bold text-[var(--text-primary)]">Super Kompres</span>
+                <span class="text-[9px] text-brand-emerald font-semibold mt-1">Ukuran Terkecil</span>
+              </label>
+              <label class="border border-[var(--border)] p-2.5 rounded-xl cursor-pointer flex flex-col justify-between hover:border-[var(--border)]/80 transition-all" id="label-quality-high">
+                <input type="radio" name="pdf-quality" value="high" class="sr-only">
+                <span class="font-bold text-[var(--text-primary)]">Resolusi Tinggi</span>
+                <span class="text-[9px] text-[var(--text-muted)] mt-1">Standar Cetak</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="pt-2 space-y-2 text-xs">
+            <button id="download-pdf-btn" class="w-full bg-brand-light hover:bg-opacity-90 text-white font-semibold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-md shadow-brand-light/10">
+              <i class="fa-solid fa-file-pdf"></i>
+              <span>Unduh PDF Ringan</span>
+            </button>
             
-            msgEl.textContent = message;
-            if (type === 'success') {
-                iconWrapper.className = 'p-1 rounded-lg bg-emerald-500 text-white';
-                iconWrapper.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i>`;
-            } else {
-                iconWrapper.className = 'p-1 rounded-lg bg-rose-500 text-white';
-                iconWrapper.innerHTML = `<i data-lucide="alert-triangle" class="w-4 h-4"></i>`;
+            <button id="print-btn" class="w-full bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] font-semibold py-2.5 px-4 rounded-xl hover:bg-[var(--border)] transition-all flex items-center justify-center gap-2">
+              <i class="fa-solid fa-print"></i>
+              <span>Cetak Langsung</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Area Preview & Lembar Invoice (Kanan) -->
+      <div class="lg:col-span-8">
+        <div id="invoice-container" class="bg-[var(--bg-surface)] p-6 sm:p-10 rounded-3xl border border-[var(--border)] shadow-xl relative text-[var(--text-primary)] transition-all">
+          
+          <!-- Watermark Live Edit Mode -->
+          <div class="absolute top-4 right-4 no-print text-[9px] font-bold tracking-wider uppercase text-brand-dark bg-brand-light/10 px-3 py-1 rounded-full border border-brand-light/15">
+            Preview Live Edit
+          </div>
+
+          <!-- Bagian 1: Header Invoice (Logo & Metadata) -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-8 border-b border-[var(--border)]">
+            <div class="space-y-4">
+              <!-- Preview Logo -->
+              <div class="relative group w-36 h-20 bg-[var(--bg-card)] rounded-xl border border-dashed border-[var(--border)] flex items-center justify-center overflow-hidden">
+                <img id="invoice-logo-preview" src="" alt="Logo Bisnis" class="object-contain w-full h-full p-2 hidden">
+                <div id="logo-placeholder" class="text-center p-2 text-[var(--text-muted)]">
+                  <p class="text-[11px] font-medium">Belum Ada Logo</p>
+                  <span class="no-print text-[9px] text-brand-dark underline cursor-pointer mt-1 block hover:opacity-80" onclick="document.getElementById('image-input').click()">Unggah & Kompres</span>
+                </div>
+                <button id="remove-logo-btn" class="no-print absolute top-1.5 right-1.5 bg-rose-500 text-white p-1 rounded-full hidden hover:bg-rose-600 transition shadow">
+                  <i class="fa-solid fa-xmark text-[10px]"></i>
+                </button>
+              </div>
+              
+              <!-- Identitas Bisnis Pengirim -->
+              <div>
+                <input type="text" id="sender-name" value="NAMA PERUSAHAAN ANDA" class="w-full text-base font-bold text-[var(--text-primary)] border-b border-transparent hover:border-[var(--border)] focus:border-brand-light focus:outline-none py-1 placeholder-[var(--text-muted)] uppercase tracking-wide bg-transparent">
+                <textarea id="sender-address" rows="3" class="w-full text-xs text-[var(--text-secondary)] border border-transparent hover:border-[var(--border)] focus:border-brand-light focus:outline-none py-1 px-1 mt-1 rounded resize-none placeholder-[var(--text-muted)] leading-relaxed bg-transparent" placeholder="Alamat pengirim, No. Telp, Email"></textarea>
+              </div>
+            </div>
+
+            <div class="text-left md:text-right space-y-4 flex flex-col justify-between">
+              <div>
+                <h2 class="text-3xl font-extrabold text-brand-light tracking-tight font-clash">INVOICE</h2>
+              </div>
+              
+              <div class="grid grid-cols-2 gap-2 text-xs md:text-right">
+                <div>
+                  <span class="text-[var(--text-muted)] font-semibold uppercase tracking-wider block text-[10px]">No. Invoice</span>
+                  <input type="text" id="invoice-number" value="INV/2026/001" class="font-bold text-[var(--text-primary)] md:text-right w-full border-b border-transparent hover:border-[var(--border)] focus:border-brand-light focus:outline-none bg-transparent">
+                </div>
+                <div>
+                  <span class="text-[var(--text-muted)] font-semibold uppercase tracking-wider block text-[10px]">Tanggal</span>
+                  <input type="date" id="invoice-date" class="font-semibold text-[var(--text-primary)] md:text-right w-full border-b border-transparent hover:border-[var(--border)] focus:border-brand-light focus:outline-none bg-transparent">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bagian 2: Info Penerima -->
+          <div class="py-8 grid grid-cols-1 md:grid-cols-2 gap-6 border-b border-[var(--border)] text-xs">
+            <div>
+              <span class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider block mb-2">Ditagih Kepada:</span>
+              <input type="text" id="client-name" value="Nama Klien Utama" class="w-full font-bold text-[var(--text-primary)] text-sm border-b border-transparent hover:border-[var(--border)] focus:border-brand-light focus:outline-none py-1 placeholder-[var(--text-muted)] bg-transparent">
+              <textarea id="client-address" rows="3" class="w-full text-xs text-[var(--text-secondary)] border border-transparent hover:border-[var(--border)] focus:border-brand-light focus:outline-none py-1 px-1 mt-1 rounded resize-none placeholder-[var(--text-muted)] leading-relaxed bg-transparent" placeholder="Alamat Lengkap Klien, Email, & Telepon"></textarea>
+            </div>
+            <div class="flex flex-col justify-end md:items-end">
+              <div class="w-full md:w-3/4">
+                <span class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider block mb-1 md:text-right">Tenggat Pembayaran:</span>
+                <input type="date" id="invoice-due-date" class="font-bold text-[var(--text-primary)] md:text-right w-full border-b border-transparent hover:border-[var(--border)] focus:border-brand-light focus:outline-none bg-transparent">
+              </div>
+            </div>
+          </div>
+
+          <!-- Bagian 3: Tabel Item -->
+          <div class="py-6 overflow-x-auto">
+            <table class="w-full min-w-[600px] text-left border-collapse">
+              <thead>
+                <tr class="border-b border-[var(--border)] text-[10px] font-bold uppercase text-[var(--text-muted)] tracking-wider">
+                  <th class="pb-3 w-7/12">Deskripsi Layanan / Barang</th>
+                  <th class="pb-3 w-1/12 text-center">Jumlah</th>
+                  <th class="pb-3 w-2/12 text-right">Harga Satuan</th>
+                  <th class="pb-3 w-2/12 text-right">Total</th>
+                  <th class="pb-3 w-12 no-print"></th>
+                </tr>
+              </thead>
+              <tbody id="invoice-items-body">
+                <!-- Baris dinamis di-populate lewat JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Tombol Tambah Baris -->
+          <div class="pb-6 border-b border-[var(--border)] no-print">
+            <button id="add-item-btn" class="flex items-center gap-1.5 text-xs font-bold text-brand-light hover:text-opacity-80 transition py-1 px-2.5 hover:bg-brand-light/10 rounded-lg">
+              <i class="fa-solid fa-plus"></i>
+              <span>Tambah Item Baru</span>
+            </button>
+          </div>
+
+          <!-- Bagian 4: Rincian Akhir & Catatan Pembayaran -->
+          <div class="pt-8 grid grid-cols-1 md:grid-cols-12 gap-8 text-xs">
+            <!-- Sisi Kiri: Rincian Pembayaran -->
+            <div class="md:col-span-7 space-y-4">
+              <div>
+                <span class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider block mb-1">Informasi Pembayaran</span>
+                <p id="payment-method-text" class="text-xs font-medium text-[var(--text-primary)] whitespace-pre-line bg-[var(--bg-card)] p-3 rounded-xl border border-[var(--border)]"></p>
+              </div>
+              <div>
+                <span class="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider block mb-1">Catatan Tambahan / Syarat Ketentuan</span>
+                <textarea id="invoice-notes" rows="2" class="w-full text-xs text-[var(--text-secondary)] border border-transparent hover:border-[var(--border)] focus:border-brand-light focus:outline-none py-1 px-1 rounded resize-none placeholder-[var(--text-muted)] bg-transparent" placeholder="Terima kasih atas kerja samanya. Pembayaran yang sah wajib menyertakan bukti transfer."></textarea>
+              </div>
+            </div>
+
+            <!-- Sisi Kanan: Subtotal & Total -->
+            <div class="md:col-span-5 space-y-2.5">
+              <div class="flex justify-between text-[var(--text-secondary)]">
+                <span>Subtotal</span>
+                <span id="summary-subtotal" class="font-semibold text-[var(--text-primary)]">-</span>
+              </div>
+              <div class="flex justify-between text-[var(--text-secondary)] items-center">
+                <span>Diskon (<span id="discount-percent-label">0</span>%)</span>
+                <span id="summary-discount" class="font-semibold text-rose-500">-</span>
+              </div>
+              <div class="flex justify-between text-[var(--text-secondary)] items-center">
+                <span>Pajak (<span id="tax-percent-label">0</span>%)</span>
+                <span id="summary-tax" class="font-semibold text-[var(--text-primary)]">-</span>
+              </div>
+              <div class="border-t border-[var(--border)] pt-3 flex justify-between items-center">
+                <span class="text-xs font-bold text-[var(--text-primary)]">Total Pembayaran</span>
+                <span id="summary-grand-total" class="text-base font-extrabold text-brand-light font-clash">-</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer Tanda Tangan -->
+          <div class="pt-16 grid grid-cols-2 gap-4 text-center text-xs">
+            <div></div>
+            <div class="space-y-12">
+              <div>
+                <span class="text-[var(--text-muted)]">Hormat Kami,</span>
+              </div>
+              <div class="relative inline-block w-48 border-b border-[var(--border)]">
+                <input type="text" id="signer-name" value="Manajer Keuangan" class="w-full text-center font-bold text-[var(--text-primary)] border-b border-transparent focus:outline-none focus:border-brand-light py-1 uppercase tracking-wider bg-transparent">
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Kaki Halaman (Footer Persis Homepage) -->
+  <footer class="w-full py-8 text-center text-xs text-[var(--text-muted)] border-t border-[var(--border)] mt-12 bg-[var(--bg-surface)] relative z-10 pb-24 md:pb-8 no-print">
+    <div class="max-w-6xl mx-auto px-4">
+      <p class="mb-2">Dibuat dengan <i class="fa-solid fa-heart text-red-500 animate-pulse"></i> oleh <a href="https://296.web.id" class="text-brand-dark hover:underline font-semibold" target="_blank">296GROUP</a></p>
+      <p class="text-[10px] tracking-wide uppercase font-bold text-slate-400">Powered by 296GROUP</p>
+    </div>
+  </footer>
+
+  <!-- ========================================================== -->
+  <!-- BAR NAVIGASI SELULER (Mobile Sticky Bottom Navbar) -->
+  <!-- ========================================================== -->
+  <div class="fixed bottom-0 left-0 right-0 z-50 bg-[var(--bg-surface)]/90 backdrop-blur-lg border-t border-[var(--border)] shadow-xl md:hidden block no-print">
+    <div class="flex justify-around items-center h-16">
+      <!-- Tombol Kiri: Kembali ke Daftar Tools -->
+      <button onclick="openToolsModal()" class="flex flex-col items-center justify-center text-[var(--text-secondary)] hover:text-brand-light transition-all flex-1 py-1">
+        <i class="fa-solid fa-compass text-lg mb-1"></i>
+        <span class="text-[10px] font-semibold">Semua Alat</span>
+      </button>
+
+      <!-- Tombol Tengah: Beranda Utama (Homepage) -->
+      <a href="homepage_296tools.html" class="flex flex-col items-center justify-center text-brand-light transition-all flex-1 py-1">
+        <div class="w-10 h-10 bg-brand-light text-white rounded-full flex items-center justify-center shadow-lg -mt-5 border-4 border-[var(--bg-surface)]">
+          <i class="fa-solid fa-house text-sm"></i>
+        </div>
+        <span class="text-[10px] font-semibold mt-1">Beranda</span>
+      </a>
+
+      <!-- Tombol Kanan: About Us Pop-up -->
+      <button onclick="openAboutModal()" class="flex flex-col items-center justify-center text-[var(--text-secondary)] hover:text-brand-light transition-all flex-1 py-1">
+        <i class="fa-solid fa-circle-info text-lg mb-1"></i>
+        <span class="text-[10px] font-semibold">About Us</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================== -->
+  <!-- POP-UP MODAL: ABOUT US (Persis Homepage) -->
+  <!-- ========================================================== -->
+  <div id="aboutModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-300 no-print">
+    <div class="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-2xl max-w-md w-full border border-[var(--border)] shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="aboutModalCard">
+      <div class="p-6 space-y-4">
+        <div class="flex justify-between items-center border-b border-[var(--border)] pb-3">
+          <h3 class="font-clash text-base font-bold text-brand-light flex items-center gap-2">
+            <i class="fa-solid fa-address-card"></i> Tentang 296Tools
+          </h3>
+          <button onclick="closeAboutModal()" class="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg hover:bg-[var(--bg-card)]">
+            <i class="fa-solid fa-xmark text-base"></i>
+          </button>
+        </div>
+        
+        <div class="space-y-3 text-xs leading-relaxed text-[var(--text-secondary)]">
+          <div class="w-16 h-16 bg-brand-light/10 rounded-2xl mx-auto flex items-center justify-center">
+            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" class="w-10 h-10 object-contain" alt="296 Studios Logo">
+          </div>
+          <p class="text-center font-bold text-xs text-[var(--text-primary)]">296GROUP - Solusi Digital Lokal</p>
+          <p>
+            <strong>296Tools</strong> adalah direktori & ekosistem micro-apps yang dikembangkan untuk membantu kegiatan digital harian Anda secara produktif. 
+          </p>
+          <p>
+            Seluruh data diproses secara <strong>100% lokal di dalam browser Anda (Client-Side)</strong>. Kami sama sekali tidak mengirim atau menyimpan berkas dokumen atau data sensitif Anda ke server luar. Keamanan privasi Anda terjamin penuh.
+          </p>
+          <div class="p-3 bg-[var(--bg-card)] rounded-xl border border-[var(--border)] text-[10px] text-[var(--text-muted)] text-center">
+            Misi kami adalah menyediakan alat bantu cepat, ringan, bersih tanpa pop-up iklan mengganggu.
+          </div>
+        </div>
+
+        <div class="pt-2 flex justify-end">
+          <button onclick="closeAboutModal()" class="px-5 py-2 text-xs font-semibold bg-brand-light text-white rounded-lg hover:bg-opacity-90 transition-all">
+            Mengerti, Terima Kasih
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+<div id="toolsMenuModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-300">
+    <div class="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-2xl max-w-2xl w-full border border-[var(--border)] shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="toolsMenuCard">
+      <div class="p-6 space-y-4">
+        <div class="flex justify-between items-center border-b border-[var(--border)] pb-3">
+          <h3 class="font-clash text-base font-bold text-brand-light flex items-center gap-2">
+            <i class="fa-solid fa-grid-2"></i> Macam-Macam Alat (Quick Access)
+          </h3>
+          <button onclick="closeToolsModal()" class="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg hover:bg-[var(--bg-card)]">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+
+        <!-- Wadah List Grid Dinamis Tools -->
+        <div class="max-h-[60vh] overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-3 pr-1" id="modalToolsList">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <div class="pt-2 flex justify-end">
+          <button onclick="closeToolsModal()" class="px-5 py-2 text-xs font-semibold bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-lg hover:bg-[var(--border)] transition-all">
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Hidden canvas for compression -->
+  <canvas id="canvas" class="hidden"></canvas>
+
+  <!-- ========================================================== -->
+  <!-- LOGIKA PEMROGRAMAN INVOICE MAKER -->
+  <!-- ========================================================== -->
+  <script>
+    // ==========================================================
+    // SISTEM TEMA: GELAP / TERANG (DARK & LIGHT MODE)
+    // ==========================================================
+    const themeToggleBtn = document.getElementById('themeToggle');
+    
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+
+// Array yang berisi data menu pintas semua tools
+    const ALL_TOOLS = [
+        { name: 'Converter File', desc: 'Pengkonversi berkas PDF, Word, Teks, & Gambar', icon: 'fa-solid fa-file', url: 'converter-file.html' },
+        { name: 'Fake Post X', desc: 'Pembuat screenshot postingan media sosial X secara instan', icon: 'fa-brands fa-x-twitter', url: 'fake-post-x.html' },
+        { name: 'Favicon Maker', desc: 'Pembuat & kompresor Favicon modern terlengkap (.ico & .png)', icon: 'fa-solid fa-file-image', url: 'favicon-maker.html' },
+        { name: 'Generator QR Code', desc: 'Pembuat QR Code premium dengan warna & logo kustom', icon: 'fa-solid fa-qrcode', url: 'generator-qr-code.html' },
+        { name: 'Google Dorking Tools', desc: 'Advanced Google Dork & OSINT Intelligence Generator', icon: 'fa-brands fa-google', url: 'google-dorking.html' },
+        { name: 'Image Compressor', desc: 'Pengkompres ukuran dimensi & kapasitas kilobyte gambar', icon: 'fa-regular fa-images', url: 'image-compresor.html' },
+        { name: 'Invoice Maker', desc: 'Pembuat berkas tagihan (Invoice) praktis terkompresi PDF', icon: 'fa-solid fa-file-invoice', url: 'invoice-maker.html' },
+        { name: 'Prompt Generator', desc: 'Pembuat format prompt siap pakai untuk optimasi ChatGPT/Claude', icon: 'fa-regular fa-keyboard', url: 'prompt-generator.html' },
+        { name: 'Scraping Link FB Reels', desc: 'Ekstraktor tautan (URL) reel profil publik dari Facebook', icon: 'fa-brands fa-facebook', url: 'scraping-fb-reels.html' },
+        { name: 'Smart HPP', desc: 'Kalkulator HPP & Harga Jual Anti Boncos bagi pemilik bisnis', icon: 'fa-solid fa-calculator', url: 'smart-hpp.html' },
+        { name: 'URL Shortener', desc: 'Pangkas URL panjang menjadi ringkas dan mudah dibagikan', icon: 'fa-solid fa-link', url: 'url-shortener.html' },
+        { name: 'WA Link Generator', desc: 'Pembuat link pesan instan WhatsApp otomatis', icon: 'fa-brands fa-whatsapp', url: 'wa-link-generator.html' },
+    ];
+	
+	
+    // ==========================================================
+    // DEKLARASI ELEMEN DOM & STATE
+    // ==========================================================
+    let currencySymbol = 'Rp';
+    let currencyFormat = 'IDR';
+    let compressedLogoBase64 = '';
+
+    const dropzone = document.getElementById('dropzone');
+    const imageInput = document.getElementById('image-input');
+    const compResult = document.getElementById('compression-result');
+    const origSizeEl = document.getElementById('orig-size');
+    const compSizeEl = document.getElementById('comp-size');
+    const savingsBar = document.getElementById('savings-bar');
+    const savingsPerc = document.getElementById('savings-percentage');
+    const applyLogoBtn = document.getElementById('apply-logo-btn');
+    const logoPreview = document.getElementById('invoice-logo-preview');
+    const logoPlaceholder = document.getElementById('logo-placeholder');
+    const removeLogoBtn = document.getElementById('remove-logo-btn');
+
+    const currencySelect = document.getElementById('currency-select');
+    const taxInput = document.getElementById('tax-input');
+    const discountInput = document.getElementById('discount-input');
+    const paymentMethodInput = document.getElementById('payment-method-input');
+    const paymentMethodText = document.getElementById('payment-method-text');
+
+    const subtotalEl = document.getElementById('summary-subtotal');
+    const discountEl = document.getElementById('summary-discount');
+    const discountPercentLabel = document.getElementById('discount-percent-label');
+    const taxEl = document.getElementById('summary-tax');
+    const taxPercentLabel = document.getElementById('tax-percent-label');
+    const grandTotalEl = document.getElementById('summary-grand-total');
+
+    const itemsBody = document.getElementById('invoice-items-body');
+    const addItemBtn = document.getElementById('add-item-btn');
+    const downloadPdfBtn = document.getElementById('download-pdf-btn');
+    const printBtn = document.getElementById('print-btn');
+
+    // Inisialisasi Tanggal
+    const today = new Date();
+    document.getElementById('invoice-date').value = today.toISOString().split('T')[0];
+    const dueDate = new Date();
+    dueDate.setDate(today.getDate() + 30);
+    document.getElementById('invoice-due-date').value = dueDate.toISOString().split('T')[0];
+
+    // Daftar Default Item
+    const defaultItems = [
+      { desc: 'Desain Layout Landing Page & Branding Identitas', qty: 1, price: 3500000 },
+      { desc: 'Pengembangan Frontend React & Penyetelan Tailwind CSS', qty: 1, price: 5000000 },
+      { desc: 'Layanan Pemeliharaan Server Bulanan (Desember)', qty: 2, price: 750000 }
+    ];
+
+    // Toast Notification (Gaya Premium 296Tools)
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `transform translate-y-2 opacity-0 transition-all duration-300 ease-out flex items-center p-4 min-w-[280px] max-w-sm rounded-2xl shadow-xl border text-xs font-semibold ${
+        type === 'success' 
+          ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500 dark:text-emerald-400 backdrop-blur-md' 
+          : type === 'error' 
+            ? 'bg-red-500/10 border-red-500/20 text-red-500 dark:text-red-400 backdrop-blur-md' 
+            : 'bg-[var(--bg-surface)] border-[var(--border)] text-[var(--text-primary)] backdrop-blur-md'
+      }`;
+      
+      const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+      toast.innerHTML = `<span class="mr-3 text-sm">${icon}</span><span class="flex-grow">${message}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+      setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Formatter Mata Uang
+    function formatCurrency(amount) {
+      if (currencyFormat === 'IDR') {
+        return 'Rp ' + amount.toLocaleString('id-ID');
+      } else if (currencyFormat === 'USD') {
+        return '$' + amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      } else if (currencyFormat === 'EUR') {
+        return '€' + amount.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      } else if (currencyFormat === 'SGD') {
+        return 'S$' + amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+      return amount.toLocaleString();
+    }
+
+    function formatBytes(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Kompresi Logo Gambar (Lokal di Canvas)
+    function compressImage(file, maxWidth = 300, quality = 0.6) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function (event) {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = function () {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+
+            if (width > maxWidth) {
+              height = (maxWidth / width) * height;
+              width = maxWidth;
             }
-            lucide.createIcons();
 
-            toast.classList.remove('translate-y-24', 'opacity-0');
-            toast.classList.add('translate-y-0', 'opacity-100');
+            canvas.width = width;
+            canvas.height = height;
 
-            setTimeout(() => {
-                toast.classList.remove('translate-y-0', 'opacity-100');
-                toast.classList.add('translate-y-24', 'opacity-0');
-            }, 3500);
-        }
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
 
-        // Format Angka ke Format Mata Uang Terpilih
-        function formatCurrency(amount) {
-            if (currencyFormat === 'IDR') {
-                return 'Rp ' + amount.toLocaleString('id-ID');
-            } else if (currencyFormat === 'USD') {
-                return '$' + amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            } else if (currencyFormat === 'EUR') {
-                return '€' + amount.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            } else if (currencyFormat === 'SGD') {
-                return 'S$' + amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            }
-            return amount.toLocaleString();
-        }
-
-        // Format ukuran file ke representasi ramah manusia
-        function formatBytes(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-
-        // Fungsi Kompresi Gambar Menggunakan Kanvas (Client-side)
-        function compressImage(file, maxWidth = 300, quality = 0.6) {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = function (event) {
-                    const img = new Image();
-                    img.src = event.target.result;
-                    img.onload = function () {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-
-                        // Sesuaikan proporsi ukuran gambar
-                        if (width > maxWidth) {
-                            height = (maxWidth / width) * height;
-                            width = maxWidth;
-                        }
-
-                        canvas.width = width;
-                        canvas.height = height;
-
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        // Gunakan JPEG/WebP untuk rasio kompresi terbaik
-                        const mimeType = 'image/jpeg';
-                        const dataUrl = canvas.toDataURL(mimeType, quality);
-                        
-                        // Kalkulasi perkiraan ukuran file hasil kompresi
-                        const head = 'data:image/jpeg;base64,';
-                        const fileSizeBytes = Math.round((dataUrl.length - head.length) * 3/4);
-
-                        resolve({
-                            dataUrl,
-                            size: fileSizeBytes
-                        });
-                    };
-                };
-            });
-        }
-
-        // Proses File Logo yang Masuk
-        async function handleLogoUpload(file) {
-            if (!file.type.startsWith('image/')) {
-                showToast('Hanya berkas gambar yang didukung.', 'error');
-                return;
-            }
-
-            const originalSize = file.size;
-            origSizeEl.textContent = formatBytes(originalSize);
-
-            // Jalankan Proses Kompresi Pintar (Ukuran target lebar 240px dengan kualitas seimbang)
-            const result = await compressImage(file, 240, 0.7);
+            const mimeType = 'image/jpeg';
+            const dataUrl = canvas.toDataURL(mimeType, quality);
             
-            compressedLogoBase64 = result.dataUrl;
-            compSizeEl.textContent = formatBytes(result.size);
+            const head = 'data:image/jpeg;base64,';
+            const fileSizeBytes = Math.round((dataUrl.length - head.length) * 3/4);
 
-            // Hitung Rasio Hemat Ukuran
-            const savings = ((originalSize - result.size) / originalSize) * 100;
-            const finalSavings = savings > 0 ? savings.toFixed(0) : 0;
-            
-            savingsBar.style.width = `${finalSavings}%`;
-            savingsPerc.textContent = `Hemat ${finalSavings}%`;
-
-            // Tampilkan panel hasil
-            compResult.classList.remove('hidden');
-            showToast('Logo berhasil dikompresi!', 'success');
-        }
-
-        // Terapkan Logo yang Dikompres ke Invoice Preview
-        function applyLogoToInvoice() {
-            if (!compressedLogoBase64) return;
-            logoPreview.src = compressedLogoBase64;
-            logoPreview.classList.remove('hidden');
-            logoPlaceholder.classList.add('hidden');
-            removeLogoBtn.classList.remove('hidden');
-            showToast('Logo terpasang di template invoice.', 'success');
-        }
-
-        // Hapus Logo dari Invoice
-        function removeLogo() {
-            compressedLogoBase64 = '';
-            logoPreview.src = '';
-            logoPreview.classList.add('hidden');
-            logoPlaceholder.classList.remove('hidden');
-            removeLogoBtn.classList.add('hidden');
-            compResult.classList.add('hidden');
-            showToast('Logo berhasil dihapus.', 'success');
-        }
-
-        // Render Baris Barang Baru
-        function createItemRow(desc = '', qty = 1, price = 0) {
-            const tr = document.createElement('tr');
-            tr.className = 'border-b border-slate-100 group';
-            tr.innerHTML = `
-                <td class="py-4 pr-3">
-                    <input type="text" class="item-desc w-full bg-transparent border-b border-transparent hover:border-slate-200 focus:border-indigo-500 focus:outline-none text-sm font-semibold text-slate-800 placeholder-slate-400 py-0.5" value="${desc}" placeholder="Nama Barang atau Jenis Jasa">
-                </td>
-                <td class="py-4 px-2">
-                    <input type="number" class="item-qty w-full bg-transparent border-b border-transparent hover:border-slate-200 focus:border-indigo-500 focus:outline-none text-sm text-center font-medium text-slate-700 py-0.5" value="${qty}" min="1">
-                </td>
-                <td class="py-4 px-2">
-                    <input type="number" class="item-price w-full bg-transparent border-b border-transparent hover:border-slate-200 focus:border-indigo-500 focus:outline-none text-sm text-right font-medium text-slate-700 py-0.5" value="${price}" min="0">
-                </td>
-                <td class="py-4 pl-3 text-right text-sm font-bold text-slate-800 item-total">
-                    ${formatCurrency(qty * price)}
-                </td>
-                <td class="py-4 text-center no-print w-12">
-                    <button class="delete-item-btn opacity-0 group-hover:opacity-100 text-rose-500 hover:text-rose-700 transition p-1.5 rounded-lg hover:bg-rose-50">
-                        <i data-lucide="trash-2" class="w-4 h-4"></i>
-                    </button>
-                </td>
-            `;
-
-            // Pasang event listener otomatis saat element dibuat
-            const inputDesc = tr.querySelector('.item-desc');
-            const inputQty = tr.querySelector('.item-qty');
-            const inputPrice = tr.querySelector('.item-price');
-            const deleteBtn = tr.querySelector('.delete-item-btn');
-
-            const calculateRowTotal = () => {
-                const q = parseFloat(inputQty.value) || 0;
-                const p = parseFloat(inputPrice.value) || 0;
-                tr.querySelector('.item-total').textContent = formatCurrency(q * p);
-                calculateInvoiceSummary();
-            };
-
-            inputQty.addEventListener('input', calculateRowTotal);
-            inputPrice.addEventListener('input', calculateRowTotal);
-            inputDesc.addEventListener('input', calculateInvoiceSummary);
-
-            deleteBtn.addEventListener('click', () => {
-                tr.remove();
-                calculateInvoiceSummary();
-                showToast('Item berhasil dihapus', 'success');
+            resolve({
+              dataUrl,
+              size: fileSizeBytes
             });
+          };
+        };
+      });
+    }
 
-            itemsBody.appendChild(tr);
-            lucide.createIcons();
+    async function handleLogoUpload(file) {
+      if (!file.type.startsWith('image/')) {
+        showToast('Format tidak didukung! Masukkan berkas gambar.', 'error');
+        return;
+      }
+
+      const originalSize = file.size;
+      origSizeEl.textContent = formatBytes(originalSize);
+
+      const result = await compressImage(file, 240, 0.7);
+      
+      compressedLogoBase64 = result.dataUrl;
+      compSizeEl.textContent = formatBytes(result.size);
+
+      const savings = ((originalSize - result.size) / originalSize) * 100;
+      const finalSavings = savings > 0 ? savings.toFixed(0) : 0;
+      
+      savingsBar.style.width = `${finalSavings}%`;
+      savingsPerc.textContent = `Hemat ${finalSavings}%`;
+
+      compResult.classList.remove('hidden');
+      showToast('Logo berhasil terkompresi!', 'success');
+    }
+
+    function applyLogoToInvoice() {
+      if (!compressedLogoBase64) return;
+      logoPreview.src = compressedLogoBase64;
+      logoPreview.classList.remove('hidden');
+      logoPlaceholder.classList.add('hidden');
+      removeLogoBtn.classList.remove('hidden');
+      showToast('Logo terpasang pada template.', 'success');
+    }
+
+    function removeLogo() {
+      compressedLogoBase64 = '';
+      logoPreview.src = '';
+      logoPreview.classList.add('hidden');
+      logoPlaceholder.classList.remove('hidden');
+      removeLogoBtn.classList.add('hidden');
+      compResult.classList.add('hidden');
+      showToast('Logo dihapus.', 'success');
+    }
+
+    // Menambah Baris Baru pada Tabel
+    function createItemRow(desc = '', qty = 1, price = 0) {
+      const tr = document.createElement('tr');
+      tr.className = 'border-b border-[var(--border)] group text-xs text-[var(--text-primary)]';
+      tr.innerHTML = `
+        <td class="py-4 pr-3">
+          <input type="text" class="item-desc w-full bg-transparent border-b border-transparent hover:border-[var(--border)] focus:border-brand-light focus:outline-none text-xs font-semibold py-0.5 placeholder-[var(--text-muted)] text-[var(--text-primary)]" value="${desc}" placeholder="Nama Barang atau Jenis Jasa">
+        </td>
+        <td class="py-4 px-2">
+          <input type="number" class="item-qty w-full bg-transparent border-b border-transparent hover:border-[var(--border)] focus:border-brand-light focus:outline-none text-xs text-center font-medium py-0.5 text-[var(--text-primary)]" value="${qty}" min="1">
+        </td>
+        <td class="py-4 px-2">
+          <input type="number" class="item-price w-full bg-transparent border-b border-transparent hover:border-[var(--border)] focus:border-brand-light focus:outline-none text-xs text-right font-medium py-0.5 text-[var(--text-primary)]" value="${price}" min="0">
+        </td>
+        <td class="py-4 pl-3 text-right text-xs font-bold item-total">
+          ${formatCurrency(qty * price)}
+        </td>
+        <td class="py-4 text-center no-print w-12">
+          <button class="delete-item-btn opacity-0 group-hover:opacity-100 text-rose-500 hover:text-rose-700 transition-all p-1.5 rounded-lg hover:bg-rose-500/10">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </td>
+      `;
+
+      const inputDesc = tr.querySelector('.item-desc');
+      const inputQty = tr.querySelector('.item-qty');
+      const inputPrice = tr.querySelector('.item-price');
+      const deleteBtn = tr.querySelector('.delete-item-btn');
+
+      const calculateRowTotal = () => {
+        const q = parseFloat(inputQty.value) || 0;
+        const p = parseFloat(inputPrice.value) || 0;
+        tr.querySelector('.item-total').textContent = formatCurrency(q * p);
+        calculateInvoiceSummary();
+      };
+
+      inputQty.addEventListener('input', calculateRowTotal);
+      inputPrice.addEventListener('input', calculateRowTotal);
+      inputDesc.addEventListener('input', calculateInvoiceSummary);
+
+      deleteBtn.addEventListener('click', () => {
+        tr.remove();
+        calculateInvoiceSummary();
+        showToast('Item dihapus.', 'success');
+      });
+
+      itemsBody.appendChild(tr);
+    }
+
+    // Kalkulasi Rangkuman Biaya Lembar Invoice
+    function calculateInvoiceSummary() {
+      let subtotal = 0;
+      const rows = itemsBody.querySelectorAll('tr');
+      
+      rows.forEach(row => {
+        const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
+        const price = parseFloat(row.querySelector('.item-price').value) || 0;
+        subtotal += qty * price;
+      });
+
+      const taxPercent = parseFloat(taxInput.value) || 0;
+      const discountPercent = parseFloat(discountInput.value) || 0;
+
+      const discountAmount = subtotal * (discountPercent / 100);
+      const taxableAmount = subtotal - discountAmount;
+      const taxAmount = taxableAmount * (taxPercent / 100);
+      const grandTotal = taxableAmount + taxAmount;
+
+      subtotalEl.textContent = formatCurrency(subtotal);
+      
+      discountPercentLabel.textContent = discountPercent;
+      discountEl.textContent = `- ${formatCurrency(discountAmount)}`;
+      
+      taxPercentLabel.textContent = taxPercent;
+      taxEl.textContent = formatCurrency(taxAmount);
+      
+      grandTotalEl.textContent = formatCurrency(grandTotal);
+    }
+
+    function syncPaymentMethod() {
+      paymentMethodText.textContent = paymentMethodInput.value || 'Metode pembayaran belum ditentukan.';
+    }
+
+    // Fungsi Export PDF via html2pdf
+    function exportInvoicePDF() {
+      const element = document.getElementById('invoice-container');
+      const invoiceNo = document.getElementById('invoice-number').value.replace(/[^a-zA-Z0-9]/g, '_');
+      const qualityMode = document.querySelector('input[name="pdf-quality"]:checked').value;
+
+      let scaleValue = 2; // Default Standard
+      if (qualityMode === 'optimal') {
+        scaleValue = 1.3; // Optimasi resolusi render agar kompresi berkas maksimal
+      }
+
+      const opt = {
+        margin:       [10, 10, 10, 10],
+        filename:     `Invoice_${invoiceNo}.pdf`,
+        image:        { type: 'jpeg', quality: 0.8 },
+        html2canvas:  { 
+          scale: scaleValue, 
+          useCORS: true,
+          letterRendering: true
+        },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      showToast('Sedang membuat & mengompresi PDF...', 'info');
+
+      html2pdf().set(opt).from(element).save().then(() => {
+        showToast('PDF berhasil diunduh!', 'success');
+      }).catch(err => {
+        showToast('Gagal memproses dokumen.', 'error');
+        console.error(err);
+      });
+    }
+
+    // ==========================================================
+    // REGISTER EVENT LISTENERS
+    // ==========================================================
+    dropzone.addEventListener('click', () => imageInput.click());
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('border-brand-light', 'bg-brand-light/5');
+    });
+    dropzone.addEventListener('dragleave', () => {
+      dropzone.classList.remove('border-brand-light', 'bg-brand-light/5');
+    });
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('border-brand-light', 'bg-brand-light/5');
+      if (e.dataTransfer.files.length > 0) {
+        handleLogoUpload(e.dataTransfer.files[0]);
+      }
+    });
+    imageInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        handleLogoUpload(e.target.files[0]);
+      }
+    });
+
+    applyLogoBtn.addEventListener('click', applyLogoToInvoice);
+    removeLogoBtn.addEventListener('click', removeLogo);
+
+    currencySelect.addEventListener('change', (e) => {
+      currencyFormat = e.target.value;
+      calculateInvoiceSummary();
+    });
+    taxInput.addEventListener('input', calculateInvoiceSummary);
+    discountInput.addEventListener('input', calculateInvoiceSummary);
+    paymentMethodInput.addEventListener('input', syncPaymentMethod);
+
+    addItemBtn.addEventListener('click', () => {
+      createItemRow('', 1, 0);
+    });
+
+    downloadPdfBtn.addEventListener('click', exportInvoicePDF);
+    printBtn.addEventListener('click', () => {
+      window.print();
+    });
+
+    // Handle Radio Buttons Styling
+    const qualityOptimalLabel = document.getElementById('label-quality-optimal');
+    const qualityHighLabel = document.getElementById('label-quality-high');
+    const qualityRadios = document.querySelectorAll('input[name="pdf-quality"]');
+
+    qualityRadios.forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        if (e.target.value === 'optimal') {
+          qualityOptimalLabel.className = 'border border-brand-light/20 bg-brand-light/5 p-2.5 rounded-xl cursor-pointer flex flex-col justify-between hover:border-brand-light/40 transition-all';
+          qualityHighLabel.className = 'border border-[var(--border)] p-2.5 rounded-xl cursor-pointer flex flex-col justify-between hover:border-[var(--border)]/80 transition-all';
+        } else {
+          qualityHighLabel.className = 'border border-brand-light/20 bg-brand-light/5 p-2.5 rounded-xl cursor-pointer flex flex-col justify-between hover:border-brand-light/40 transition-all';
+          qualityOptimalLabel.className = 'border border-[var(--border)] p-2.5 rounded-xl cursor-pointer flex flex-col justify-between hover:border-[var(--border)]/80 transition-all';
         }
+      });
+    });
 
-        // Kalkulasi Rincian Biaya Akhir Invoice
-        function calculateInvoiceSummary() {
-            let subtotal = 0;
-            const rows = itemsBody.querySelectorAll('tr');
-            
-            rows.forEach(row => {
-                const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
-                const price = parseFloat(row.querySelector('.item-price').value) || 0;
-                subtotal += qty * price;
-            });
+    // Inisialisasi on Load
+    window.addEventListener('DOMContentLoaded', () => {
+      defaultItems.forEach(item => {
+        createItemRow(item.desc, item.qty, item.price);
+      });
+      syncPaymentMethod();
+      calculateInvoiceSummary();
+    });
 
-            // Baca diskon & pajak
-            const taxPercent = parseFloat(taxInput.value) || 0;
-            const discountPercent = parseFloat(discountInput.value) || 0;
+    // ==========================================================
+    // FUNGSI MODAL ABOUT US
+    // ==========================================================
+    const aboutModal = document.getElementById('aboutModal');
+    const aboutModalCard = document.getElementById('aboutModalCard');
 
-            const discountAmount = subtotal * (discountPercent / 100);
-            const taxableAmount = subtotal - discountAmount;
-            const taxAmount = taxableAmount * (taxPercent / 100);
-            const grandTotal = taxableAmount + taxAmount;
+    function openAboutModal() {
+      aboutModal.classList.remove('hidden');
+      setTimeout(() => {
+        aboutModal.classList.add('opacity-100');
+        aboutModalCard.classList.remove('scale-95');
+        aboutModalCard.classList.add('scale-100');
+      }, 50);
+    }
 
-            // Render Output
-            subtotalEl.textContent = formatCurrency(subtotal);
-            
-            discountPercentLabel.textContent = discountPercent;
-            discountEl.textContent = `- ${formatCurrency(discountAmount)}`;
-            
-            taxPercentLabel.textContent = taxPercent;
-            taxEl.textContent = formatCurrency(taxAmount);
-            
-            grandTotalEl.textContent = formatCurrency(grandTotal);
-        }
+    function closeAboutModal() {
+      aboutModal.classList.remove('opacity-100');
+      aboutModalCard.classList.remove('scale-100');
+      aboutModalCard.classList.add('scale-95');
+      setTimeout(() => {
+        aboutModal.classList.add('hidden');
+      }, 300);
+    }
 
-        // Sinkronisasi Metode Pembayaran dari Setelan
-        function syncPaymentMethod() {
-            paymentMethodText.textContent = paymentMethodInput.value || 'Metode pembayaran belum ditentukan.';
-        }
+    window.addEventListener('click', (e) => {
+      if (e.target === aboutModal) closeAboutModal();
+    });
+	
+	const toolsMenuModal = document.getElementById('toolsMenuModal');
+    const toolsMenuCard = document.getElementById('toolsMenuCard');
+    const modalToolsList = document.getElementById('modalToolsList');
 
-        // Ekspor Dokumen ke PDF Ringan atau Resolusi Tinggi
-        function exportInvoicePDF() {
-            const element = document.getElementById('invoice-container');
-            const invoiceNo = document.getElementById('invoice-number').value.replace(/[^a-zA-Z0-9]/g, '_');
-            const qualityMode = document.querySelector('input[name="pdf-quality"]:checked').value;
+    // Buka Modal Daftar Macam-Macam Tools
+    function openToolsModal() {
+        // Melakukan render menu secara dinamis menggunakan Javascript
+        modalToolsList.innerHTML = ALL_TOOLS.map(t => `
+            <a href="${t.url}" class="flex items-center gap-3 p-3 rounded-xl border border-[var(--border)] hover:bg-[var(--bg-card)] transition-all">
+                <div class="w-8 h-8 rounded-lg bg-brand-light/10 text-brand-light flex items-center justify-center text-sm">
+                    <i class="${t.icon}"></i>
+                </div>
+                <div class="flex-grow">
+                    <h4 class="text-xs font-bold text-[var(--text-primary)]">${t.name}</h4>
+                    <p class="text-[10px] text-[var(--text-muted)] truncate max-w-[200px] sm:max-w-md">${t.desc}</p>
+                </div>
+            </a>
+        `).join('');
 
-            // Pengaturan resolusi dinamis untuk mereduksi ukuran output file PDF
-            let scaleValue = 2; // Default High Quality
-            if (qualityMode === 'optimal') {
-                scaleValue = 1.3; // Terbukti menghemat ukuran file hingga 50%-70% lebih kecil namun teks tetap tajam
-            }
+        toolsMenuModal.classList.remove('hidden');
+        setTimeout(() => {
+            toolsMenuModal.classList.add('opacity-100');
+            toolsMenuCard.classList.remove('scale-95');
+            toolsMenuCard.classList.add('scale-100');
+        }, 50);
+    }
 
-            const opt = {
-                margin:       [10, 10, 10, 10],
-                filename:     `Invoice_${invoiceNo}.pdf`,
-                image:        { type: 'jpeg', quality: 0.8 },
-                html2canvas:  { 
-                    scale: scaleValue, 
-                    useCORS: true,
-                    letterRendering: true
-                },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
+    // Tutup Modal Daftar Macam-Macam Tools
+    function closeToolsModal() {
+        toolsMenuModal.classList.remove('opacity-100');
+        toolsMenuCard.classList.remove('scale-100');
+        toolsMenuCard.classList.add('scale-95');
+        setTimeout(() => {
+            toolsMenuModal.classList.add('hidden');
+        }, 300);
+    }
 
-            showToast('Sedang memproses & mengompres dokumen PDF...', 'success');
-
-            // Jalankan modul html2pdf
-            html2pdf().set(opt).from(element).save().then(() => {
-                showToast('PDF Berhasil Diunduh!', 'success');
-            }).catch(err => {
-                showToast('Gagal membuat PDF. Coba lagi.', 'error');
-                console.error(err);
-            });
-        }
-
-        // Event Listeners Utama
-        // Dropzone & Kompresi Logo
-        dropzone.addEventListener('click', () => imageInput.click());
-        dropzone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropzone.classList.add('border-indigo-500', 'bg-indigo-50/20');
-        });
-        dropzone.addEventListener('dragleave', () => {
-            dropzone.classList.remove('border-indigo-500', 'bg-indigo-50/20');
-        });
-        dropzone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            dropzone.classList.remove('border-indigo-500', 'bg-indigo-50/20');
-            if (e.dataTransfer.files.length > 0) {
-                handleLogoUpload(e.dataTransfer.files[0]);
-            }
-        });
-        imageInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleLogoUpload(e.target.files[0]);
-            }
-        });
-
-        applyLogoBtn.addEventListener('click', applyLogoToInvoice);
-        removeLogoBtn.addEventListener('click', removeLogo);
-
-        // Input Setelan & Mata Uang
-        currencySelect.addEventListener('change', (e) => {
-            currencyFormat = e.target.value;
-            calculateInvoiceSummary();
-        });
-        taxInput.addEventListener('input', calculateInvoiceSummary);
-        discountInput.addEventListener('input', calculateInvoiceSummary);
-        paymentMethodInput.addEventListener('input', syncPaymentMethod);
-
-        // Tambah baris item baru secara interaktif
-        addItemBtn.addEventListener('click', () => {
-            createItemRow('', 1, 0);
-        });
-
-        // Trigger Cetak & Download PDF
-        downloadPdfBtn.addEventListener('click', exportInvoicePDF);
-        printBtn.addEventListener('click', () => {
-            window.print();
-        });
-
-        // Setup Profil UI Interaktif untuk Tombol Radio Kualitas PDF
-        const qualityOptimalLabel = document.getElementById('label-quality-optimal');
-        const qualityHighLabel = document.getElementById('label-quality-high');
-        const qualityRadios = document.querySelectorAll('input[name="pdf-quality"]');
-
-        qualityRadios.forEach(radio => {
-            radio.addEventListener('change', (e) => {
-                if (e.target.value === 'optimal') {
-                    qualityOptimalLabel.className = 'border border-indigo-100 bg-indigo-50/40 p-2.5 rounded-xl cursor-pointer flex flex-col justify-between hover:border-indigo-300 transition';
-                    qualityHighLabel.className = 'border border-slate-200 p-2.5 rounded-xl cursor-pointer flex flex-col justify-between hover:border-slate-300 transition';
-                } else {
-                    qualityHighLabel.className = 'border border-indigo-100 bg-indigo-50/40 p-2.5 rounded-xl cursor-pointer flex flex-col justify-between hover:border-indigo-300 transition';
-                    qualityOptimalLabel.className = 'border border-slate-200 p-2.5 rounded-xl cursor-pointer flex flex-col justify-between hover:border-slate-300 transition';
-                }
-            });
-        });
-
-        // Inisialisasi Data Awal saat Load Selesai
-        window.addEventListener('DOMContentLoaded', () => {
-            // Render item default bawaan
-            defaultItems.forEach(item => {
-                createItemRow(item.desc, item.qty, item.price);
-            });
-            syncPaymentMethod();
-            calculateInvoiceSummary();
-        });
-    </script>
+    // Listener klik area luar modal untuk menutup
+    window.addEventListener('click', (e) => {
+      if (e.target === aboutModal) closeAboutModal();
+      if (e.target === toolsMenuModal) closeToolsModal();
+    });
+    
+  </script>
 </body>
 </html>
