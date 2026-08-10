@@ -1,0 +1,49 @@
+<header class="sticky top-0 z-40 w-full h-full bg-[var(--bg)]/80 backdrop-blur-md border-b border-[var(--border)]">
+  <div class="h-full px-3 md:px-4 flex items-center gap-3">
+
+    <!-- Toggle sidebar (desktop) -->
+    <button id="btn-sidebar-toggle" class="hidden lg:flex w-9 h-9 items-center justify-center rounded-lg bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] transition-all flex-shrink-0" title="Ciutkan/Perluas Menu">
+      <i class="fa-solid fa-bars text-sm"></i>
+    </button>
+
+    <!-- Toggle drawer (mobile) -->
+    <button id="btn-mobile-menu-open" class="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] transition-all flex-shrink-0" title="Buka Menu">
+      <i class="fa-solid fa-bars text-sm"></i>
+    </button>
+
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-2.5 flex-shrink-0">
+      <div class="w-8 h-8 md:w-9 md:h-9 bg-gradient-to-tr from-brand-light to-brand-accent rounded-lg flex items-center justify-center shadow-lg">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" class="w-5 h-5 md:w-6 md:h-6 object-contain" alt="Logo 296">
+      </div>
+      <span class="hidden sm:inline font-clash text-base md:text-lg font-bold tracking-tight">296<span class="text-brand-dark">Tools</span></span>
+    </a>
+
+    <!-- Search (desktop) -->
+    <div class="relative flex-1 max-w-md mx-2 hidden md:block">
+      <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)] text-xs pointer-events-none"></i>
+      <input type="text" id="global-search-input" placeholder="Cari tool… (tekan /)" autocomplete="off"
+        class="w-full h-10 pl-9 pr-9 rounded-xl bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] focus:border-brand-light focus:ring-4 focus:ring-brand-light/10 outline-none transition-all text-xs" />
+      <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] text-[var(--text-muted)] border border-[var(--border)] rounded px-1 py-0.5 bg-[var(--bg-surface)]">/</span>
+      <div id="global-search-results" class="search-results-panel"></div>
+    </div>
+
+    <div class="flex-1 md:flex-none"></div>
+
+    <!-- Kanan: jumlah tool + theme toggle -->
+    <div class="flex items-center gap-2 flex-shrink-0">
+      <span class="hidden md:inline-block text-[11px] font-semibold text-[var(--text-secondary)] bg-[var(--bg-card)] px-3 py-1.5 rounded-full border border-[var(--border)]" id="header-tool-count">
+        …
+      </span>
+      <button id="theme-toggle" class="w-9 h-9 flex items-center justify-center rounded-lg bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] transition-all" title="Ubah Tema">
+        <i class="fa-solid fa-moon dark:hidden text-sm"></i>
+        <i class="fa-solid fa-sun hidden dark:block text-sm text-yellow-400"></i>
+      </button>
+    </div>
+
+    <!-- Search (mobile, ikon saja → buka drawer + fokus search) -->
+    <button id="btn-mobile-search" class="md:hidden w-9 h-9 flex items-center justify-center rounded-lg bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] transition-all flex-shrink-0" title="Cari">
+      <i class="fa-solid fa-magnifying-glass text-sm"></i>
+    </button>
+  </div>
+</header>

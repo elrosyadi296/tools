@@ -1,125 +1,37 @@
 <!DOCTYPE html>
 <html lang="id" class="transition-colors duration-300">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>296Tools - Google Search Operator Tool</title>
-  
-  <!-- Font Family Premium -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  
-  <!-- Tailwind CSS Setup -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: {
-              light: '#6c63ff',
-              dark: '#a78bfa',
-              accent: '#38bdf8',
-              emerald: '#34d399'
-            }
-          },
-          fontFamily: {
-            clash: ['Clash Display', 'sans-serif'],
-            bricolage: ['Bricolage Grotesque', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace']
-          }
-        }
-      }
-    }
-  </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google Dorking — Pembuat Query Pencarian Lanjutan | 296Tools</title>
+<meta name="description" content="Pembuat query pencarian lanjutan (dork) Google untuk riset & keamanan, 100% lokal di browser.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.296.web.id/google-dorking/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
 
-  <!-- FAVICON -->
-  <link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
-  <script src="../tools-data.js"></script>  
-  <style>
-    /* Variabel CSS untuk Mode Terang (Default) */
-    :root {
-      --bg: #f8fafc;
-      --bg-surface: #ffffff;
-      --bg-card: #f1f5f9;
-      --border: rgba(15, 23, 42, 0.08);
-      --text-primary: #0f172a;
-      --text-secondary: #475569;
-      --text-muted: #94a3b8;
-      --shadow-premium: 0 10px 30px -10px rgba(108, 99, 255, 0.1);
-    }
-
-    /* Variabel CSS untuk Mode Gelap */
-    .dark {
-      --bg: #07070a;
-      --bg-surface: #11111b;
-      --bg-card: #1e1e2f;
-      --border: rgba(255, 255, 255, 0.07);
-      --text-primary: #e2e8f0;
-      --text-secondary: #94a3b8;
-      --text-muted: #64748b;
-      --shadow-premium: 0 10px 40px rgba(0,0,0,0.5), 0 0 40px rgba(108,99,255,0.15);
-    }
-
-    body {
-      font-family: 'Bricolage Grotesque', sans-serif;
-      background-color: var(--bg);
-      color: var(--text-primary);
-      min-height: 100vh;
-      transition: background-color 0.3s, color 0.3s;
-    }
-
-    /* Noise Overlay */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.5;
-    }
-
-    /* Animasi Transisi */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fade-up {
-      animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-    }
-  </style>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="/assets/js/tailwind-config.js"></script>
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/layout.css">
+<script src="/assets/js/tools-data.js"></script>
 </head>
 <body class="flex flex-col">
 
-  <!-- Header / Topbar -->
-  <header class="sticky top-0 z-40 w-full bg-[var(--bg)]/80 backdrop-blur-md border-b border-[var(--border)] transition-all">
-    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-      <a href="homepage.html" class="flex items-center gap-3">
-        <div class="w-9 h-9 bg-gradient-to-tr from-brand-light to-brand-accent rounded-lg flex items-center justify-center shadow-lg">
-          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" class="w-6 h-6 object-contain" alt="Logo 296">
-        </div>
-        <div class="flex flex-col">
-          <span class="font-clash text-base font-bold leading-none tracking-tight">296<span class="text-brand-dark">Tools</span></span>
-          <span class="text-[10px] text-[var(--text-muted)] font-medium mt-0.5">Google Dorking Tools</span>
-        </div>
-      </a>
-      
-      <div class="flex items-center gap-3">
-        <!-- Tombol Pengubah Mode Gelap/Terang -->
-        <button id="themeToggle" class="p-2 rounded-lg bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] transition-all" title="Ubah Tema">
-          <i class="fa-solid fa-moon dark:hidden text-base"></i>
-          <i class="fa-solid fa-sun hidden dark:block text-base text-yellow-400"></i>
-        </button>
-      </div>
-    </div>
-  </header>
+  <div id="site-header"></div>
 
-  <!-- Konten Utama -->
-  <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-8 animate-fade-up relative z-10 space-y-8 pb-24 md:pb-8">
+  <div class="app-shell">
+    <div id="site-sidebar-wrap"><div id="site-sidebar"></div></div>
+
+    <div id="site-content-wrap">
+      <div class="max-w-6xl w-full mx-auto px-4 pt-4">
+        <div id="site-breadcrumb"></div>
+      </div>
+
+<main class="flex-grow max-w-4xl w-full mx-auto px-4 py-8 animate-fade-up relative z-10 space-y-8 pb-24 md:pb-8">
     
     <!-- Title & Introduction -->
     <div class="text-center md:text-left relative overflow-hidden">
@@ -311,7 +223,6 @@
           </label>
         </div>
       </div>
-
       <!-- Output Query -->
       <div class="space-y-3 pt-2">
         <span class="block text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">🔮 Hasil Query Anda</span>
@@ -392,14 +303,9 @@
     </section>
 
   </main>
-
-  <!-- Kaki Halaman / Footer -->
-  <footer class="w-full py-8 text-center text-xs text-[var(--text-muted)] border-t border-[var(--border)] mt-12 bg-[var(--bg-surface)] relative z-10 pb-24 md:pb-8">
-    <div class="max-w-4xl mx-auto px-4">
-      <p class="mb-2">&copy; 2026 DorkBuilder. Dirancang secara aman dan diproses langsung pada peramban Anda.</p>
-      <p class="text-[10px] tracking-wide uppercase font-bold text-slate-400">Powered by 296GROUP</p>
+      <div id="site-footer"></div>
     </div>
-  </footer>
+  </div>
 
   <!-- Alert Custom & Toast -->
   <div class="custom-alert fixed top-20 right-4 bg-slate-900 border border-brand-light/30 text-white px-5 py-3 rounded-xl text-xs font-semibold shadow-2xl transform translate-x-12 opacity-0 transition-all duration-300 pointer-events-none z-50 flex items-center gap-2" id="custom-alert">Pemberitahuan muncul di sini</div>
@@ -407,128 +313,16 @@
     <i class="fa-solid fa-circle-check"></i> ✓ Berhasil disalin ke papan klip!
   </div>
 
-  <!-- ========================================================== -->
-  <!-- BAR NAVIGASI SELULER (Mobile Sticky Bottom Navbar - 3 Tombol) -->
-  <!-- ========================================================== -->
-  <div class="fixed bottom-0 left-0 right-0 z-50 bg-[var(--bg-surface)]/90 backdrop-blur-lg border-t border-[var(--border)] shadow-xl md:hidden block">
-    <div class="flex justify-around items-center h-16">
-      <!-- Tombol Kiri: Pop-up / Daftar Macam Tools -->
-      <button onclick="openToolsModal()" class="flex flex-col items-center justify-center text-[var(--text-secondary)] hover:text-brand-light transition-all flex-1 py-1">
-        <i class="fa-solid fa-compass text-lg mb-1"></i>
-        <span class="text-[10px] font-semibold">Semua Alat</span>
-      </button>
+  <div id="site-mobile-menu"></div>
 
-      <!-- Tombol Tengah: Beranda Utama (Homepage) -->
-      <a href="homepage.html" class="flex flex-col items-center justify-center text-brand-light transition-all flex-1 py-1">
-        <div class="w-10 h-10 bg-brand-light text-white rounded-full flex items-center justify-center shadow-lg -mt-5 border-4 border-[var(--bg-surface)]">
-          <i class="fa-solid fa-house text-sm"></i>
-        </div>
-        <span class="text-[10px] font-semibold mt-1">Beranda</span>
-      </a>
+  <script src="/assets/js/layout.js"></script>
 
-      <!-- Tombol Kanan: About Us Pop-up -->
-      <button onclick="openAboutModal()" class="flex flex-col items-center justify-center text-[var(--text-secondary)] hover:text-brand-light transition-all flex-1 py-1">
-        <i class="fa-solid fa-circle-info text-lg mb-1"></i>
-        <span class="text-[10px] font-semibold">About Us</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- ========================================================== -->
-  <!-- POP-UP MODAL: ABOUT US -->
-  <!-- ========================================================== -->
-  <div id="aboutModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-300">
-    <div class="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-2xl max-w-md w-full border border-[var(--border)] shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="aboutModalCard">
-      <div class="p-6 space-y-4">
-        <div class="flex justify-between items-center border-b border-[var(--border)] pb-3">
-          <h3 class="font-clash text-lg font-bold text-brand-light flex items-center gap-2">
-            <i class="fa-solid fa-address-card"></i> Tentang 296Tools
-          </h3>
-          <button onclick="closeAboutModal()" class="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg hover:bg-[var(--bg-card)]">
-            <i class="fa-solid fa-xmark text-lg"></i>
-          </button>
-        </div>
-        
-        <div class="space-y-3 text-sm leading-relaxed text-[var(--text-secondary)]">
-          <div class="w-16 h-16 bg-brand-light/10 rounded-2xl mx-auto flex items-center justify-center">
-            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTrTr1ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" class="w-10 h-10 object-contain" alt="296 Studios Logo">
-          </div>
-          <p class="text-center font-bold text-sm text-[var(--text-primary)]">296GROUP - Solusi Digital Lokal</p>
-          <p>
-            <strong>296Tools</strong> adalah direktori & ekosistem micro-apps yang dikembangkan untuk membantu kegiatan digital harian Anda secara produktif. 
-          </p>
-          <p>
-            Seluruh data diproses secara <strong>100% lokal di dalam browser Anda (Client-Side)</strong>. Kami sama sekali tidak mengirim atau menyimpan berkas dokumen atau data sensitif Anda ke server luar. Keamanan privasi Anda terjamin penuh.
-          </p>
-        </div>
-
-        <div class="pt-2 flex justify-end">
-          <button onclick="closeAboutModal()" class="px-5 py-2 text-xs font-semibold bg-brand-light text-white rounded-lg hover:bg-opacity-90 transition-all">
-            Mengerti, Terima Kasih
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========================================================== -->
-  <!-- POP-UP MODAL: DAFTAR MACAM-MACAM TOOLS -->
-  <!-- ========================================================== -->
-  <div id="toolsMenuModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-300">
-    <div class="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-2xl max-w-2xl w-full border border-[var(--border)] shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="toolsMenuCard">
-      <div class="p-6 space-y-4">
-        <div class="flex justify-between items-center border-b border-[var(--border)] pb-3">
-          <h3 class="font-clash text-lg font-bold text-brand-light flex items-center gap-2">
-            <i class="fa-solid fa-grid-2"></i> Macam-Macam Alat (Quick Access)
-          </h3>
-          <button onclick="closeToolsModal()" class="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg hover:bg-[var(--bg-card)]">
-            <i class="fa-solid fa-xmark text-lg"></i>
-          </button>
-        </div>
-
-        <!-- Scrollable list of all tools in modal -->
-        <div class="max-h-[60vh] overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-3 pr-1" id="modalToolsList">
-          <!-- Daftar dinamis akan di-populate oleh JS -->
-        </div>
-
-        <div class="pt-2 flex justify-end">
-          <button onclick="closeToolsModal()" class="px-5 py-2 text-xs font-semibold bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-lg hover:bg-[var(--border)] transition-all">
-            Tutup
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Script Logika -->
   <script>
     let generatedQuery = '';
 
     // ==========================================================
     // SISTEM TEMA: GELAP / TERANG (DARK & LIGHT MODE)
     // ==========================================================
-    const themeToggleBtn = document.getElementById('themeToggle');
-    
-    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-    } else {
-        document.documentElement.classList.remove('dark');
-    }
-
-    themeToggleBtn.addEventListener('click', () => {
-        if (document.documentElement.classList.contains('dark')) {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('theme', 'light');
-        } else {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('theme', 'dark');
-        }
-    });
-
-    // ==========================================================
-    // PETUNJUK PENAMBAHAN ALAT / LAMAN BARU:
-    // Jika Anda ingin mendaftarkan tools baru ke dalam pop-up modal,
-    // silakan tambahkan objek baru ke dalam array "ALL_TOOLS" di bawah ini.
     // ==========================================================
    
 
@@ -815,70 +609,9 @@
     // ==========================================================
     // MANAJEMEN MODAL & SISTEM NAVIGASI SELULER
     // ==========================================================
-    const aboutModal = document.getElementById('aboutModal');
-    const aboutModalCard = document.getElementById('aboutModalCard');
-    const toolsMenuModal = document.getElementById('toolsMenuModal');
-    const toolsMenuCard = document.getElementById('toolsMenuCard');
-    const modalToolsList = document.getElementById('modalToolsList');
-
-    // Buka Modal About Us
-    function openAboutModal() {
-        aboutModal.classList.remove('hidden');
-        setTimeout(() => {
-            aboutModal.classList.add('opacity-100');
-            aboutModalCard.classList.remove('scale-95');
-            aboutModalCard.classList.add('scale-100');
-        }, 50);
-    }
-
-    // Tutup Modal About Us
-    function closeAboutModal() {
-        aboutModal.classList.remove('opacity-100');
-        aboutModalCard.classList.remove('scale-100');
-        aboutModalCard.classList.add('scale-95');
-        setTimeout(() => {
-            aboutModal.classList.add('hidden');
-        }, 300);
-    }
-
-    // Buka Modal Daftar Macam-Macam Tools
-    function openToolsModal() {
-        // Populate list dinamis
-        modalToolsList.innerHTML = ALL_TOOLS.map(t => `
-            <a href="${t.url}" class="flex items-center gap-3 p-3 rounded-xl border border-[var(--border)] hover:bg-[var(--bg-card)] transition-all">
-                <div class="w-8 h-8 rounded-lg bg-brand-light/10 text-brand-light flex items-center justify-center text-sm">
-                    <i class="${t.icon}"></i>
-                </div>
-                <div class="flex-grow">
-                    <h4 class="text-xs font-bold text-[var(--text-primary)]">${t.name}</h4>
-                    <p class="text-[10px] text-[var(--text-muted)] truncate max-w-[200px] sm:max-w-md">${t.desc}</p>
-                </div>
-            </a>
-        `).join('');
-
-        toolsMenuModal.classList.remove('hidden');
-        setTimeout(() => {
-            toolsMenuModal.classList.add('opacity-100');
-            toolsMenuCard.classList.remove('scale-95');
-            toolsMenuCard.classList.add('scale-100');
-        }, 50);
-    }
-
-    // Tutup Modal Daftar Macam-Macam Tools
-    function closeToolsModal() {
-        toolsMenuModal.classList.remove('opacity-100');
-        toolsMenuCard.classList.remove('scale-100');
-        toolsMenuCard.classList.add('scale-95');
-        setTimeout(() => {
-            toolsMenuModal.classList.add('hidden');
-        }, 300);
-    }
-
-    // Klik di luar area modal untuk menutup modal
-    window.addEventListener('click', (e) => {
-        if (e.target === aboutModal) closeAboutModal();
-        if (e.target === toolsMenuModal) closeToolsModal();
-    });
+    
+  
   </script>
+
 </body>
 </html>

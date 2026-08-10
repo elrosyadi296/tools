@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teks Berjalan LED</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Latar belakang efek titik-titik LED */
+        .led-board {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background-image: radial-gradient(#111 1px, transparent 1px);
+            background-size: 6px 6px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Gaya untuk teks LED */
+        .led-text {
+            font-family: 'VT323', monospace;
+            position: absolute;
+            left: 0;
+            white-space: nowrap;
+            /* Nilai default, akan ditimpa oleh JavaScript */
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00, 0 0 20px #00ff00;
+            font-size: 150px;
+            user-select: none;
+            will-change: transform;
+        }
+
+        /* Panel kontrol */
+        .control-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(20, 20, 20, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            color: white;
+            transition: opacity 0.3s, transform 0.3s, visibility 0.3s;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            z-index: 50;
+        }
+
+        .control-panel.hidden-panel {
+            opacity: 0;
+            visibility: hidden;
+            transform: translate(-50%, 20px);
+        }
+
+        .toggle-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(30, 30, 30, 0.7);
+            color: white;
+            border: 1px solid #555;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: background 0.2s;
+        }
+
+        .toggle-btn:hover {
+            background: rgba(60, 60, 60, 0.9);
+        }
+
+        /* Styling kustom untuk input range */
+        input[type=range] {
+            accent-color: #00ff00;
+        }
+        
+        /* Menyembunyikan kursor jika panel tertutup */
+        body.hide-cursor {
+            cursor: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Papan LED -->
+    <div class="led-board" id="board">
+        <div class="led-text" id="ledText">HALO DUNIA! SELAMAT DATANG</div>
+    </div>
+
+    <!-- Tombol Pengaturan -->
+    <button class="toggle-btn" id="toggleBtn" title="Pengaturan (Klik atau Tap Ganda pada layar)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+    </button>
+
+    <!-- Panel Kontrol -->
+    <div class="control-panel" id="controlPanel">
+        <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
+            <h2 class="text-xl font-bold text-gray-200">Pengaturan LED</h2>
+            <button id="closeBtn" class="text-gray-400 hover:text-white transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+
+        <div class="space-y-4">
+            <!-- Teks Input -->
+            <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Teks yang ditampilkan</label>
+                <input type="text" id="textInput" value="HALO DUNIA! SELAMAT DATANG" class="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500">
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Warna -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-400 mb-1">Warna LED</label>
+                    <div class="flex items-center gap-3">
+                        <input type="color" id="colorInput" value="#00ff00" class="h-10 w-full rounded cursor-pointer bg-transparent border-0 p-0">
+                        <!-- Preset Warna -->
+                        <div class="flex gap-2">
+                            <button class="color-preset w-6 h-6 rounded-full bg-[#ff0000] border-2 border-transparent hover:border-white" data-color="#ff0000"></button>
+                            <button class="color-preset w-6 h-6 rounded-full bg-[#00ff00] border-2 border-white" data-color="#00ff00"></button>
+                            <button class="color-preset w-6 h-6 rounded-full bg-[#0088ff] border-2 border-transparent hover:border-white" data-color="#0088ff"></button>
+                            <button class="color-preset w-6 h-6 rounded-full bg-[#ff00ff] border-2 border-transparent hover:border-white" data-color="#ff00ff"></button>
+                            <button class="color-preset w-6 h-6 rounded-full bg-[#ffff00] border-2 border-transparent hover:border-white" data-color="#ffff00"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kecepatan -->
+                <div>
+                    <label class="flex justify-between text-sm font-medium text-gray-400 mb-1">
+                        <span>Kecepatan Gulir</span>
+                        <span id="speedValue">5</span>
+                    </label>
+                    <input type="range" id="speedInput" min="1" max="20" value="5" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                </div>
+
+                <!-- Ukuran Font -->
+                <div class="md:col-span-2">
+                    <label class="flex justify-between text-sm font-medium text-gray-400 mb-1">
+                        <span>Ukuran Teks</span>
+                        <span id="sizeValue">150px</span>
+                    </label>
+                    <input type="range" id="sizeInput" min="50" max="400" value="150" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                </div>
+            </div>
+            
+            <div class="pt-2 text-xs text-center text-gray-500">
+                <p>Klik ganda (double-click) di sembarang tempat untuk menyembunyikan/menampilkan menu.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Referensi Elemen DOM
+        const ledText = document.getElementById('ledText');
+        const textInput = document.getElementById('textInput');
+        const colorInput = document.getElementById('colorInput');
+        const speedInput = document.getElementById('speedInput');
+        const speedValue = document.getElementById('speedValue');
+        const sizeInput = document.getElementById('sizeInput');
+        const sizeValue = document.getElementById('sizeValue');
+        const controlPanel = document.getElementById('controlPanel');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const closeBtn = document.getElementById('closeBtn');
+        const colorPresets = document.querySelectorAll('.color-preset');
+
+        // State Animasi
+        let currentX = window.innerWidth;
+        let animationId;
+        let isPanelVisible = true;
+
+        // Fungsi Pembaruan Gaya Teks (Warna & Cahaya)
+        function updateLEDStyle(color) {
+            ledText.style.color = color;
+            ledText.style.textShadow = `0 0 5px ${color}, 0 0 15px ${color}, 0 0 30px ${color}`;
+            // Update accent color di slider agar selaras dengan warna LED
+            document.querySelectorAll('input[type=range]').forEach(el => {
+                el.style.accentColor = color;
+            });
+        }
+
+        // --- Event Listeners untuk Panel Kontrol ---
+
+        // 1. Mengubah Teks
+        textInput.addEventListener('input', (e) => {
+            ledText.textContent = e.target.value || ' '; // Jangan biarkan kosong agar ukuran tetap ada
+        });
+
+        // 2. Mengubah Warna
+        colorInput.addEventListener('input', (e) => {
+            updateLEDStyle(e.target.value);
+            // Reset border dari preset
+            colorPresets.forEach(p => p.classList.remove('border-white'));
+            colorPresets.forEach(p => p.classList.add('border-transparent'));
+        });
+
+        // 2.1 Warna Preset
+        colorPresets.forEach(preset => {
+            preset.addEventListener('click', (e) => {
+                const color = e.target.getAttribute('data-color');
+                colorInput.value = color;
+                updateLEDStyle(color);
+                
+                // Update border yang aktif
+                colorPresets.forEach(p => {
+                    p.classList.remove('border-white');
+                    p.classList.add('border-transparent');
+                });
+                e.target.classList.remove('border-transparent');
+                e.target.classList.add('border-white');
+            });
+        });
+
+        // 3. Mengubah Kecepatan
+        speedInput.addEventListener('input', (e) => {
+            speedValue.textContent = e.target.value;
+        });
+
+        // 4. Mengubah Ukuran Teks
+        sizeInput.addEventListener('input', (e) => {
+            const newSize = e.target.value + 'px';
+            ledText.style.fontSize = newSize;
+            sizeValue.textContent = newSize;
+        });
+
+        // --- Visibilitas Panel ---
+        function togglePanel() {
+            isPanelVisible = !isPanelVisible;
+            if (isPanelVisible) {
+                controlPanel.classList.remove('hidden-panel');
+                toggleBtn.style.opacity = '1';
+                document.body.classList.remove('hide-cursor');
+            } else {
+                controlPanel.classList.add('hidden-panel');
+                toggleBtn.style.opacity = '0';
+                document.body.classList.add('hide-cursor');
+            }
+        }
+
+        toggleBtn.addEventListener('click', togglePanel);
+        closeBtn.addEventListener('click', togglePanel);
+
+        // Klik ganda untuk full-screen experience
+        document.addEventListener('dblclick', togglePanel);
+
+        // Handle Resize Jendela
+        window.addEventListener('resize', () => {
+            // Pastikan teks tidak melompat terlalu jauh saat di-resize
+            if (currentX > window.innerWidth) {
+                currentX = window.innerWidth;
+            }
+        });
+
+        // --- Loop Animasi Utama ---
+        function animateMarquee() {
+            const speed = parseFloat(speedInput.value);
+            const textWidth = ledText.getBoundingClientRect().width;
+            
+            // Kurangi posisi X (gerak ke kiri)
+            currentX -= speed;
+
+            // Jika seluruh teks telah melewati layar sebelah kiri
+            if (currentX < -textWidth) {
+                currentX = window.innerWidth; // Reset posisi ke ujung kanan layar
+            }
+
+            // Terapkan translasi
+            ledText.style.transform = `translateX(${currentX}px)`;
+
+            // Lanjut ke frame berikutnya
+            animationId = requestAnimationFrame(animateMarquee);
+        }
+
+        // Inisialisasi awal
+        updateLEDStyle(colorInput.value);
+        animateMarquee();
+
+        // Sembunyikan panel secara otomatis setelah 3 detik awal untuk efek "wow"
+        setTimeout(() => {
+            if (isPanelVisible) togglePanel();
+        }, 3000);
+
+    </script>
+</body>
+</html>

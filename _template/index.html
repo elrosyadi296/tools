@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id" class="transition-colors duration-300">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nama Tool Baru — 296Tools</title>
+<meta name="description" content="Deskripsi singkat tool baru untuk SEO.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.296.web.id/nama-tool-baru/">
+
+<!-- Font & Icon -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
+
+<!-- Tailwind CDN + config bersama (JANGAN diubah per halaman) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="/assets/js/tailwind-config.js"></script>
+
+<!-- Design tokens + layout engine styles (single source, JANGAN diduplikasi) -->
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/layout.css">
+
+<!-- Database tool (dibaca sidebar, search, breadcrumb, active-menu) -->
+<script src="/assets/js/tools-data.js"></script>
+
+<!--
+  ===========================================================================
+  TARUH <style> KHUSUS TOOL INI DI SINI (jika ada), JANGAN edit layout.css.
+  ===========================================================================
+-->
+<!-- <style> ... </style> -->
+
+</head>
+<body class="flex flex-col">
+
+  <!-- Mount point: HEADER (jangan ubah struktur ini) -->
+  <div id="site-header"></div>
+
+  <div class="app-shell">
+    <!-- Mount point: SIDEBAR (desktop) -->
+    <div id="site-sidebar-wrap"><div id="site-sidebar"></div></div>
+
+    <div id="site-content-wrap">
+      <!-- Breadcrumb otomatis -->
+      <div class="max-w-6xl w-full mx-auto px-4 pt-4">
+        <div id="site-breadcrumb"></div>
+      </div>
+
+      <!-- =================================================================
+           KONTEN UNIK TOOL — HANYA DI SINI Anda menulis HTML tool baru.
+           Semua elemen header/sidebar/drawer/footer TIDAK perlu disentuh.
+           ================================================================= -->
+      <main id="page-content" class="flex-grow max-w-6xl w-full mx-auto px-4 py-8 relative z-10 animate-fade-up">
+
+        <div class="text-center max-w-3xl mx-auto mb-10">
+          <h1 class="text-2xl md:text-3xl font-extrabold text-[var(--text-primary)] tracking-tight font-clash">
+            Nama Tool Baru
+          </h1>
+          <p class="mt-2 text-xs md:text-sm text-[var(--text-secondary)]">
+            Ganti judul, deskripsi, dan seluruh isi di dalam &lt;main&gt; ini dengan UI tool Anda.
+          </p>
+        </div>
+
+        <div class="bg-[var(--bg-surface)] rounded-2xl border border-[var(--border)] p-6 shadow-sm">
+          <p class="text-sm text-[var(--text-secondary)]">Mulai bangun tool Anda di sini…</p>
+        </div>
+
+      </main>
+      <!-- ============================ AKHIR KONTEN UNIK ============================ -->
+
+      <!-- Mount point: FOOTER + bottom nav mobile -->
+      <div id="site-footer"></div>
+    </div>
+  </div>
+
+  <!-- Mount point: MOBILE DRAWER -->
+  <div id="site-mobile-menu"></div>
+
+  <!-- Layout engine: memuat header/sidebar/drawer/footer + semua interaksi global -->
+  <script src="/assets/js/layout.js"></script>
+
+  <!--
+    ===========================================================================
+    TARUH <script> LOGIKA UNIK TOOL INI DI SINI (paling bawah).
+    Boleh pakai window.TOOLS / window.CATEGORIES bila perlu, dan
+    window.Tools296.toggleFavorite(id) / .isFavorite(id) bila perlu.
+    ===========================================================================
+  -->
+  <script>
+    // Logika JS khusus tool baru Anda di sini.
+  </script>
+
+</body>
+</html>

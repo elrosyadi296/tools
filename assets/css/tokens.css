@@ -1,0 +1,73 @@
+/* ==========================================================================
+   296TOOLS · DESIGN TOKENS
+   Satu-satunya sumber untuk warna, radius, shadow, spacing, dan font.
+   JANGAN hardcode nilai desain di halaman tool manapun — selalu pakai token
+   di sini (lewat var(--nama-token) atau lewat utility class Tailwind yang
+   sudah dipetakan di /assets/js/tailwind-config.js).
+   ========================================================================== */
+
+:root {
+  /* ---------- Warna dasar (Light mode) ---------- */
+  --bg: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-card: #f1f5f9;
+  --border: rgba(15, 23, 42, 0.08);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+
+  /* ---------- Warna brand (sama di light & dark) ---------- */
+  --brand-light: #6c63ff;
+  --brand-dark: #a78bfa;
+  --brand-accent: #38bdf8;
+  --brand-emerald: #34d399;
+  --brand-rose: #f43f5e;
+
+  /* ---------- Shadow ---------- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-premium: 0 10px 30px -10px rgba(108, 99, 255, 0.1);
+  --shadow-glow: 0 0 40px rgba(108, 99, 255, 0.15);
+
+  /* ---------- Radius scale ---------- */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* ---------- Spacing scale (pelengkap Tailwind) ---------- */
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  /* ---------- Dimensi layout global ---------- */
+  --header-height: 4rem;
+  --sidebar-width: 17rem;
+  --sidebar-width-collapsed: 4.5rem;
+  --mobile-bottom-nav-height: 4rem;
+
+  /* ---------- Font ---------- */
+  --font-display: 'Clash Display', sans-serif;
+  --font-body: 'Bricolage Grotesque', sans-serif;
+
+  /* ---------- Breakpoints (referensi — Tailwind default) ----------
+     sm: 640px · md: 768px · lg: 1024px · xl: 1280px · 2xl: 1536px
+     Sidebar desktop aktif mulai breakpoint lg (1024px ke atas).
+  ------------------------------------------------------------------- */
+}
+
+.dark {
+  --bg: #0b0c10;
+  --bg-surface: #13141a;
+  --bg-card: #1e2029;
+  --border: rgba(255, 255, 255, 0.07);
+  --text-primary: #f0f0f5;
+  --text-secondary: #9899a8;
+  --text-muted: #5a5b6a;
+  --shadow-premium: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 40px rgba(108, 99, 255, 0.15);
+}

@@ -1,0 +1,24 @@
+<div id="site-mobile-menu-backdrop" data-close-drawer></div>
+<div id="site-mobile-menu-panel">
+  <div class="flex items-center justify-between px-4 h-16 border-b border-[var(--border)] flex-shrink-0">
+    <span class="font-clash text-base font-bold">296<span class="text-brand-dark">Tools</span></span>
+    <button id="btn-mobile-menu-close" class="w-8 h-8 flex items-center justify-center rounded-lg bg-[var(--bg-card)] border border-[var(--border)]">
+      <i class="fa-solid fa-xmark text-sm"></i>
+    </button>
+  </div>
+
+  <div class="p-4">
+    <div class="relative mb-4">
+      <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)] text-xs pointer-events-none"></i>
+      <input type="text" id="mobile-search-input" placeholder="Cari tool…" autocomplete="off"
+        class="w-full h-10 pl-9 pr-3 rounded-xl bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] focus:border-brand-light outline-none transition-all text-xs" />
+      <div id="mobile-search-results" class="search-results-panel"></div>
+    </div>
+
+    <a href="/" class="sidebar-link !text-[var(--text-primary)] mb-3">
+      <i class="fa-solid fa-house text-brand-light"></i><span>Beranda</span>
+    </a>
+
+    <div id="mobile-menu-categories" class="space-y-1"></div>
+  </div>
+</div>

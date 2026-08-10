@@ -1,0 +1,32 @@
+<nav class="h-full flex flex-col py-4">
+
+  <div class="px-3 mb-2">
+    <a href="/" class="sidebar-link !text-[var(--text-primary)]">
+      <i class="fa-solid fa-house text-brand-light"></i>
+      <span class="sidebar-label">Beranda</span>
+    </a>
+  </div>
+
+  <div class="px-3 mb-1 mt-3 sidebar-group-label text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
+    Favorit
+  </div>
+  <div class="px-3 space-y-0.5" id="sidebar-favorites-list">
+    <p class="sidebar-label text-[10px] text-[var(--text-muted)] px-2 py-1">Belum ada tool favorit.</p>
+  </div>
+
+  <div class="px-3 mb-1 mt-4 sidebar-group-label text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)]">
+    Baru Dibuka
+  </div>
+  <div class="px-3 space-y-0.5" id="sidebar-recent-list">
+    <p class="sidebar-label text-[10px] text-[var(--text-muted)] px-2 py-1">Belum ada riwayat.</p>
+  </div>
+
+  <div class="px-3 mt-4 pt-2 border-t border-[var(--border)]" id="sidebar-categories"></div>
+  <!-- diisi JS: satu blok per kategori berisi group-label + daftar sidebar-link -->
+
+  <div class="flex-1"></div>
+
+  <div class="px-3 pt-3 mt-2 border-t border-[var(--border)] sidebar-label">
+    <p class="text-[9px] uppercase tracking-wider font-bold text-[var(--text-muted)] text-center">Powered by 296GROUP</p>
+  </div>
+</nav>

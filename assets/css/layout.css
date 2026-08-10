@@ -1,0 +1,157 @@
+/* ==========================================================================
+   296TOOLS · LAYOUT ENGINE STYLES
+   Style struktural untuk shell (header, sidebar, drawer, footer, breadcrumb).
+   Konten unik tiap tool TIDAK boleh menaruh style di sini.
+   ========================================================================== */
+
+html, body { height: 100%; }
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.font-clash { font-family: var(--font-display); }
+
+/* Noise overlay (identitas visual 296) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up { animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+.blob { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; }
+.blob-1 { width: 400px; height: 250px; background: rgba(108,99,255,0.12); top: -40px; left: 50%; transform: translateX(-50%); }
+
+/* ---------- Skeleton loader saat komponen layout sedang di-fetch ---------- */
+.layout-skeleton { position: relative; overflow: hidden; background: var(--bg-card); }
+.layout-skeleton::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+
+/* ---------- Header ---------- */
+#site-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+  height: var(--header-height);
+}
+
+/* ---------- App shell: sidebar + content ---------- */
+.app-shell { display: flex; min-height: 100vh; position: relative; z-index: 10; padding-top: var(--header-height); }
+
+#site-sidebar-wrap {
+  flex-shrink: 0;
+  width: var(--sidebar-width);
+  transition: width 0.25s ease;
+  display: none;
+}
+@media (min-width: 1024px) {
+  #site-sidebar-wrap { display: block; }
+}
+.app-shell.sidebar-collapsed #site-sidebar-wrap { width: var(--sidebar-width-collapsed); }
+
+#site-sidebar {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar-width);
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+  background: var(--bg-surface);
+  transition: width 0.25s ease;
+  z-index: 30;
+}
+.app-shell.sidebar-collapsed #site-sidebar { width: var(--sidebar-width-collapsed); }
+.app-shell.sidebar-collapsed .sidebar-label,
+.app-shell.sidebar-collapsed .sidebar-group-label,
+.app-shell.sidebar-collapsed .sidebar-count { display: none !important; }
+.app-shell.sidebar-collapsed .sidebar-link { justify-content: center; }
+
+.sidebar-link {
+  display: flex; align-items: center; gap: 0.65rem;
+  padding: 0.55rem 0.75rem; border-radius: var(--radius-md);
+  color: var(--text-secondary); font-size: 0.8rem; font-weight: 600;
+  transition: all 0.15s ease; white-space: nowrap;
+}
+.sidebar-link:hover { background: var(--bg-card); color: var(--text-primary); }
+.sidebar-link.active {
+  background: color-mix(in srgb, var(--brand-light) 12%, transparent);
+  color: var(--brand-light);
+}
+.sidebar-link i:first-child { width: 1.1rem; text-align: center; flex-shrink: 0; }
+
+#site-content-wrap {
+  flex: 1 1 0%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Mobile drawer ---------- */
+#site-mobile-menu-panel {
+  position: fixed; top: 0; left: 0; bottom: 0; width: 84%; max-width: 320px;
+  background: var(--bg-surface); z-index: 60; transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto; border-right: 1px solid var(--border);
+}
+#site-mobile-menu.is-open #site-mobile-menu-panel { transform: translateX(0); }
+#site-mobile-menu-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(2px);
+  z-index: 55; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+}
+#site-mobile-menu.is-open #site-mobile-menu-backdrop { opacity: 1; pointer-events: auto; }
+
+/* ---------- Search dropdown (dipakai header & mobile menu) ---------- */
+.search-results-panel {
+  position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+  background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow-premium);
+  max-height: 60vh; overflow-y: auto; z-index: 50; display: none;
+}
+.search-results-panel.is-open { display: block; }
+.search-result-item {
+  display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0.9rem;
+  color: var(--text-secondary); font-size: 0.8rem; font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+.search-result-item:last-child { border-bottom: none; }
+.search-result-item:hover { background: var(--bg-card); color: var(--text-primary); }
+
+/* ---------- Breadcrumb ---------- */
+#site-breadcrumb { font-size: 0.72rem; color: var(--text-muted); }
+#site-breadcrumb a { color: var(--text-secondary); font-weight: 600; }
+#site-breadcrumb a:hover { color: var(--brand-light); }
+
+/* ---------- Tool card (dipakai homepage & grid manapun) ---------- */
+.tool-card {
+  position: relative; padding: 1.25rem; background: var(--bg-surface);
+  border: 1px solid var(--border); border-radius: var(--radius-2xl);
+  display: flex; flex-direction: column; justify-content: space-between;
+  height: 11rem; transition: all 0.3s ease;
+}
+.tool-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-premium); }
+
+@media (max-width: 1023px) {
+  #site-content-wrap { padding-bottom: var(--mobile-bottom-nav-height); }
+}

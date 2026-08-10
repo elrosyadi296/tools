@@ -4,554 +4,196 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>296Tools — Koleksi Tools Internet Terbaik</title>
-<!-- ========================================================== -->
-<!-- META TAG UMUM (Untuk SEO Dasar & Browser) -->
-<!-- ========================================================== -->
 <meta name="description" content="Temukan berbagai tools internet gratis untuk produktivitas, SEO, developer, dan optimasi digital. Cepat, aman, dan mudah digunakan langsung dari browser Anda.">
 <meta name="robots" content="index, follow">
 
-<!-- ========================================================== -->
-<!-- OPEN GRAPH META TAGS (Facebook, WhatsApp, Telegram, LinkedIn) -->
-<!-- ========================================================== -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://tools.296.web.id/">
 <meta property="og:title" content="Kumpulan Tools Internet Gratis & Super Cepat - 296Tools">
 <meta property="og:description" content="Butuh tools internet cepat? Akses puluhan alat optimasi web, converter, generator, dan utility gratis hanya di 296Tools!">
 <meta property="og:image" content="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png">
 <meta property="og:site_name" content="296Tools">
-
-<!-- ========================================================== -->
-<!-- TWITTER CARDS META TAGS (Khusus untuk Twitter/X) -->
-<!-- ========================================================== -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:url" content="https://tools.296.web.id/">
 <meta name="twitter:title" content="Kumpulan Tools Internet Gratis & Super Cepat - 296Tools">
 <meta name="twitter:description" content="Butuh tools internet cepat? Akses puluhan alat optimasi web, converter, generator, dan utility gratis hanya di 296Tools!">
-<meta name="twitter:image" content="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png">
 
-<!-- Font Family Premium -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<!-- Favicon -->
 <link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
 
-<!-- Tailwind CSS Setup -->
 <script src="https://cdn.tailwindcss.com"></script>
-<script>
-  tailwind.config = {
-    darkMode: 'class',
-    theme: {
-      extend: {
-        colors: {
-          brand: {
-            light: '#6c63ff',
-            dark: '#a78bfa',
-            accent: '#38bdf8',
-            emerald: '#34d399'
-          }
-        },
-        fontFamily: {
-          clash: ['Clash Display', 'sans-serif'],
-          bricolage: ['Bricolage Grotesque', 'sans-serif'],
-        }
-      }
-    }
-  }
-</script>
-
-<style>
-  /* Variabel CSS untuk Mode Terang (Default) */
-  :root {
-    --bg: #f8fafc;
-    --bg-surface: #ffffff;
-    --bg-card: #f1f5f9;
-    --border: rgba(15, 23, 42, 0.08);
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #94a3b8;
-    --shadow-premium: 0 10px 30px -10px rgba(108, 99, 255, 0.1);
-  }
-
-  /* Variabel CSS untuk Mode Gelap */
-  .dark {
-    --bg: #0b0c10;
-    --bg-surface: #13141a;
-    --bg-card: #1e2029;
-    --border: rgba(255, 255, 255, 0.07);
-    --text-primary: #f0f0f5;
-    --text-secondary: #9899a8;
-    --text-muted: #5a5b6a;
-    --shadow-premium: 0 10px 40px rgba(0,0,0,0.5), 0 0 40px rgba(108,99,255,0.15);
-  }
-
-  body {
-    font-family: 'Bricolage Grotesque', sans-serif;
-    background-color: var(--bg);
-    color: var(--text-primary);
-    min-height: 100vh;
-    overflow-x: hidden;
-    transition: background-color 0.3s, color 0.3s;
-  }
-
-  /* Noise Overlay */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.5;
-  }
-
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-  /* Hero Gradient Blur */
-  .blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    pointer-events: none;
-  }
-  .blob-1 {
-    width: 400px; height: 250px;
-    background: rgba(108,99,255,0.12);
-    top: -40px; left: 50%;
-    transform: translateX(-50%);
-  }
-
-  /* Animasi Transisi Halaman */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(18px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .animate-fade-up {
-    animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-</style>
+<script src="/assets/js/tailwind-config.js"></script>
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/layout.css">
+<script src="/assets/js/tools-data.js"></script>
 </head>
 <body class="flex flex-col">
 
-  <!-- Header / Topbar -->
-  <header class="sticky top-0 z-40 w-full bg-[var(--bg)]/80 backdrop-blur-md border-b border-[var(--border)] transition-all">
-    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-      <a href="#" class="flex items-center gap-3">
-        <div class="w-9 h-9 bg-gradient-to-tr from-brand-light to-brand-accent rounded-lg flex items-center justify-center shadow-lg">
-          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" class="w-6 h-6 object-contain" alt="Logo 296">
-        </div>
-        <span class="font-clash text-lg font-bold tracking-tight">296<span class="text-brand-dark">Tools</span></span>
-      </a>
+  <div id="site-header"></div>
 
-      <!-- Menu Aksi Samping Kanan (Theme Toggle & Deskripsi) -->
-      <div class="flex items-center gap-4">
-        <span class="hidden md:inline-block text-xs font-semibold text-[var(--text-secondary)] bg-[var(--bg-card)] px-3 py-1.5 rounded-full border border-[var(--border)]" id="headerCount">
-          36 tools tersedia
-        </span>
-        <!-- Tombol Pengubah Mode Gelap/Terang -->
-        <button id="themeToggle" class="p-2.5 rounded-lg bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] transition-all" title="Ubah Tema">
-          <i class="fa-solid fa-moon dark:hidden text-lg"></i>
-          <i class="fa-solid fa-sun hidden dark:block text-lg text-yellow-400"></i>
-        </button>
-      </div>
-    </div>
-  </header>
+  <div class="app-shell">
+    <div id="site-sidebar-wrap"><div id="site-sidebar"></div></div>
 
-  <!-- Konten Utama -->
-  <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-8 relative z-10 animate-fade-up">
-    
-    <!-- Hero Section -->
-    <section class="text-center py-12 md:py-16 relative overflow-hidden">
-      <div class="blob blob-1"></div>
-      
-      <div class="inline-flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-brand-dark bg-brand-light/10 border border-brand-light/20 rounded-full px-4 py-1.5 mb-6">
-        <i class="fa-solid fa-bolt"></i> Koleksi Tools Internet Pilihan
-      </div>
+    <div id="site-content-wrap">
+      <main id="page-content" class="flex-grow max-w-6xl w-full mx-auto px-4 py-8 relative z-10 animate-fade-up">
 
-      <h1 class="font-clash text-4xl md:text-6xl font-bold tracking-tight leading-none mb-6">
-        Satu Tempat,<br><span class="bg-gradient-to-r from-brand-light via-brand-accent to-brand-emerald bg-clip-text text-transparent">Semua Tools</span>
-      </h1>
-
-      <p class="text-sm md:text-lg text-[var(--text-secondary)] max-w-xl mx-auto mb-8 font-light leading-relaxed">
-        Kumpulan alat utilitas & produktivitas online 100% gratis, aman, dan langsung diproses secara lokal dari dalam browser perangkat Anda.
-      </p>
-
-      <!-- Pencarian -->
-      <div class="relative max-w-md mx-auto mb-6">
-        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] text-sm pointer-events-none"></i>
-        <input type="text" id="searchInput" placeholder="Cari nama atau deskripsi alat..." autocomplete="off" class="w-full h-12 pl-12 pr-12 rounded-xl bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border)] focus:border-brand-light focus:ring-4 focus:ring-brand-light/10 outline-none transition-all text-sm shadow-sm" />
-        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-[var(--text-muted)] border border-[var(--border)] rounded px-1.5 py-0.5 bg-[var(--bg-card)]">/ Cari</span>
-      </div>
-
-      <div class="flex justify-center gap-6 text-xs text-[var(--text-muted)] flex-wrap">
-        <div class="flex items-center gap-2"><i class="fa-solid fa-box-open text-brand-dark"></i><span><strong id="visibleCount" class="text-[var(--text-secondary)]">0</strong> tools</span></div>
-        <div class="flex items-center gap-2"><i class="fa-solid fa-layer-group text-brand-dark"></i><span><strong class="text-[var(--text-secondary)]">1</strong> kategori utama</span></div>
-        <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-dark"></i><span><strong>100%</strong> lokal & privat</span></div>
-      </div>
-    </section>
-
-    <!-- Filters Kategori -->
-    <section class="mb-8">
-      <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-none" id="filterRow"></div>
-    </section>
-
-    <!-- Header List Section -->
-    <div class="flex items-center justify-between border-b border-[var(--border)] pb-4 mb-6">
-      <div class="flex items-center gap-3">
-        <span class="w-1 h-5 rounded-full bg-brand-light inline-block"></span>
-        <h2 class="font-clash text-sm font-semibold tracking-wider uppercase text-[var(--text-secondary)]" id="sectionTitle">Semua Tools</h2>
-      </div>
-      <span class="text-xs text-[var(--text-muted)] font-medium" id="resultCount">0 tools</span>
-    </div>
-
-    <!-- Grid List Tools -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="toolsGrid"></div>
-
-    <!-- State Kosong / No Results -->
-    <div class="hidden text-center py-16 text-[var(--text-muted)]" id="noResults">
-      <i class="fa-solid fa-face-sad-tear text-4xl mb-4 text-brand-light block"></i>
-      <p class="font-semibold text-lg text-[var(--text-primary)]">Alat tidak ditemukan</p>
-      <p class="text-xs mt-1">Coba gunakan kata kunci pencarian yang lain.</p>
-    </div>
-
-  </main>
-
-  <!-- Kaki Halaman (Footer) -->
-  <footer class="w-full py-8 text-center text-xs text-[var(--text-muted)] border-t border-[var(--border)] mt-12 bg-[var(--bg-surface)] relative z-10 pb-24 md:pb-8">
-    <div class="max-w-6xl mx-auto px-4">
-      <p class="mb-2">Dibuat dengan <i class="fa-solid fa-heart text-red-500 animate-pulse"></i> oleh <a href="https://296.web.id" class="text-brand-dark hover:underline font-semibold" target="_blank">296GROUP</a></p>
-      <p class="text-[10px] tracking-wide uppercase font-bold text-slate-400">Powered by 296GROUP</p>
-    </div>
-  </footer>
-
-  <!-- ========================================================== -->
-  <!-- BAR NAVIGASI SELULER (Mobile Sticky Bottom Navbar - 3 Tombol) -->
-  <!-- ========================================================== -->
-  <div class="fixed bottom-0 left-0 right-0 z-50 bg-[var(--bg-surface)]/90 backdrop-blur-lg border-t border-[var(--border)] shadow-xl md:hidden block">
-    <div class="flex justify-around items-center h-16">
-      <!-- Tombol Kiri: Pop-up / Daftar Macam Tools -->
-      <button onclick="handleToolsNav()" class="flex flex-col items-center justify-center text-[var(--text-secondary)] hover:text-brand-light transition-all flex-1 py-1">
-        <i class="fa-solid fa-compass text-lg mb-1"></i>
-        <span class="text-[10px] font-semibold">Semua Alat</span>
-      </button>
-
-      <!-- Tombol Tengah: Beranda Utama (Homepage) -->
-      <a href="#" onclick="goHome()" class="flex flex-col items-center justify-center text-brand-light transition-all flex-1 py-1">
-        <div class="w-10 h-10 bg-brand-light text-white rounded-full flex items-center justify-center shadow-lg -mt-5 border-4 border-[var(--bg-surface)]">
-          <i class="fa-solid fa-house text-sm"></i>
-        </div>
-        <span class="text-[10px] font-semibold mt-1">Beranda</span>
-      </a>
-
-      <!-- Tombol Kanan: About Us Pop-up -->
-      <button onclick="openAboutModal()" class="flex flex-col items-center justify-center text-[var(--text-secondary)] hover:text-brand-light transition-all flex-1 py-1">
-        <i class="fa-solid fa-circle-info text-lg mb-1"></i>
-        <span class="text-[10px] font-semibold">About Us</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- ========================================================== -->
-  <!-- POP-UP MODAL: ABOUT US -->
-  <!-- ========================================================== -->
-  <div id="aboutModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-300">
-    <div class="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-2xl max-w-md w-full border border-[var(--border)] shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="aboutModalCard">
-      <div class="p-6 space-y-4">
-        <div class="flex justify-between items-center border-b border-[var(--border)] pb-3">
-          <h3 class="font-clash text-lg font-bold text-brand-light flex items-center gap-2">
-            <i class="fa-solid fa-address-card"></i> Tentang 296Tools
-          </h3>
-          <button onclick="closeAboutModal()" class="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg hover:bg-[var(--bg-card)]">
-            <i class="fa-solid fa-xmark text-lg"></i>
-          </button>
-        </div>
-        
-        <div class="space-y-3 text-sm leading-relaxed text-[var(--text-secondary)]">
-          <div class="w-16 h-16 bg-brand-light/10 rounded-2xl mx-auto flex items-center justify-center">
-            <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" class="w-10 h-10 object-contain" alt="296 Studios Logo">
+        <section class="text-center py-12 md:py-16 relative overflow-hidden">
+          <div class="blob blob-1"></div>
+          <div class="inline-flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-brand-dark bg-brand-light/10 border border-brand-light/20 rounded-full px-4 py-1.5 mb-6">
+            <i class="fa-solid fa-bolt"></i> Koleksi Tools Internet Pilihan
           </div>
-          <p class="text-center font-bold text-sm text-[var(--text-primary)]">296GROUP - Solusi Digital Lokal</p>
-          <p>
-            <strong>296Tools</strong> adalah direktori & ekosistem micro-apps yang dikembangkan untuk membantu kegiatan digital harian Anda secara produktif. 
+          <h1 class="font-clash text-4xl md:text-6xl font-bold tracking-tight leading-none mb-6">
+            Satu Tempat,<br><span class="bg-gradient-to-r from-brand-light via-brand-accent to-brand-emerald bg-clip-text text-transparent">Semua Tools</span>
+          </h1>
+          <p class="text-sm md:text-lg text-[var(--text-secondary)] max-w-xl mx-auto mb-8 font-light leading-relaxed">
+            Kumpulan alat utilitas &amp; produktivitas online 100% gratis, aman, dan langsung diproses secara lokal dari dalam browser perangkat Anda.
           </p>
-          <p>
-            Seluruh data diproses secara <strong>100% lokal di dalam browser Anda (Client-Side)</strong>. Kami sama sekali tidak mengirim atau menyimpan berkas dokumen atau data sensitif Anda ke server luar. Keamanan privasi Anda terjamin penuh.
-          </p>
-          <div class="p-3 bg-[var(--bg-card)] rounded-xl border border-[var(--border)] text-xs text-[var(--text-muted)] text-center">
-            Misi kami adalah menyediakan alat bantu cepat, ringan, bersih tanpa pop-up iklan mengganggu.
+
+          <div class="relative max-w-md mx-auto mb-6">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] text-sm pointer-events-none"></i>
+            <input type="text" id="homeSearchInput" placeholder="Cari nama atau deskripsi alat..." autocomplete="off" class="w-full h-12 pl-12 pr-12 rounded-xl bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border)] focus:border-brand-light focus:ring-4 focus:ring-brand-light/10 outline-none transition-all text-sm shadow-sm" />
+            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] text-[var(--text-muted)] border border-[var(--border)] rounded px-1.5 py-0.5 bg-[var(--bg-card)]">/ Cari</span>
           </div>
+
+          <div class="flex justify-center gap-6 text-xs text-[var(--text-muted)] flex-wrap">
+            <div class="flex items-center gap-2"><i class="fa-solid fa-box-open text-brand-dark"></i><span><strong id="visibleCount" class="text-[var(--text-secondary)]">0</strong> tools</span></div>
+            <div class="flex items-center gap-2"><i class="fa-solid fa-layer-group text-brand-dark"></i><span><strong id="catCount" class="text-[var(--text-secondary)]">0</strong> kategori</span></div>
+            <div class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-brand-dark"></i><span><strong>100%</strong> lokal &amp; privat</span></div>
+          </div>
+        </section>
+
+        <section class="mb-8">
+          <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-none" id="filterRow"></div>
+        </section>
+
+        <div class="flex items-center justify-between border-b border-[var(--border)] pb-4 mb-6">
+          <div class="flex items-center gap-3">
+            <span class="w-1 h-5 rounded-full bg-brand-light inline-block"></span>
+            <h2 class="font-clash text-sm font-semibold tracking-wider uppercase text-[var(--text-secondary)]" id="sectionTitle">Semua Tools</h2>
+          </div>
+          <span class="text-xs text-[var(--text-muted)] font-medium" id="resultCount">0 tools</span>
         </div>
 
-        <div class="pt-2 flex justify-end">
-          <button onclick="closeAboutModal()" class="px-5 py-2 text-xs font-semibold bg-brand-light text-white rounded-lg hover:bg-opacity-90 transition-all">
-            Mengerti, Terima Kasih
-          </button>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="toolsGrid"></div>
+
+        <div class="hidden text-center py-16 text-[var(--text-muted)]" id="noResults">
+          <i class="fa-solid fa-face-sad-tear text-4xl mb-4 text-brand-light block"></i>
+          <p class="font-semibold text-lg text-[var(--text-primary)]">Alat tidak ditemukan</p>
+          <p class="text-xs mt-1">Coba gunakan kata kunci pencarian yang lain.</p>
         </div>
-      </div>
+
+      </main>
+
+      <div id="site-footer"></div>
     </div>
   </div>
 
-  <!-- ========================================================== -->
-  <!-- POP-UP MODAL: DAFTAR MACAM-MACAM TOOLS -->
-  <!-- ========================================================== -->
-  <div id="toolsMenuModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 hidden transition-opacity duration-300">
-    <div class="bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-2xl max-w-2xl w-full border border-[var(--border)] shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300" id="toolsMenuCard">
-      <div class="p-6 space-y-4">
-        <div class="flex justify-between items-center border-b border-[var(--border)] pb-3">
-          <h3 class="font-clash text-lg font-bold text-brand-light flex items-center gap-2">
-            <i class="fa-solid fa-grid-2"></i> Macam-Macam Alat (Quick Access)
-          </h3>
-          <button onclick="closeToolsModal()" class="text-[var(--text-muted)] hover:text-[var(--text-primary)] p-1 rounded-lg hover:bg-[var(--bg-card)]">
-            <i class="fa-solid fa-xmark text-lg"></i>
-          </button>
-        </div>
+  <div id="site-mobile-menu"></div>
 
-        <!-- Scrollable list of all tools in modal -->
-        <div class="max-h-[60vh] overflow-y-auto grid grid-cols-1 sm:grid-cols-2 gap-3 pr-1" id="modalToolsList">
-          <!-- Daftar dinamis akan di-populate oleh JS -->
-        </div>
+  <script src="/assets/js/layout.js"></script>
 
-        <div class="pt-2 flex justify-end">
-          <button onclick="closeToolsModal()" class="px-5 py-2 text-xs font-semibold bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border)] rounded-lg hover:bg-[var(--border)] transition-all">
-            Tutup
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- ========================================================== -->
-  <!-- LOGIKA PEMROGRAMAN WEB -->
-  <!-- ========================================================== -->
+  <!-- ==========================================================
+       LOGIKA HOMEPAGE: grid, filter kategori, pencarian.
+       Semua data berasal dari window.TOOLS / window.CATEGORIES
+       di /assets/js/tools-data.js — TIDAK ADA data tool di-hardcode di sini.
+       ========================================================== -->
   <script>
-    // ==========================================================
-    // PETUNJUK PENAMBAHAN ALAT / LAMAN BARU:
-    // Jika Anda ingin menambahkan alat utilitas baru, silakan cari array "TOOLS"
-    // di bawah ini. Cukup buat objek baru mengikuti skema berikut:
-    // {
-    //   name: 'Nama Alat Baru',
-    //   desc: 'Deskripsi fungsional singkat alat baru Anda.',
-    //   icon: 'class ikon font-awesome (misal: fa-solid fa-check)',
-    //   cat: 'kategori (gunakan "util")',
-    //   url: '../url-folder-alat-baru'
-    // }
-    // ==========================================================
+    (function () {
+      var params = new URLSearchParams(location.search);
+      var activeCat = params.get('kategori') || 'all';
+      var searchQ = '';
 
-    // Kategori Filter (Sesuai Konsep Homepage)
-    const CATEGORIES = [
-      { id: 'all', label: 'Semua', icon: 'fa-solid fa-border-all' },
-      { id: 'util', label: 'Utilitas', icon: 'fa-solid fa-wrench' },
-    ];
-
-    // Koleksi Tools yang Terintegrasi di 296GROUP
-    const TOOLS = [
-      { name: 'Converter File', desc: 'Pengkonversi berkas PDF, Word, Teks, & Gambar', icon: 'fa-solid fa-file', cat: 'util', url: '/converter-file' },
-      { name: 'Fake Post X', desc: 'Pembuat screenshot postingan media sosial X secara instan', icon: 'fa-brands fa-x-twitter', cat: 'util', url: '/fake-post-x' },
-      { name: 'Favicon Maker', desc: 'Pembuat & kompresor Favicon modern terlengkap (.ico & .png)', icon: 'fa-solid fa-file-image', cat: 'util', url: '/favicon-maker' },
-      { name: 'Generator QR Code', desc: 'Pembuat QR Code premium dengan warna & logo kustom', icon: 'fa-solid fa-qrcode', cat: 'util', url: '/generator-qr-code' },
-      { name: 'Google Dorking Tools', desc: 'Advanced Google Dork & OSINT Intelligence Generator', icon: 'fa-brands fa-google', cat: 'util', url: '/google-dorking' },
-      { name: 'Image Compressor', desc: 'Pengkompres ukuran dimensi & kapasitas kilobyte gambar', icon: 'fa-regular fa-images', cat: 'util', url: '/image-compresor' },
-      { name: 'Invoice Maker', desc: 'Pembuat berkas tagihan (Invoice) praktis terkompresi PDF', icon: 'fa-solid fa-file-invoice', cat: 'util', url: '/invoice-maker' },
-      { name: 'Prompt Generator', desc: 'Pembuat format prompt siap pakai untuk optimasi ChatGPT/Claude', icon: 'fa-regular fa-keyboard', cat: 'util', url: '/prompt-generator' },
-      { name: 'Scraping Link FB Reels', desc: 'Ekstraktor tautan (URL) reel profil publik dari Facebook', icon: 'fa-brands fa-facebook', cat: 'util', url: '/scraping-fb-reels' },
-      { name: 'Smart HPP', desc: 'Kalkulator HPP & Harga Jual Anti Boncos bagi pemilik bisnis', icon: 'fa-solid fa-calculator', cat: 'util', url: '/smart-hpp' },
-      { name: 'URL Shortener', desc: 'Pangkas URL panjang menjadi ringkas dan mudah dibagikan', icon: 'fa-solid fa-link', cat: 'util', url: '/url-shortener' },
-      { name: 'WA Link Generator', desc: 'Pembuat link pesan instan WhatsApp otomatis', icon: 'fa-brands fa-whatsapp', cat: 'util', url: '/wa-link-generator' },
-    ];
-
-    let activeCat = 'all';
-    let searchQ = '';
-
-    // ==========================================================
-    // SISTEM TEMA: GELAP / TERANG (DARK & LIGHT MODE)
-    // ==========================================================
-    const themeToggleBtn = document.getElementById('themeToggle');
-    
-    // Inisialisasi Deteksi Tema Tersimpan atau Sistem Pengguna
-    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-
-    themeToggleBtn.addEventListener('click', () => {
-      if (document.documentElement.classList.contains('dark')) {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
-      } else {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
+      function toolCardHTML(t, i) {
+        var delay = Math.min(i * 28, 280);
+        return '<a class="tool-card group" href="' + t.url + '" style="animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) ' + delay + 'ms both">' +
+          '<div class="flex items-start justify-between w-full">' +
+            '<div class="w-10 h-10 rounded-xl bg-brand-light/10 text-brand-light flex items-center justify-center text-lg group-hover:bg-brand-light group-hover:text-white transition-all duration-300"><i class="' + t.icon + '"></i></div>' +
+            '<button class="text-[11px] ' + (window.Tools296 && window.Tools296.isFavorite(t.id) ? 'text-yellow-400' : 'text-[var(--text-muted)]') + '" data-fav-id="' + t.id + '" title="Favoritkan"><i class="fa-' + (window.Tools296 && window.Tools296.isFavorite(t.id) ? 'solid' : 'regular') + ' fa-star"></i></button>' +
+          '</div>' +
+          '<div class="my-3">' +
+            '<h3 class="text-sm font-bold text-[var(--text-primary)] group-hover:text-brand-light transition-colors">' + t.name + '</h3>' +
+            '<p class="text-[11px] leading-relaxed text-[var(--text-secondary)] font-light mt-1 line-clamp-2">' + t.desc + '</p>' +
+          '</div>' +
+          '<div class="flex items-center justify-between pt-1 text-[var(--text-muted)] group-hover:text-brand-light transition-all text-xs">' +
+            '<span class="text-[10px] font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Akses Alat</span>' +
+            '<i class="fa-solid fa-arrow-up-right-from-square transform translate-x-1 -translate-y-1 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform"></i>' +
+          '</div></a>';
       }
-    });
 
-    // ==========================================================
-    // RENDER FILTER KATEGORI
-    // ==========================================================
-    const filterRow = document.getElementById('filterRow');
-    CATEGORIES.forEach(c => {
-      const count = c.id === 'all' ? TOOLS.length : TOOLS.filter(t => t.cat === c.id).length;
-      const btn = document.createElement('button');
-      
-      // Styling Tombol Filter Sesuai Homepage Premium
-      btn.className = `filter-btn flex-shrink-0 flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:bg-[var(--bg-card)] transition-all cursor-pointer ${
-        c.id === 'all' ? 'border-brand-light bg-brand-light text-white hover:bg-brand-light/95 shadow-md shadow-brand-light/20' : ''
-      }`;
-      btn.dataset.cat = c.id;
-      btn.innerHTML = `<i class="${c.icon}"></i><span>${c.label}</span> <span class="opacity-60 bg-black/10 dark:bg-white/10 px-2 py-0.5 rounded text-[10px]">${count}</span>`;
-      
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => {
-          b.className = "filter-btn flex-shrink-0 flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:bg-[var(--bg-card)] transition-all cursor-pointer";
+      function renderFilters() {
+        var row = document.getElementById('filterRow');
+        var CATEGORIES = window.CATEGORIES || [];
+        var TOOLS = window.TOOLS || [];
+        row.innerHTML = CATEGORIES.map(function (c) {
+          var count = c.id === 'all' ? TOOLS.length : TOOLS.filter(function (t) { return t.category === c.id; }).length;
+          var isActive = c.id === activeCat;
+          return '<button data-cat="' + c.id + '" class="filter-btn flex-shrink-0 flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-xl border transition-all cursor-pointer ' +
+            (isActive
+              ? 'border-brand-light bg-brand-light text-white shadow-md shadow-brand-light/20'
+              : 'border-[var(--border)] bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:bg-[var(--bg-card)]') +
+            '"><i class="' + c.icon + '"></i><span>' + c.label + '</span> <span class="opacity-60 bg-black/10 dark:bg-white/10 px-2 py-0.5 rounded text-[10px]">' + count + '</span></button>';
+        }).join('');
+
+        row.querySelectorAll('.filter-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            activeCat = btn.dataset.cat;
+            var url = new URL(location.href);
+            if (activeCat === 'all') url.searchParams.delete('kategori'); else url.searchParams.set('kategori', activeCat);
+            history.replaceState(null, '', url);
+            renderFilters();
+            render();
+          });
         });
-        btn.className = "filter-btn flex-shrink-0 flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-xl border border-brand-light bg-brand-light text-white hover:bg-brand-light/95 shadow-md shadow-brand-light/20 cursor-pointer";
-        activeCat = c.id;
+
+        document.getElementById('catCount').textContent = CATEGORIES.length - 1;
+      }
+
+      function render() {
+        var TOOLS = window.TOOLS || [];
+        var CATEGORIES = window.CATEGORIES || [];
+        var list = TOOLS;
+        if (activeCat !== 'all') list = list.filter(function (t) { return t.category === activeCat; });
+        if (searchQ) {
+          var q = searchQ.toLowerCase();
+          list = list.filter(function (t) { return t.name.toLowerCase().indexOf(q) !== -1 || t.desc.toLowerCase().indexOf(q) !== -1; });
+        }
+
+        var grid = document.getElementById('toolsGrid');
+        var noRes = document.getElementById('noResults');
+        var cat = CATEGORIES.find(function (c) { return c.id === activeCat; });
+        document.getElementById('sectionTitle').textContent = cat ? cat.label : 'Semua';
+        document.getElementById('resultCount').textContent = list.length + ' tools';
+        document.getElementById('visibleCount').textContent = list.length;
+
+        if (!list.length) {
+          grid.innerHTML = '';
+          noRes.classList.remove('hidden');
+          return;
+        }
+        noRes.classList.add('hidden');
+        grid.innerHTML = list.map(toolCardHTML).join('');
+        grid.querySelectorAll('[data-fav-id]').forEach(function (btn) {
+          btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.Tools296.toggleFavorite(btn.getAttribute('data-fav-id'));
+            render();
+          });
+        });
+      }
+
+      document.getElementById('homeSearchInput').addEventListener('input', function (e) {
+        searchQ = e.target.value.trim();
         render();
       });
-      filterRow.appendChild(btn);
-    });
 
-    // ==========================================================
-    // RENDER DAFTAR TOOLS (HOMEPAGE VIEW)
-    // ==========================================================
-    function render() {
-      let list = TOOLS;
-      if (activeCat !== 'all') list = list.filter(t => t.cat === activeCat);
-      if (searchQ) {
-        const q = searchQ.toLowerCase();
-        list = list.filter(t => t.name.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q));
-      }
-
-      const grid = document.getElementById('toolsGrid');
-      const noRes = document.getElementById('noResults');
-      const vis = document.getElementById('visibleCount');
-      const resCount = document.getElementById('resultCount');
-      const secTitle = document.getElementById('sectionTitle');
-      const headerCount = document.getElementById('headerCount');
-
-      const cat = CATEGORIES.find(c => c.id === activeCat);
-      secTitle.textContent = cat ? cat.label : 'Semua';
-      resCount.textContent = list.length + ' tools';
-      vis.textContent = list.length;
-      headerCount.textContent = list.length + ' tools tersedia';
-
-      if (!list.length) {
-        grid.innerHTML = '';
-        noRes.classList.remove('hidden');
-        return;
-      }
-      noRes.classList.add('hidden');
-
-      grid.innerHTML = list.map((t, i) => {
-        const delay = Math.min(i * 28, 280);
-        return `
-        <a class="tool-card group relative p-5 bg-[var(--bg-surface)] border border-[var(--border)] rounded-2xl flex flex-col justify-between h-44 hover:-translate-y-1.5 hover:shadow-xl transition-all duration-300" 
-           href="${t.url}" 
-           style="animation: fadeUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms both">
-          
-          <div class="flex items-start justify-between w-full">
-            <div class="w-10 h-10 rounded-xl bg-brand-light/10 text-brand-light flex items-center justify-center text-lg group-hover:bg-brand-light group-hover:text-white transition-all duration-300">
-              <i class="${t.icon}"></i>
-            </div>
-            <span class="text-[9px] uppercase font-bold tracking-wider text-[var(--text-muted)] bg-[var(--bg-card)] px-2.5 py-1 rounded-md">
-              Utilitas
-            </span>
-          </div>
-
-          <div class="my-3">
-            <h3 class="text-sm font-bold text-[var(--text-primary)] group-hover:text-brand-light transition-colors">${t.name}</h3>
-            <p class="text-[11px] leading-relaxed text-[var(--text-secondary)] font-light mt-1 line-clamp-2">${t.desc}</p>
-          </div>
-
-          <div class="flex items-center justify-between pt-1 text-[var(--text-muted)] group-hover:text-brand-light transition-all text-xs">
-            <span class="text-[10px] font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Akses Alat</span>
-            <i class="fa-solid fa-arrow-up-right-from-square transform translate-x-1 -translate-y-1 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform"></i>
-          </div>
-        </a>`;
-      }).join('');
-    }
-
-    // Input Event Pencarian
-    const searchInput = document.getElementById('searchInput');
-    searchInput.addEventListener('input', e => {
-      searchQ = e.target.value.trim();
-      render();
-    });
-
-    // Event Shortcut Keyboard '/' untuk fokus pencarian
-    document.addEventListener('keydown', e => {
-      if (e.key === '/' && document.activeElement !== searchInput) {
-        e.preventDefault();
-        searchInput.focus();
-        searchInput.select();
-      }
-      if (e.key === 'Escape') {
-        searchInput.blur();
-        searchQ = '';
-        searchInput.value = '';
+      document.addEventListener('296tools:layout-ready', function () {
+        renderFilters();
         render();
-      }
-    });
-
-    // ==========================================================
-    // NAVIGASI SPESIFIK & SISTEM MODAL / POP-UP
-    // ==========================================================
-
-    // Tombol Navigasi Kiri Seluler (handleToolsNav)
-    function handleToolsNav() {
-      // Karena kita sedang berada di Beranda (homepage.html), klik ini akan langsung scroll
-      // ke bagian grid list macam-macam tools secara halus (smooth scroll).
-      document.getElementById('sectionTitle').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // Tombol Navigasi Tengah Seluler (goHome)
-    function goHome() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // Modal About Us
-    const aboutModal = document.getElementById('aboutModal');
-    const aboutModalCard = document.getElementById('aboutModalCard');
-
-    function openAboutModal() {
-      aboutModal.classList.remove('hidden');
-      setTimeout(() => {
-        aboutModal.classList.add('opacity-100');
-        aboutModalCard.classList.remove('scale-95');
-        aboutModalCard.classList.add('scale-100');
-      }, 50);
-    }
-
-    function closeAboutModal() {
-      aboutModal.classList.remove('opacity-100');
-      aboutModalCard.classList.remove('scale-100');
-      aboutModalCard.classList.add('scale-95');
-      setTimeout(() => {
-        aboutModal.classList.add('hidden');
-      }, 300);
-    }
-
-    // Klik di luar area modal untuk menutup modal
-    window.addEventListener('click', (e) => {
-      if (e.target === aboutModal) closeAboutModal();
-      if (e.target === document.getElementById('toolsMenuModal')) closeToolsModal();
-    });
-
-    // NOTE: Kode pop-up modal "toolsMenuModal" disediakan sebagai kontinjensi
-    // bila berkas ini dipasangkan di luar halaman utama, yang mana akan me-render daftar alat di dalam pop-up.
-    function closeToolsModal() {
-      const modal = document.getElementById('toolsMenuModal');
-      modal.classList.add('hidden');
-    }
-
-    // Jalankan render awal
-    render();
+      });
+    })();
   </script>
 </body>
 </html>
