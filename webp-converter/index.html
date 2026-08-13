@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="id" class="transition-colors duration-300">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebP Converter — Konversi Gambar ke WebP untuk Blogger | 296Tools</title>
+<meta name="description" content="Ubah JPG, PNG, dan gambar lainnya ke format WebP secara massal agar ukuran file lebih kecil dan tidak berat saat diunggah ke Blogger. 100% lokal di browser.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.296.web.id/webp-converter/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="/assets/js/tailwind-config.js"></script>
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/layout.css">
+<script src="/assets/js/tools-data.js"></script>
+
+<!-- JSZip: dipakai untuk fitur "Unduh Semua (ZIP)" -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<!--
+  ===========================================================================
+  STYLE KHUSUS TOOL INI
+  ===========================================================================
+-->
+<style>
+  .file-card { transition: all .25s ease; }
+  .file-card.is-removing { opacity: 0; transform: scale(.95); }
+  .drag-active { border-color: var(--brand-light, #6366f1) !important; }
+  #global-drop-overlay { backdrop-filter: blur(2px); }
+</style>
+
+</head>
+<body class="flex flex-col">
+
+  <div id="site-header"></div>
+
+  <div class="app-shell">
+    <div id="site-sidebar-wrap"><div id="site-sidebar"></div></div>
+
+    <div id="site-content-wrap">
+      <div class="max-w-6xl w-full mx-auto px-4 pt-4">
+        <div id="site-breadcrumb"></div>
+      </div>
+
+      <!-- =================================================================
+           KONTEN UNIK TOOL
+           ================================================================= -->
+      <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-8 relative z-10 animate-fade-up">
+
+        <!-- Toast Notification Container -->
+        <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+        <!-- Hero / Judul Halaman -->
+        <section class="text-center py-8 relative overflow-hidden" id="hero-section">
+          <div class="blob blob-1"></div>
+
+          <div class="inline-flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-brand-dark bg-brand-light/10 border border-brand-light/20 rounded-full px-4 py-1.5 mb-4">
+            <i class="fa-solid fa-file-export"></i> WebP Converter
+          </div>
+
+          <h1 class="font-clash text-3xl md:text-5xl font-bold tracking-tight leading-none mb-4">
+            Konversi ke <span class="bg-gradient-to-r from-brand-light via-brand-accent to-brand-emerald bg-clip-text text-transparent">WebP</span>
+          </h1>
+
+          <p class="text-xs md:text-sm text-[var(--text-secondary)] max-w-lg mx-auto font-light leading-relaxed">
+            Ubah JPG, PNG, atau gambar lainnya ke format WebP secara massal agar postingan Blogger Anda ringan &amp; cepat dimuat. Seluruh proses 100% lokal di browser — file tidak pernah diunggah ke server.
+          </p>
+        </section>
+
+        <!-- Upload Dropzone Area -->
+        <div id="dropzone-container" class="max-w-2xl mx-auto transition-all duration-300">
+          <div id="dropzone" class="border-2 border-dashed border-[var(--border)] hover:border-brand-light bg-[var(--bg-surface)] rounded-3xl p-8 md:p-12 text-center cursor-pointer transition-all shadow-sm hover:shadow-md group relative">
+            <input type="file" id="file-input" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" multiple>
+
+            <div class="space-y-4 pointer-events-none">
+              <div class="mx-auto w-16 h-16 bg-[var(--bg-card)] group-hover:bg-brand-light/10 text-[var(--text-muted)] group-hover:text-brand-light rounded-2xl flex items-center justify-center transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+              </div>
+
+              <div class="space-y-1">
+                <p class="text-base font-semibold text-[var(--text-primary)]">
+                  Tarik &amp; lepas gambar Anda di sini
+                </p>
+                <p class="text-xs text-[var(--text-secondary)]">
+                  atau <span class="text-brand-dark font-semibold group-hover:underline">pilih beberapa file</span> sekaligus dari perangkat Anda
+                </p>
+              </div>
+
+              <p class="text-[10px] text-[var(--text-muted)]">
+                Mendukung JPG, PNG, GIF, BMP, hingga WebP lain — bisa banyak file sekaligus
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Studio Section (muncul setelah ada file) -->
+        <div id="studio-section" class="hidden space-y-6 mt-2">
+
+          <!-- Toolbar Atas: Pengaturan Global + Aksi -->
+          <div class="bg-[var(--bg-surface)] rounded-2xl border border-[var(--border)] p-5 shadow-sm">
+            <div class="flex flex-col lg:flex-row lg:items-center gap-5 lg:gap-8">
+
+              <!-- Slider Kualitas -->
+              <div class="flex-1 min-w-[220px] space-y-2">
+                <div class="flex justify-between items-center text-xs">
+                  <label for="quality-range" class="font-semibold text-[var(--text-secondary)] flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-brand-light"></i> Kualitas WebP
+                  </label>
+                  <span id="quality-val" class="bg-brand-light/15 text-brand-dark px-2.5 py-0.5 rounded-full font-bold text-[11px]">80%</span>
+                </div>
+                <input type="range" id="quality-range" min="1" max="100" value="80" class="w-full h-1.5 bg-[var(--bg-card)] rounded-lg appearance-none cursor-pointer accent-brand-light">
+                <div class="flex justify-between text-[10px] text-[var(--text-muted)]">
+                  <span>Kecil (Rendah)</span>
+                  <span>Kualitas Tinggi</span>
+                </div>
+              </div>
+
+              <!-- Resize Max Width -->
+              <div class="w-full lg:w-56 space-y-2">
+                <label for="max-width-input" class="text-xs font-semibold text-[var(--text-secondary)] flex items-center gap-2">
+                  <i class="fa-solid fa-expand text-[var(--text-muted)]"></i> Lebar Maks (px)
+                </label>
+                <input type="number" id="max-width-input" placeholder="Opsional, mis. 1200" class="w-full bg-[var(--bg-card)] border border-[var(--border)] rounded-xl px-3 py-2.5 text-xs text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-brand-light">
+              </div>
+
+              <!-- Tombol Aksi -->
+              <div class="flex items-center gap-2 shrink-0">
+                <button id="btn-add-more" class="flex items-center gap-2 text-xs font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] bg-[var(--bg-card)] px-3.5 py-2.5 rounded-xl border border-[var(--border)] transition-all">
+                  <i class="fa-solid fa-plus"></i>
+                  <span class="hidden sm:inline">Tambah</span>
+                </button>
+                <button id="btn-clear-all" class="flex items-center gap-2 text-xs font-semibold text-[var(--text-secondary)] hover:text-red-500 bg-[var(--bg-card)] px-3.5 py-2.5 rounded-xl border border-[var(--border)] transition-all">
+                  <i class="fa-solid fa-trash"></i>
+                  <span class="hidden sm:inline">Hapus Semua</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ringkasan Total -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="bg-[var(--bg-surface)] rounded-2xl border border-[var(--border)] p-4 text-center">
+              <div class="text-[10px] uppercase tracking-wider text-[var(--text-muted)] font-bold mb-1">Total File</div>
+              <div id="stat-total-files" class="text-lg font-clash font-bold text-[var(--text-primary)]">0</div>
+            </div>
+            <div class="bg-[var(--bg-surface)] rounded-2xl border border-[var(--border)] p-4 text-center">
+              <div class="text-[10px] uppercase tracking-wider text-[var(--text-muted)] font-bold mb-1">Ukuran Asli</div>
+              <div id="stat-total-orig" class="text-lg font-clash font-bold text-[var(--text-primary)]">0 KB</div>
+            </div>
+            <div class="bg-[var(--bg-surface)] rounded-2xl border border-[var(--border)] p-4 text-center">
+              <div class="text-[10px] uppercase tracking-wider text-[var(--text-muted)] font-bold mb-1">Ukuran WebP</div>
+              <div id="stat-total-webp" class="text-lg font-clash font-bold text-brand-dark">0 KB</div>
+            </div>
+            <div class="bg-brand-light/10 rounded-2xl border border-brand-light/20 p-4 text-center">
+              <div class="text-[10px] uppercase tracking-wider text-brand-dark font-bold mb-1">Penghematan</div>
+              <div id="stat-total-saving" class="text-lg font-clash font-bold text-emerald-500">0%</div>
+            </div>
+          </div>
+
+          <!-- Daftar File -->
+          <div id="file-list" class="space-y-3"></div>
+
+          <!-- Tombol Download Semua -->
+          <div class="sticky bottom-4 flex justify-center pt-2">
+            <button id="btn-download-all" class="flex items-center gap-2 bg-brand-light hover:bg-opacity-90 text-white font-semibold py-3.5 px-6 rounded-2xl text-xs transition-all shadow-lg shadow-brand-light/20">
+              <i class="fa-solid fa-file-zipper"></i>
+              <span>Unduh Semua (ZIP)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Kartu Info Manfaat -->
+        <div class="max-w-3xl mx-auto mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-[var(--bg-surface)] rounded-2xl border border-[var(--border)] p-5 text-center space-y-2">
+            <i class="fa-solid fa-gauge-high text-brand-light text-lg"></i>
+            <p class="text-xs font-semibold text-[var(--text-primary)]">Blogger Lebih Ringan</p>
+            <p class="text-[11px] text-[var(--text-secondary)]">WebP biasanya 25–35% lebih kecil dari JPG/PNG dengan kualitas visual serupa.</p>
+          </div>
+          <div class="bg-[var(--bg-surface)] rounded-2xl border border-[var(--border)] p-5 text-center space-y-2">
+            <i class="fa-solid fa-lock text-brand-light text-lg"></i>
+            <p class="text-xs font-semibold text-[var(--text-primary)]">Privasi Terjaga</p>
+            <p class="text-[11px] text-[var(--text-secondary)]">Semua konversi diproses langsung di browser Anda, tidak ada file yang diunggah.</p>
+          </div>
+          <div class="bg-[var(--bg-surface)] rounded-2xl border border-[var(--border)] p-5 text-center space-y-2">
+            <i class="fa-solid fa-layer-group text-brand-light text-lg"></i>
+            <p class="text-xs font-semibold text-[var(--text-primary)]">Bisa Banyak Sekaligus</p>
+            <p class="text-[11px] text-[var(--text-secondary)]">Unggah beberapa gambar sekaligus lalu unduh hasilnya satu per satu atau dalam ZIP.</p>
+          </div>
+        </div>
+
+      </main>
+      <!-- ============================ AKHIR KONTEN UNIK ============================ -->
+
+      <div id="site-footer"></div>
+    </div>
+  </div>
+
+  <!-- Hidden canvas untuk konversi -->
+  <canvas id="canvas" class="hidden"></canvas>
+
+  <div id="site-mobile-menu"></div>
+
+  <script src="/assets/js/layout.js"></script>
+
+  <!--
+    ===========================================================================
+    LOGIKA UNIK TOOL: KONVERSI GAMBAR KE WEBP (MULTI FILE)
+    ===========================================================================
+  -->
+  <script>
+    // ==========================================================
+    // ELEMEN DOM & STATE
+    // ==========================================================
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('file-input');
+    const heroSection = document.getElementById('hero-section');
+    const dropzoneContainer = document.getElementById('dropzone-container');
+    const studioSection = document.getElementById('studio-section');
+    const fileListEl = document.getElementById('file-list');
+
+    const qualityRange = document.getElementById('quality-range');
+    const qualityVal = document.getElementById('quality-val');
+    const maxWidthInput = document.getElementById('max-width-input');
+
+    const btnAddMore = document.getElementById('btn-add-more');
+    const btnClearAll = document.getElementById('btn-clear-all');
+    const btnDownloadAll = document.getElementById('btn-download-all');
+
+    const statTotalFiles = document.getElementById('stat-total-files');
+    const statTotalOrig = document.getElementById('stat-total-orig');
+    const statTotalWebp = document.getElementById('stat-total-webp');
+    const statTotalSaving = document.getElementById('stat-total-saving');
+
+    const canvas = document.getElementById('canvas');
+
+    let items = []; // { id, file, name, origSize, status, webpBlob, webpSize, origUrl, webpUrl, width, height }
+    let seq = 0;
+    let webpSupportChecked = false;
+    let webpSupported = true;
+
+    // ==========================================================
+    // TOAST
+    // ==========================================================
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `transform translate-y-2 opacity-0 transition-all duration-300 ease-out flex items-center p-4 min-w-[280px] max-w-sm rounded-2xl shadow-xl border text-xs font-semibold ${
+        type === 'success'
+          ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500 dark:text-emerald-400 backdrop-blur-md'
+          : type === 'error'
+            ? 'bg-red-500/10 border-red-500/20 text-red-500 dark:text-red-400 backdrop-blur-md'
+            : 'bg-[var(--bg-surface)] border-[var(--border)] text-[var(--text-primary)] backdrop-blur-md'
+      }`;
+      const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+      toast.innerHTML = `<span class="mr-3 text-sm">${icon}</span><span class="flex-grow">${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+      setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // ==========================================================
+    // HELPERS
+    // ==========================================================
+    function formatBytes(bytes, decimals = 2) {
+      if (!bytes || bytes === 0) return '0 KB';
+      const k = 1024;
+      const dm = decimals < 0 ? 0 : decimals;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+
+    function checkWebpSupport() {
+      if (webpSupportChecked) return webpSupported;
+      try {
+        const c = document.createElement('canvas');
+        c.width = 1; c.height = 1;
+        webpSupported = c.toDataURL('image/webp').indexOf('image/webp') === 5;
+      } catch (e) {
+        webpSupported = false;
+      }
+      webpSupportChecked = true;
+      if (!webpSupported) {
+        showToast('Browser Anda tampaknya tidak mendukung ekspor WebP. Coba gunakan Chrome, Edge, atau Firefox terbaru.', 'error');
+      }
+      return webpSupported;
+    }
+
+    // ==========================================================
+    // DRAG & DROP + INPUT
+    // ==========================================================
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropzone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        dropzone.classList.add('drag-active', 'bg-brand-light/5');
+      }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropzone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('drag-active', 'bg-brand-light/5');
+      }, false);
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+      const files = e.dataTransfer.files;
+      if (files.length > 0) handleFiles(files);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) handleFiles(e.target.files);
+      fileInput.value = '';
+    });
+
+    btnAddMore.addEventListener('click', () => fileInput.click());
+
+    btnClearAll.addEventListener('click', () => {
+      items.forEach(it => {
+        if (it.origUrl) URL.revokeObjectURL(it.origUrl);
+        if (it.webpUrl) URL.revokeObjectURL(it.webpUrl);
+      });
+      items = [];
+      renderList();
+      updateStats();
+      studioSection.classList.add('hidden');
+      heroSection.classList.remove('hidden');
+      dropzoneContainer.classList.remove('hidden');
+    });
+
+    // ==========================================================
+    // HANDLE FILE MASUK
+    // ==========================================================
+    function handleFiles(fileList) {
+      checkWebpSupport();
+
+      const validFiles = Array.from(fileList).filter(f => {
+        if (!f.type.startsWith('image/')) {
+          showToast(`"${f.name}" dilewati: bukan berkas gambar.`, 'error');
+          return false;
+        }
+        return true;
+      });
+
+      if (validFiles.length === 0) return;
+
+      heroSection.classList.add('hidden');
+      dropzoneContainer.classList.add('hidden');
+      studioSection.classList.remove('hidden');
+
+      validFiles.forEach(file => {
+        const id = 'f' + (++seq);
+        const item = {
+          id,
+          file,
+          name: file.name,
+          origSize: file.size,
+          status: 'processing', // processing | done | error
+          webpBlob: null,
+          webpSize: 0,
+          origUrl: URL.createObjectURL(file),
+          webpUrl: null,
+          width: 0,
+          height: 0,
+        };
+        items.push(item);
+        convertItem(item);
+      });
+
+      renderList();
+      updateStats();
+    }
+
+    // ==========================================================
+    // KONVERSI SATU FILE KE WEBP
+    // ==========================================================
+    function convertItem(item) {
+      const img = new Image();
+      img.onload = function () {
+        const quality = parseFloat(qualityRange.value) / 100;
+        let targetWidth = img.width;
+        let targetHeight = img.height;
+
+        const maxW = parseInt(maxWidthInput.value);
+        if (maxW && maxW > 0 && img.width > maxW) {
+          targetWidth = maxW;
+          targetHeight = Math.round(img.height * (maxW / img.width));
+        }
+
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, targetWidth, targetHeight);
+        ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+
+        canvas.toBlob((blob) => {
+          if (blob && blob.type === 'image/webp') {
+            item.webpBlob = blob;
+            item.webpSize = blob.size;
+            item.webpUrl = URL.createObjectURL(blob);
+            item.width = targetWidth;
+            item.height = targetHeight;
+            item.status = 'done';
+          } else {
+            item.status = 'error';
+          }
+          renderList();
+          updateStats();
+        }, 'image/webp', quality);
+      };
+      img.onerror = function () {
+        item.status = 'error';
+        renderList();
+        updateStats();
+      };
+      img.src = item.origUrl;
+    }
+
+    function reconvertAll() {
+      items.forEach(it => {
+        if (it.webpUrl) URL.revokeObjectURL(it.webpUrl);
+        it.status = 'processing';
+        it.webpBlob = null;
+        it.webpUrl = null;
+      });
+      renderList();
+      items.forEach(it => convertItem(it));
+    }
+
+    let debounceTimer;
+    function debounceReconvert() {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(reconvertAll, 450);
+    }
+
+    qualityRange.addEventListener('input', (e) => {
+      qualityVal.textContent = e.target.value + '%';
+    });
+    qualityRange.addEventListener('change', () => {
+      if (items.length) debounceReconvert();
+    });
+    maxWidthInput.addEventListener('input', () => {
+      if (items.length) debounceReconvert();
+    });
+
+    // ==========================================================
+    // RENDER DAFTAR FILE
+    // ==========================================================
+    function renderList() {
+      if (items.length === 0) {
+        fileListEl.innerHTML = '';
+        return;
+      }
+
+      fileListEl.innerHTML = items.map(it => {
+        const diff = it.origSize - it.webpSize;
+        const savedPercent = it.status === 'done' && it.origSize > 0 ? Math.round((diff / it.origSize) * 100) : null;
+
+        let rightBlock = '';
+        if (it.status === 'processing') {
+          rightBlock = `
+            <div class="flex items-center gap-2 text-[11px] text-[var(--text-secondary)]">
+              <div class="animate-spin rounded-full h-4 w-4 border-2 border-[var(--border)] border-t-brand-light"></div>
+              Mengonversi…
+            </div>`;
+        } else if (it.status === 'error') {
+          rightBlock = `<span class="text-[11px] font-semibold text-red-500"><i class="fa-solid fa-triangle-exclamation"></i> Gagal dikonversi</span>`;
+        } else {
+          const savingColor = savedPercent > 0 ? 'text-emerald-500' : (savedPercent < 0 ? 'text-red-500' : 'text-[var(--text-secondary)]');
+          const savingLabel = savedPercent > 0 ? `-${savedPercent}%` : (savedPercent < 0 ? `+${Math.abs(savedPercent)}%` : 'Sama');
+          rightBlock = `
+            <div class="flex items-center gap-3">
+              <div class="text-right">
+                <div class="text-[11px] font-bold text-[var(--text-primary)]">${formatBytes(it.webpSize)}</div>
+                <div class="text-[10px] font-semibold ${savingColor}">${savingLabel}</div>
+              </div>
+              <button data-action="download" data-id="${it.id}" class="w-9 h-9 flex items-center justify-center rounded-xl bg-brand-light/10 text-brand-dark hover:bg-brand-light hover:text-white transition-all" title="Unduh">
+                <i class="fa-solid fa-download text-xs"></i>
+              </button>
+            </div>`;
+        }
+
+        return `
+          <div class="file-card bg-[var(--bg-surface)] rounded-2xl border border-[var(--border)] p-3 flex items-center gap-3 shadow-sm" data-id="${it.id}">
+            <div class="w-14 h-14 rounded-xl overflow-hidden bg-[var(--bg)] flex items-center justify-center shrink-0 border border-[var(--border)]">
+              <img src="${it.origUrl}" class="w-full h-full object-cover" alt="Pratinjau ${it.name}">
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-semibold text-[var(--text-primary)] truncate">${it.name}</p>
+              <p class="text-[10px] text-[var(--text-muted)]">${formatBytes(it.origSize)}${it.status === 'done' ? ` &rarr; ${it.width}&times;${it.height}px` : ''}</p>
+            </div>
+            ${rightBlock}
+            <button data-action="remove" data-id="${it.id}" class="w-8 h-8 flex items-center justify-center rounded-xl text-[var(--text-muted)] hover:text-red-500 hover:bg-red-500/10 transition-all shrink-0" title="Hapus">
+              <i class="fa-solid fa-xmark text-xs"></i>
+            </button>
+          </div>`;
+      }).join('');
+    }
+
+    fileListEl.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-action]');
+      if (!btn) return;
+      const id = btn.getAttribute('data-id');
+      const action = btn.getAttribute('data-action');
+      const item = items.find(i => i.id === id);
+      if (!item) return;
+
+      if (action === 'download') {
+        downloadSingle(item);
+      } else if (action === 'remove') {
+        if (item.origUrl) URL.revokeObjectURL(item.origUrl);
+        if (item.webpUrl) URL.revokeObjectURL(item.webpUrl);
+        items = items.filter(i => i.id !== id);
+        renderList();
+        updateStats();
+        if (items.length === 0) {
+          studioSection.classList.add('hidden');
+          heroSection.classList.remove('hidden');
+          dropzoneContainer.classList.remove('hidden');
+        }
+      }
+    });
+
+    function baseName(name) {
+      const idx = name.lastIndexOf('.');
+      return idx > 0 ? name.substring(0, idx) : name;
+    }
+
+    function downloadSingle(item) {
+      if (!item.webpBlob) {
+        showToast('Berkas belum selesai dikonversi.', 'error');
+        return;
+      }
+      const link = document.createElement('a');
+      link.href = item.webpUrl;
+      link.download = `${baseName(item.name)}.webp`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // ==========================================================
+    // DOWNLOAD SEMUA (ZIP)
+    // ==========================================================
+    btnDownloadAll.addEventListener('click', async () => {
+      const doneItems = items.filter(i => i.status === 'done' && i.webpBlob);
+      if (doneItems.length === 0) {
+        showToast('Belum ada berkas WebP yang siap diunduh.', 'error');
+        return;
+      }
+
+      if (doneItems.length === 1) {
+        downloadSingle(doneItems[0]);
+        return;
+      }
+
+      if (typeof JSZip === 'undefined') {
+        showToast('Gagal memuat modul ZIP. Coba unduh satu per satu.', 'error');
+        return;
+      }
+
+      showToast('Menyiapkan berkas ZIP…', 'info');
+      const zip = new JSZip();
+      const usedNames = new Set();
+
+      doneItems.forEach(it => {
+        let name = `${baseName(it.name)}.webp`;
+        let counter = 1;
+        while (usedNames.has(name)) {
+          name = `${baseName(it.name)}_${counter}.webp`;
+          counter++;
+        }
+        usedNames.add(name);
+        zip.file(name, it.webpBlob);
+      });
+
+      try {
+        const blob = await zip.generateAsync({ type: 'blob' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'webp-converter-296tools.zip';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(link.href), 2000);
+        showToast('Berkas ZIP berhasil diunduh!', 'success');
+      } catch (err) {
+        showToast('Gagal membuat berkas ZIP.', 'error');
+      }
+    });
+
+    // ==========================================================
+    // STATISTIK RINGKASAN
+    // ==========================================================
+    function updateStats() {
+      const totalFiles = items.length;
+      const totalOrig = items.reduce((sum, i) => sum + (i.origSize || 0), 0);
+      const totalWebp = items.reduce((sum, i) => sum + (i.status === 'done' ? i.webpSize : 0), 0);
+      const diff = totalOrig - totalWebp;
+      const savedPercent = totalOrig > 0 && totalWebp > 0 ? Math.round((diff / totalOrig) * 100) : 0;
+
+      statTotalFiles.textContent = totalFiles;
+      statTotalOrig.textContent = formatBytes(totalOrig);
+      statTotalWebp.textContent = totalWebp > 0 ? formatBytes(totalWebp) : '-';
+      statTotalSaving.textContent = totalWebp > 0 ? `${savedPercent}%` : '0%';
+      statTotalSaving.className = `text-lg font-clash font-bold ${savedPercent >= 0 ? 'text-emerald-500' : 'text-red-500'}`;
+
+      const anyDone = items.some(i => i.status === 'done');
+      btnDownloadAll.disabled = !anyDone;
+      btnDownloadAll.classList.toggle('opacity-50', !anyDone);
+      btnDownloadAll.classList.toggle('cursor-not-allowed', !anyDone);
+    }
+
+    // Cek dukungan WebP saat halaman dimuat
+    checkWebpSupport();
+  </script>
+
+</body>
+</html>
