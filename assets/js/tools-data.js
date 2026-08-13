@@ -45,6 +45,7 @@ window.TOOLS = [
   { id: 'url-shortener', name: 'URL Shortener', desc: 'Pangkas URL panjang menjadi ringkas dan mudah dibagikan', icon: 'fa-solid fa-link', category: 'util', url: '/url-shortener/' },
   { id: 'wa-link-generator', name: 'WA Link Generator', desc: 'Pembuat link pesan instan WhatsApp otomatis', icon: 'fa-brands fa-whatsapp', category: 'generator', url: '/wa-link-generator/' },
   { id: 'web-scanner', name: 'Web Scanner', desc: 'Scan dokumen dengan mudah dan dimana saja', icon: 'fa-brands fa-searchengin', category: 'util', url: '/web-scanner/' },
+  { id: 'webp-converter', name: 'WebP Converter', desc: 'Konversi JPG/PNG ke WebP secara massal agar ringan saat diunggah ke Blogger', icon: 'fa-solid fa-file-export', category: 'gambar', url: '/webp-converter/', badge: 'Baru', keywords: ['webp', 'konversi gambar', 'kompres blogger', 'convert jpg png'] },
 
   // ANDA BISA MENAMBAHKAN TOOL BARU DI SINI SECARA MUDAH!
   // Contoh:
