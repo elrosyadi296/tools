@@ -38,6 +38,7 @@ window.TOOLS = [
   { id: 'google-dorking', name: 'Google Dorking', desc: 'Pembuat query pencarian lanjutan (dork) Google untuk riset & keamanan', icon: 'fa-brands fa-google', category: 'util', url: '/google-dorking/' },
   { id: 'image-compresor', name: 'Image Compressor', desc: 'Pengkompres ukuran dimensi & kapasitas kilobyte gambar', icon: 'fa-regular fa-images', category: 'gambar', url: '/image-compresor/' },
   { id: 'invoice-maker', name: 'Invoice Maker', desc: 'Pembuat berkas tagihan (invoice) praktis terkompresi PDF', icon: 'fa-solid fa-file-invoice', category: 'bisnis', url: '/invoice-maker/' },
+  { id: 'pasfoto', name: 'Pas Foto Studio', desc: 'Edit, ganti background, dan cetak pas foto ukuran resmi langsung di browser', icon: 'fa-solid fa-id-card', category: 'gambar', url: '/pasfoto/', badge: 'Baru', keywords: ['pas foto', 'passphoto', 'crop wajah', 'cetak foto', 'ukuran 3x4', 'ukuran 2x3'] },
   { id: 'prompt-generator', name: 'Prompt Generator', desc: 'Pembuat format prompt siap pakai untuk optimasi ChatGPT/Claude', icon: 'fa-regular fa-keyboard', category: 'generator', url: '/prompt-generator/' },
   { id: 'rekap', name: 'Rekap Keuangan', desc: 'Merekap keuangan dimanapun dan kapanpun', icon: 'fa-solid fa-rupiah-sign', category: 'bisnis', url: '/rekap/' },
   { id: 'scraping-fb-reels', name: 'Scraping Link FB Reels', desc: 'Ekstraktor tautan (URL) reel profil publik dari Facebook', icon: 'fa-brands fa-facebook', category: 'sosial', url: '/scraping-fb-reels/' },
