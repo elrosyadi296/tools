@@ -39,6 +39,7 @@ window.TOOLS = [
   { id: 'image-compresor', name: 'Image Compressor', desc: 'Pengkompres ukuran dimensi & kapasitas kilobyte gambar', icon: 'fa-regular fa-images', category: 'gambar', url: '/image-compresor/' },
   { id: 'invoice-maker', name: 'Invoice Maker', desc: 'Pembuat berkas tagihan (invoice) praktis terkompresi PDF', icon: 'fa-solid fa-file-invoice', category: 'bisnis', url: '/invoice-maker/' },
   { id: 'pasfoto', name: 'Pas Foto Studio', desc: 'Edit, ganti background, dan cetak pas foto ukuran resmi langsung di browser', icon: 'fa-solid fa-id-card', category: 'gambar', url: '/pasfoto/', badge: 'Baru', keywords: ['pas foto', 'passphoto', 'crop wajah', 'cetak foto', 'ukuran 3x4', 'ukuran 2x3'] },
+  { id: 'pdf-toolkit', name: 'PDF Toolkit', desc: 'Gabung, pisah, putar, kunci, & tanda tangani PDF — 100% lokal di browser', icon: 'fa-solid fa-file-pdf', category: 'dokumen', url: '/pdf-toolkit/', badge: 'Baru', keywords: ['pdf', 'gabung pdf', 'pisah pdf', 'kompres pdf', 'kunci pdf', 'tanda tangan pdf', 'merge', 'split'] },
   { id: 'prompt-generator', name: 'Prompt Generator', desc: 'Pembuat format prompt siap pakai untuk optimasi ChatGPT/Claude', icon: 'fa-regular fa-keyboard', category: 'generator', url: '/prompt-generator/' },
   { id: 'rekap', name: 'Rekap Keuangan', desc: 'Merekap keuangan dimanapun dan kapanpun', icon: 'fa-solid fa-rupiah-sign', category: 'bisnis', url: '/rekap/' },
   { id: 'scraping-fb-reels', name: 'Scraping Link FB Reels', desc: 'Ekstraktor tautan (URL) reel profil publik dari Facebook', icon: 'fa-brands fa-facebook', category: 'sosial', url: '/scraping-fb-reels/' },
@@ -47,6 +48,9 @@ window.TOOLS = [
   { id: 'wa-link-generator', name: 'WA Link Generator', desc: 'Pembuat link pesan instan WhatsApp otomatis', icon: 'fa-brands fa-whatsapp', category: 'generator', url: '/wa-link-generator/' },
   { id: 'web-scanner', name: 'Web Scanner', desc: 'Scan dokumen dengan mudah dan dimana saja', icon: 'fa-brands fa-searchengin', category: 'util', url: '/web-scanner/' },
   { id: 'webp-converter', name: 'WebP Converter', desc: 'Konversi JPG/PNG ke WebP secara massal agar ringan saat diunggah ke Blogger', icon: 'fa-solid fa-file-export', category: 'gambar', url: '/webp-converter/', badge: 'Baru', keywords: ['webp', 'konversi gambar', 'kompres blogger', 'convert jpg png'] },
+  { id: 'wa-fake-chat', name: 'WA Fake Chat Generator', desc: 'Buat tangkapan layar percakapan WhatsApp palsu yang realistis untuk kebutuhan konten', icon: 'fa-brands fa-whatsapp', category: 'sosial', url: '/wa-fake-chat/', badge: 'Baru', keywords: ['whatsapp', 'fake chat', 'screenshot chat', 'wa palsu', 'editor chat wa'] },
+  { id: 'blogger-html-parser', name: 'Blogger HTML Parser', desc: 'Ubah kode HTML/CSS/JS ke format aman XML (entitas atau CDATA) untuk template Blogger', icon: 'fa-solid fa-code', category: 'util', url: '/blogger-html-parser/', badge: 'Baru', keywords: ['blogger', 'parser html', 'xml entity', 'cdata', 'template blogger'] },
+  { id: 'perapi-template-blogger', name: 'Perapi Template Blogger', desc: 'Rapikan otomatis indentasi kode XML template Blogger beserta HTML, CSS & JS di dalamnya', icon: 'fa-solid fa-broom', category: 'util', url: '/perapi-template-blogger/', badge: 'Baru', keywords: ['blogger', 'format kode', 'prettier', 'rapikan xml', 'b:widget'] },
 
   // ANDA BISA MENAMBAHKAN TOOL BARU DI SINI SECARA MUDAH!
   // Contoh:

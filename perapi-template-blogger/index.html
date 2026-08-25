@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id" class="transition-colors duration-300">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perapi Template Blogger — 296Tools</title>
+<meta name="description" content="Rapikan otomatis indentasi kode template Blogger — tag XML b:widget beserta HTML, CSS, dan JS di dalamnya, langsung di browser.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.296.web.id/perapi-template-blogger/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="/assets/js/tailwind-config.js"></script>
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/layout.css">
+<script src="/assets/js/tools-data.js"></script>
+
+<!-- Library khusus tool: Phosphor Icons + Prettier (dimuat dinamis via script logika di bawah) -->
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+<!--
+  ===========================================================================
+  STYLE KHUSUS TOOL INI
+  ===========================================================================
+-->
+<style>
+  /* Custom Scrollbar area kode */
+  .custom-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
+  .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+  .dark .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #52525b; }
+
+  /* Efek kilau tombol format */
+  @keyframes shimmer { 100% { transform: translateX(100%); } }
+</style>
+
+</head>
+<body class="flex flex-col">
+
+  <!-- Mount point: HEADER -->
+  <div id="site-header"></div>
+
+  <div class="app-shell">
+    <!-- Mount point: SIDEBAR (desktop) -->
+    <div id="site-sidebar-wrap"><div id="site-sidebar"></div></div>
+
+    <div id="site-content-wrap">
+      <!-- Breadcrumb otomatis -->
+      <div class="max-w-7xl w-full mx-auto px-4 pt-4">
+        <div id="site-breadcrumb"></div>
+      </div>
+
+      <!-- =================================================================
+           KONTEN UNIK TOOL
+           ================================================================= -->
+      <main id="page-content" class="flex-grow max-w-7xl w-full mx-auto px-4 py-8 relative z-10 animate-fade-up space-y-6">
+
+        <div class="text-center max-w-2xl mx-auto mb-2">
+          <div class="inline-flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-orange-600 dark:text-orange-400 bg-orange-500/10 border border-orange-500/20 rounded-full px-4 py-1.5 mb-4">
+            <i class="ph ph-layout"></i> Perapi Kode Template Blogger
+          </div>
+          <h1 class="text-2xl md:text-3xl font-extrabold text-[var(--text-primary)] tracking-tight font-clash">
+            Perapi Template Blogger
+          </h1>
+          <p class="mt-2 text-xs md:text-sm text-[var(--text-secondary)]">
+            Format otomatis tag XML <code class="bg-[var(--bg-card)] px-1 rounded text-orange-500">&lt;b:widget&gt;</code> beserta HTML, CSS &amp; JS di dalamnya — langsung di browser Anda.
+          </p>
+        </div>
+
+<!-- Info Banner -->
+        <div class="flex items-start gap-3 p-4 bg-orange-100/50 dark:bg-orange-900/10 border border-orange-200 dark:border-orange-900/30 rounded-xl text-sm text-orange-800 dark:text-orange-200">
+            <i class="ph ph-info mt-0.5 text-orange-500 text-lg shrink-0"></i>
+            <p>
+                <strong>Tips:</strong> Tempelkan seluruh kode template Blogger Anda (atau sebagian widget). Sistem akan mengidentifikasi tag khusus Blogger dan merapikan indentasinya. <em>Catatan: Kode CSS di dalam <code class="bg-orange-200/50 dark:bg-orange-800/50 px-1 rounded">&lt;![CDATA[ ... ]]&gt;</code> mungkin tidak diubah formatnya untuk mencegah kerusakan struktur template.</em>
+            </p>
+        </div>
+
+        <!-- Error Notification (Hidden by default) -->
+        <div id="errorBox" class="hidden flex items-center gap-2 p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800/50 rounded-xl text-sm">
+            <i class="ph ph-warning text-lg shrink-0"></i>
+            <span id="errorMsg"></span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Kolom Kiri: Input -->
+            <div class="flex flex-col bg-white dark:bg-zinc-800 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-700 overflow-hidden h-[600px]">
+                <div class="flex justify-between items-center px-4 py-3 bg-zinc-50 dark:bg-zinc-800/80 border-b border-zinc-200 dark:border-zinc-700">
+                    <span class="text-sm font-bold text-zinc-600 dark:text-zinc-300">Kode Mentah</span>
+                    <button onclick="handleClear()" class="text-xs flex items-center gap-1.5 text-zinc-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors px-2.5 py-1.5 rounded-md font-medium">
+                        <i class="ph ph-trash text-sm"></i> Bersihkan
+                    </button>
+                </div>
+                <textarea
+                    id="inputCode"
+                    placeholder="Tempel (paste) kode template Blogger di sini..."
+                    class="flex-1 w-full p-4 bg-transparent outline-none resize-none font-mono text-[13px] leading-relaxed whitespace-pre text-zinc-700 dark:text-zinc-300 custom-scrollbar"
+                    spellcheck="false"
+                ></textarea>
+            </div>
+
+            <!-- Kolom Kanan: Output -->
+            <div class="flex flex-col bg-white dark:bg-zinc-800 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-700 overflow-hidden h-[600px] relative">
+                <div class="flex justify-between items-center px-4 py-3 bg-zinc-50 dark:bg-zinc-800/80 border-b border-zinc-200 dark:border-zinc-700">
+                    <span class="text-sm font-bold text-zinc-600 dark:text-zinc-300">Hasil Rapian</span>
+                    <button id="copyBtn" onclick="handleCopy()" disabled class="text-xs flex items-center gap-1.5 transition-all px-3 py-1.5 rounded-md font-medium bg-orange-100 text-orange-700 hover:bg-orange-200 dark:bg-orange-900/40 dark:text-orange-400 dark:hover:bg-orange-900/60 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i id="copyIcon" class="ph ph-copy text-sm"></i>
+                        <span id="copyText">Salin Kode</span>
+                    </button>
+                </div>
+                <textarea
+                    id="outputCode"
+                    readonly
+                    placeholder="Hasil kode template yang sudah terstruktur rapi akan muncul di sini..."
+                    class="flex-1 w-full p-4 bg-transparent outline-none resize-none font-mono text-[13px] leading-relaxed text-orange-900 dark:text-orange-100 whitespace-pre custom-scrollbar"
+                    spellcheck="false"
+                ></textarea>
+                
+                <!-- Loading Overlay -->
+                <div id="loadingOverlay" class="hidden absolute inset-0 bg-white/60 dark:bg-zinc-900/60 backdrop-blur-[2px] flex flex-col items-center justify-center gap-3">
+                    <i class="ph ph-spinner-gap animate-spin text-orange-500 text-4xl"></i>
+                    <span class="text-orange-600 dark:text-orange-400 font-medium animate-pulse">Menyusun Tag XML...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tombol Aksi -->
+        <div class="flex justify-center pt-4 pb-8">
+            <button id="formatBtn" onclick="handleFormat()" disabled class="group relative flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 disabled:from-zinc-400 disabled:to-zinc-500 text-white px-10 py-4 rounded-2xl font-bold text-lg shadow-xl hover:shadow-orange-500/30 transition-all active:scale-95 w-full md:w-auto overflow-hidden">
+                <!-- Efek Kilau -->
+                <div class="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+                
+                <i id="btnIcon" class="ph ph-spinner-gap animate-spin text-2xl"></i>
+                <span id="btnText">Memuat Engine...</span>
+            </button>
+        </div>
+
+      </main>
+      <!-- ============================ AKHIR KONTEN UNIK ============================ -->
+
+      <!-- Mount point: FOOTER + bottom nav mobile -->
+      <div id="site-footer"></div>
+    </div>
+  </div>
+
+  <!-- Mount point: MOBILE DRAWER -->
+  <div id="site-mobile-menu"></div>
+
+  <!-- Layout engine -->
+  <script src="/assets/js/layout.js"></script>
+
+  <!--
+    ===========================================================================
+    SCRIPT KHUSUS TOOL INI
+    ===========================================================================
+  -->
+  <script>
+
+        const PRETTIER_VERSION = '3.1.0';
+        const PRETTIER_SCRIPTS = [
+            `https://unpkg.com/prettier@${PRETTIER_VERSION}/standalone.js`,
+            `https://unpkg.com/prettier@${PRETTIER_VERSION}/plugins/babel.js`,
+            `https://unpkg.com/prettier@${PRETTIER_VERSION}/plugins/estree.js`,
+            `https://unpkg.com/prettier@${PRETTIER_VERSION}/plugins/html.js`,
+            `https://unpkg.com/prettier@${PRETTIER_VERSION}/plugins/postcss.js`,
+        ];
+
+        const BLOGGER_PLACEHOLDER = `<?xml version="1.0" encoding="UTF-8" ?>\n<!DOCTYPE html>\n<html b:css='false' b:defaultwidgetversion='2' b:js='false' xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b' xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>\n<head>\n<title><data:blog.pageTitle/></title>\n<b:skin><![CDATA[\n/* CSS Kustom */\nbody { margin: 0; padding: 0; font-family: sans-serif; }\n]]></b:skin>\n</head>\n<body>\n<b:section class='main' id='main' showaddelement='yes'>\n<b:widget id='Blog1' locked='true' title='Posting Blog' type='Blog' version='2' visible='true'>\n<b:includable id='main' var='top'>\n<b:if cond='data:mobile'>\n<div class='mobile-posts'>\n<!-- Postingan versi Mobile -->\n</div>\n<b:else/>\n<div class='desktop-posts'>\n<b:loop values='data:posts' var='post'>\n<h2 class='post-title'><data:post.title/></h2>\n</b:loop>\n</div>\n</b:if>\n</b:includable>\n</b:widget>\n</b:section>\n<script>\n// Inline script\nfunction helloBlogger() { console.log("Halo Blogger!"); }\n<\/script>\n</body>\n</html>`;
+
+        // DOM Elements
+        const inputCode = document.getElementById('inputCode');
+        const outputCode = document.getElementById('outputCode');
+        const formatBtn = document.getElementById('formatBtn');
+        const btnIcon = document.getElementById('btnIcon');
+        const btnText = document.getElementById('btnText');
+        const errorBox = document.getElementById('errorBox');
+        const errorMsg = document.getElementById('errorMsg');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const copyBtn = document.getElementById('copyBtn');
+        const copyIcon = document.getElementById('copyIcon');
+        const copyText = document.getElementById('copyText');
+
+        let isReady = false;
+
+        // Inisialisasi
+        inputCode.value = BLOGGER_PLACEHOLDER;
+
+        // Memuat Prettier secara dinamis
+        async function initPrettier() {
+            const loadScript = (src) => {
+                return new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = src;
+                    script.onload = () => resolve();
+                    script.onerror = () => reject(new Error(`Gagal memuat ${src}`));
+                    document.head.appendChild(script);
+                });
+            };
+
+            try {
+                await loadScript(PRETTIER_SCRIPTS[0]); // Load standalone.js
+                const pluginPromises = PRETTIER_SCRIPTS.slice(1).map(loadScript); // Load plugins paralel
+                await Promise.all(pluginPromises);
+                
+                isReady = true;
+                
+                // Ubah status tombol
+                formatBtn.disabled = false;
+                btnIcon.className = "ph ph-magic-wand text-2xl transition-transform group-hover:-rotate-12";
+                btnText.textContent = "Rapikan Template Blogger";
+                
+            } catch (error) {
+                showError("Gagal memuat mesin Prettier. Pastikan koneksi internet Anda stabil.");
+            }
+        }
+
+        // Panggil inisialisasi
+        initPrettier();
+
+        function showError(msg) {
+            errorMsg.textContent = msg;
+            errorBox.classList.remove('hidden');
+        }
+
+        function hideError() {
+            errorBox.classList.add('hidden');
+            errorMsg.textContent = '';
+        }
+
+        async function handleFormat() {
+            const code = inputCode.value;
+            if (!code.trim()) {
+                showError("Masukkan kode template terlebih dahulu.");
+                return;
+            }
+
+            hideError();
+            formatBtn.disabled = true;
+            loadingOverlay.classList.remove('hidden');
+            
+            // Sedikit delay agar UI sempat memunculkan loading
+            await new Promise(resolve => setTimeout(resolve, 50));
+
+            try {
+                const formatted = await window.prettier.format(code, {
+                    parser: "html",
+                    plugins: window.prettierPlugins,
+                    tabWidth: 2,
+                    useTabs: false,
+                    printWidth: 120, // Template blogger biasanya punya atribut panjang
+                    htmlWhitespaceSensitivity: "ignore", // PENTING: Memaksa tag XML Blogger turun baris
+                    bracketSameLine: false,
+                });
+                
+                outputCode.value = formatted;
+                copyBtn.disabled = false;
+            } catch (error) {
+                console.error(error);
+                let cleanError = error.message.split('\n')[0];
+                if (cleanError.includes("Unexpected closing tag") || cleanError.includes("missing")) {
+                    cleanError = "Sepertinya ada tag <b:...> atau <div> yang lupa ditutup/dibuka. " + cleanError;
+                }
+                showError(`Error Sintaks: ${cleanError}`);
+            } finally {
+                formatBtn.disabled = false;
+                loadingOverlay.classList.add('hidden');
+            }
+        }
+
+        function handleCopy() {
+            if (!outputCode.value) return;
+
+            const fallbackCopy = () => {
+                outputCode.select();
+                try {
+                    document.execCommand('copy');
+                    showCopiedState();
+                } catch (err) {
+                    console.error('Gagal menyalin:', err);
+                }
+                window.getSelection().removeAllRanges();
+            };
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(outputCode.value)
+                    .then(() => showCopiedState())
+                    .catch(fallbackCopy);
+            } else {
+                fallbackCopy();
+            }
+        }
+
+        function showCopiedState() {
+            const originalClasses = copyBtn.className;
+            
+            // Ubah gaya ke "Tersalin"
+            copyBtn.className = "text-xs flex items-center gap-1.5 transition-all px-3 py-1.5 rounded-md font-medium bg-green-500 text-white shadow-sm";
+            copyIcon.className = "ph ph-check-circle text-sm";
+            copyText.textContent = "Tersalin!";
+
+            // Kembalikan setelah 2 detik
+            setTimeout(() => {
+                copyBtn.className = "text-xs flex items-center gap-1.5 transition-all px-3 py-1.5 rounded-md font-medium bg-orange-100 text-orange-700 hover:bg-orange-200 dark:bg-orange-900/40 dark:text-orange-400 dark:hover:bg-orange-900/60 disabled:opacity-50 disabled:cursor-not-allowed";
+                copyIcon.className = "ph ph-copy text-sm";
+                copyText.textContent = "Salin Kode";
+            }, 2000);
+        }
+
+        function handleClear() {
+            if (window.confirm("Yakin ingin menghapus seluruh kode di input?")) {
+                inputCode.value = '';
+                outputCode.value = '';
+                hideError();
+                copyBtn.disabled = true;
+            }
+        }
+    
+  </script>
+
+</body>
+</html>

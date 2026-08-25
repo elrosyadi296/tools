@@ -1,5 +1,22 @@
 # 296Tools — Arsitektur Modular & Scalable
 
+## Fondasi aplikasi/PWA v1.0
+
+Project ini sekarang dilengkapi lapisan aman untuk versi aplikasi:
+
+- `manifest.webmanifest` — metadata instalasi PWA.
+- `sw.js` — menyimpan shell dan versi halaman terakhir yang berhasil dimuat.
+- `offline.html` — halaman darurat ketika server dan cache halaman tidak tersedia.
+- `app-health.json` — status kesehatan rilis yang dibaca aplikasi Android.
+- `app-manifest.json` — kanal, versi, entry, fallback, dan versi minimum APK.
+- `assets/js/app-runtime.js` — registrasi service worker dan status koneksi.
+
+Saat membuat rilis, naikkan `version`/`build` pada kedua file JSON dan nilai
+`VERSION` pada `sw.js`. Jangan mengubah status menjadi `ok` sebelum rilis baru
+lolos pengujian. APK Android nantinya membaca `app-manifest.json`; jika health
+check gagal, APK mempertahankan versi terakhir yang sehat atau membuka bundle
+cadangan bawaan.
+
 Arsitektur ini dibangun agar **1 tool baru = 1 folder + 1 baris data**, tanpa
 menyentuh header, sidebar, drawer, footer, search, breadcrumb, atau active-menu
 sama sekali. Semua elemen itu punya **satu sumber tunggal** dan dimuat otomatis
@@ -100,7 +117,24 @@ masing-masing tool tetap 100% berfungsi seperti sebelumnya, hanya bagian shell
 `converter-file`, `dummy-img`, `fake-post-x`, `favicon-maker`,
 `generator-qr-code`, `google-dorking`, `image-compresor`, `invoice-maker`,
 `prompt-generator`, `scraping-fb-reels`, `smart-hpp`, `url-shortener`,
-`wa-link-generator`, `web-scanner`.
+`wa-link-generator`, `web-scanner`, `wa-fake-chat`, `blogger-html-parser`,
+`perapi-template-blogger`.
+
+### Catatan migrasi tiga tool terbaru
+
+- `wa-fake-chat`: panel kontrol (kiri) memakai token warna (`var(--bg-surface)`,
+  `var(--border)`, dst) agar ikut dark/light mode global. Pratinjau HP (kanan)
+  sengaja **tidak** diubah — warna WhatsApp asli (`#008069`, `#d9fdd3`, dst)
+  dipertahankan literal karena itu wajah dari hasil tangkapan layar itu sendiri.
+- `blogger-html-parser`: sudah memakai palet `slate` dengan varian `dark:`
+  sejak awal, jadi otomatis kompatibel dengan sistem tema global (`darkMode:
+  'class'` yang sama dipakai `tailwind-config.js`). Toggle tema bawaannya
+  sendiri (tombol matahari/bulan) dihapus karena sudah digantikan toggle tema
+  di header global; toast notifikasinya sendiri dipertahankan.
+- `perapi-template-blogger`: `<header>` bawaan halaman diganti hero standar
+  296Tools; sisanya (editor kode, Prettier standalone, Phosphor Icons)
+  dipertahankan apa adanya. Ditambahkan keyframe `shimmer` yang sebelumnya
+  dirujuk tapi belum pernah didefinisikan.
 
 Setiap migrasi diverifikasi otomatis: tag HTML seimbang, seluruh `<script>`
 lolos `node --check`, setiap `getElementById(...)` dicocokkan terhadap `id`

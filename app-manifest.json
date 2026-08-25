@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "channel": "stable",
+  "version": "1.0.0",
+  "build": 1,
+  "entry": "/",
+  "fallback": "/offline.html",
+  "health": "/app-health.json",
+  "minimumAppVersion": "1.0.0",
+  "maintenance": false,
+  "message": ""
+}

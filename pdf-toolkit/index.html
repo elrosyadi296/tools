@@ -1,0 +1,1466 @@
+<!DOCTYPE html>
+<html lang="id" class="transition-colors duration-300">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Toolkit — Gabung, Pisah &amp; Kunci PDF Lokal | 296Tools</title>
+<meta name="description" content="Delapan alat PDF dalam satu tempat: gabung, pisah, putar, hapus/ekstrak halaman, kunci &amp; buka kunci, serta tanda tangan PDF — 100% berjalan lokal di browser, file tidak pernah diunggah.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://tools.296.web.id/pdf-toolkit/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEita0_M2O-eCuyAVlkD8OIaq8QYjANaZTr61ExHZgO5wk5R3k_-Qg-UMLUIh2Xs1yfe9vHOXM7zl_DZN09EghVT3pmPEpsV5agqavbc54CnQ0CW01eoDtXxhgmVkXReU_tUy04HvF0BgltUDzZSaf35yaVUmnE9bi9_uIjrzpxl-852I-HjE0-2W_mYhJjm/s1280/logo%20296%20studios.png" rel="icon" sizes="32x32" type="image/png">
+
+<!-- Tailwind CDN + config bersama (JANGAN diubah per halaman) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="/assets/js/tailwind-config.js"></script>
+
+<!-- Design tokens + layout engine styles (single source, JANGAN diduplikasi) -->
+<link rel="stylesheet" href="/assets/css/tokens.css">
+<link rel="stylesheet" href="/assets/css/layout.css">
+
+<!-- Database tool (dibaca sidebar, search, breadcrumb, active-menu) -->
+<script src="/assets/js/tools-data.js"></script>
+
+<!-- Library pemroses PDF (semua lokal di browser) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<!-- Style khusus tool ini (di-scope ke .pdftk agar tidak bentrok dgn tokens.css) -->
+<style>
+  /* ==========================================================================
+     PDF TOOLKIT — dipetakan ke design token 296Tools (tokens.css) agar
+     ikut mode terang/gelap global & selaras visual dgn tool lain.
+     Jangan ubah nilai warna di sini; ubah di /assets/css/tokens.css.
+     ========================================================================== */
+  .pdftk{
+    --tk-bg: var(--bg-card);
+    --tk-bg-2: var(--bg-card);
+    --tk-surface: var(--bg-surface);
+    --tk-surface-2: var(--bg-card);
+    --tk-border: var(--border);
+    --tk-border-soft: var(--border);
+    --tk-text: var(--text-primary);
+    --tk-text-dim: var(--text-secondary);
+    --tk-text-faint: var(--text-muted);
+    --tk-accent: var(--brand-rose);
+    --tk-accent-2: #fb7185;
+    --tk-accent-dim: rgba(244,63,94,.16);
+    --tk-gold: #c9a24b;
+    --tk-success: var(--brand-emerald);
+    --tk-danger: var(--brand-rose);
+    --tk-radius: var(--radius-md);
+    --tk-radius-lg: var(--radius-xl);
+    --tk-mono: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
+    --tk-sans: var(--font-body);
+    color: var(--tk-text);
+    font-family: var(--tk-sans);
+  }
+  .pdftk ::selection{background:var(--tk-accent);color:#fff;}
+
+  /* ---------- Tab pill nav (pengganti sidebar lama, 1 baris di semua ukuran) ---------- */
+  .pdftk-tabs{
+    display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:22px;
+    scrollbar-width:none;
+  }
+  .pdftk-tabs::-webkit-scrollbar{display:none;}
+  .stamp-btn{
+    all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:8px;flex:none;
+    padding:8px 14px 8px 8px;border-radius:var(--radius-full);color:var(--tk-text-dim);
+    background:var(--bg-surface);border:1px solid var(--border);
+    transition:transform .12s ease, background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .stamp-btn:hover{background:var(--bg-card);color:var(--tk-text);}
+  .stamp-btn .glyph{
+    flex:none;width:26px;height:26px;border:1.5px solid var(--tk-border);border-radius:7px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--tk-mono);font-weight:700;font-size:10px;letter-spacing:.02em;
+    color:var(--tk-text-dim);transition:all .15s ease;
+  }
+  .stamp-btn .label{font-size:12.5px;font-weight:600;white-space:nowrap;}
+  .stamp-btn.active{background:var(--tk-accent-dim);color:var(--tk-accent);border-color:transparent;}
+  .stamp-btn.active .glyph{
+    border-color:var(--tk-accent);color:var(--tk-accent);
+    box-shadow:0 0 0 3px var(--tk-accent-dim);
+  }
+  .stamp-btn:active .glyph{transform:scale(.9);}
+
+        /* ---------- Main ---------- */
+  .panel{display:none;}
+  .panel.active{display:block;animation:fadeIn .25s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+
+  .panel-head{margin-bottom:22px;}
+  .eyebrow{
+    font-family:var(--tk-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--tk-accent-2);margin:0 0 6px;
+  }
+  .panel-head h2{font-size:23px;margin:0 0 6px;letter-spacing:-.01em;}
+  .panel-head p{margin:0;color:var(--tk-text-dim);font-size:14px;line-height:1.6;max-width:60ch;}
+
+  .card{
+    background:var(--tk-surface);border:1px solid var(--tk-border-soft);border-radius:var(--tk-radius-lg);
+    padding:22px;margin-bottom:16px;
+  }
+  .card h3{margin:0 0 14px;font-size:13px;color:var(--tk-text-dim);font-weight:700;
+    text-transform:uppercase;letter-spacing:.06em;}
+
+  /* Dropzone */
+  .dropzone{
+    border:1.5px dashed var(--tk-border);border-radius:var(--tk-radius);padding:26px 18px;
+    text-align:center;cursor:pointer;transition:all .15s ease;background:var(--tk-bg-2);
+  }
+  .dropzone:hover, .dropzone.drag{border-color:var(--tk-accent);background:rgba(244,63,94,.08);}
+  .dropzone .dz-title{font-size:14px;font-weight:600;margin-bottom:4px;}
+  .dropzone .dz-sub{font-size:12.5px;color:var(--tk-text-faint);}
+  .dropzone input{display:none;}
+
+  .file-row{
+    display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--tk-bg-2);
+    border:1px solid var(--tk-border-soft);border-radius:8px;margin-top:10px;font-size:13px;
+  }
+  .file-row .fname{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .file-row .fmeta{color:var(--tk-text-faint);font-size:12px;font-family:var(--tk-mono);flex:none;}
+  .file-row button.icon-btn{flex:none;}
+
+  .filelist{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
+  .filelist .file-row .order-btns{display:flex;flex-direction:column;gap:1px;}
+
+  /* Buttons */
+  .btn{
+    all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;
+    font-size:13.5px;font-weight:600;padding:10px 18px;border-radius:8px;
+    transition:all .13s ease;
+  }
+  .btn-primary{background:var(--tk-accent);color:#fff;}
+  .btn-primary:hover{background:var(--tk-accent-2);}
+  .btn-primary:active{transform:scale(.97);}
+  .btn-primary:disabled{background:var(--tk-surface-2);color:var(--tk-text-faint);cursor:not-allowed;}
+  .btn-ghost{background:var(--tk-surface-2);color:var(--tk-text);}
+  .btn-ghost:hover{background:var(--tk-border);}
+  .icon-btn{
+    all:unset;cursor:pointer;width:26px;height:26px;display:flex;align-items:center;justify-content:center;
+    border-radius:6px;color:var(--tk-text-faint);
+  }
+  .icon-btn:hover{background:var(--tk-border);color:var(--tk-text);}
+
+  /* Inputs */
+  label.field-label{display:block;font-size:12.5px;color:var(--tk-text-dim);margin-bottom:6px;font-weight:600;}
+  input[type=text], input[type=number], input[type=password]{
+    width:100%;background:var(--tk-bg-2);border:1px solid var(--tk-border);color:var(--tk-text);
+    padding:9px 11px;border-radius:7px;font-size:13.5px;font-family:var(--tk-sans);
+  }
+  input:focus{outline:none;border-color:var(--tk-accent);}
+  .field{margin-bottom:14px;}
+  .field-row{display:flex;gap:12px;}
+  .field-row .field{flex:1;}
+  .hint{font-size:11.5px;color:var(--tk-text-faint);margin-top:5px;line-height:1.5;}
+
+  .check-row{display:flex;align-items:center;gap:9px;font-size:13.5px;padding:7px 0;color:var(--tk-text-dim);}
+  .check-row input{accent-color:var(--tk-accent);width:15px;height:15px;}
+
+  /* Page grid */
+  .page-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+  .page-chip{
+    all:unset;cursor:pointer;width:52px;height:60px;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:3px;border:1.5px solid var(--tk-border);
+    border-radius:7px;background:var(--tk-bg-2);font-family:var(--tk-mono);font-size:12px;color:var(--tk-text-dim);
+    transition:all .12s ease;position:relative;
+  }
+  .page-chip:hover{border-color:var(--tk-accent-2);}
+  .page-chip.selected{border-color:var(--tk-accent);background:rgba(244,63,94,.12);color:var(--tk-accent-2);}
+  .page-chip .rot-arrow{font-size:14px;}
+  .page-chip .pnum{font-weight:700;}
+
+  .toolbar-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;}
+  .toolbar-row .spacer{flex:1;}
+  .small-note{font-size:12px;color:var(--tk-text-faint);}
+
+  /* status */
+  .status{margin-top:14px;padding:11px 14px;border-radius:8px;font-size:13px;display:none;gap:9px;align-items:flex-start;line-height:1.55;}
+  .status.show{display:flex;}
+  .status.info{background:var(--bg-card);color:var(--tk-text-dim);}
+  .status.success{background:rgba(52,211,153,.14);color:#0d9668;}
+  .dark .status.success{color:#6ee7b4;}
+  .status.error{background:rgba(244,63,94,.12);color:#c81e42;}
+  .dark .status.error{color:#fca5b1;}
+  .status svg{flex:none;margin-top:2px;}
+
+  .result-row{
+    display:flex;align-items:center;gap:12px;margin-top:14px;padding:14px;
+    border:1px solid var(--tk-border-soft);border-radius:9px;background:var(--tk-bg-2);
+  }
+  .result-row .rmeta{flex:1;font-size:13px;}
+  .result-row .rmeta b{display:block;font-size:13.5px;margin-bottom:2px;}
+  .result-row .rmeta span{color:var(--tk-text-faint);font-size:12px;font-family:var(--tk-mono);}
+
+  /* signature */
+  .sig-tabs{display:flex;gap:8px;margin-bottom:12px;}
+  .sig-tab{all:unset;cursor:pointer;padding:7px 14px;border-radius:7px;font-size:12.5px;font-weight:600;
+    background:var(--tk-surface-2);color:var(--tk-text-dim);}
+  .sig-tab.active{background:var(--tk-accent);color:#fff;}
+  canvas#sigPad{
+    width:100%;height:180px;background:#fff;border-radius:8px;border:1px solid var(--tk-border);
+    touch-action:none;cursor:crosshair;display:block;
+  }
+  .sig-typed-preview{
+    width:100%;height:180px;background:#fff;border-radius:8px;border:1px solid var(--tk-border);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .sig-typed-preview canvas{max-width:100%;max-height:100%;}
+  .corner-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:180px;}
+  .corner-btn{
+    all:unset;cursor:pointer;padding:10px;border:1.5px solid var(--tk-border);border-radius:7px;
+    text-align:center;font-size:11.5px;color:var(--tk-text-dim);font-family:var(--tk-mono);
+  }
+  .corner-btn.active{border-color:var(--tk-accent);color:var(--tk-accent-2);background:rgba(244,63,94,.1);}
+  input[type=range]{accent-color:var(--tk-accent);width:100%;}
+
+  .spinner{
+    width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,.35);
+    border-top-color:#fff;animation:spin .7s linear infinite;flex:none;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+</style>
+</head>
+<body class="flex flex-col">
+
+  <!-- Mount point: HEADER -->
+  <div id="site-header"></div>
+
+  <div class="app-shell">
+    <!-- Mount point: SIDEBAR (desktop) -->
+    <div id="site-sidebar-wrap"><div id="site-sidebar"></div></div>
+
+    <div id="site-content-wrap">
+      <!-- Breadcrumb otomatis -->
+      <div class="max-w-6xl w-full mx-auto px-4 pt-4">
+        <div id="site-breadcrumb"></div>
+      </div>
+
+      <!-- ============================= KONTEN UNIK TOOL ============================= -->
+      <main id="page-content" class="flex-grow max-w-4xl w-full mx-auto px-4 py-8 relative z-10 animate-fade-up">
+
+        <div class="text-center max-w-2xl mx-auto mb-8">
+          <h1 class="text-2xl md:text-3xl font-extrabold text-[var(--text-primary)] tracking-tight font-clash">
+            PDF Toolkit
+          </h1>
+          <p class="mt-2 text-xs md:text-sm text-[var(--text-secondary)]">
+            Delapan alat PDF, semua berjalan langsung di peramban Anda — tidak ada file yang diunggah ke server.
+          </p>
+        </div>
+
+        <div class="pdftk">
+
+          <!-- Tab pilih alat (menggantikan sidebar lama, 1 baris di semua ukuran layar) -->
+          <nav class="pdftk-tabs" id="navStamps">
+            <button class="stamp-btn active" data-tool="merge"><span class="glyph">MG</span><span class="label">Gabung</span></button>
+            <button class="stamp-btn" data-tool="split"><span class="glyph">SP</span><span class="label">Pisah</span></button>
+            <button class="stamp-btn" data-tool="rotate"><span class="glyph">RO</span><span class="label">Putar</span></button>
+            <button class="stamp-btn" data-tool="delete"><span class="glyph">HP</span><span class="label">Hapus Halaman</span></button>
+            <button class="stamp-btn" data-tool="extract"><span class="glyph">EK</span><span class="label">Ekstrak Halaman</span></button>
+            <button class="stamp-btn" data-tool="protect"><span class="glyph">LK</span><span class="label">Kunci PDF</span></button>
+            <button class="stamp-btn" data-tool="unlock"><span class="glyph">BK</span><span class="label">Buka Kunci</span></button>
+            <button class="stamp-btn" data-tool="sign"><span class="glyph">TT</span><span class="label">Tanda Tangan</span></button>
+          </nav>
+
+    <!-- ===================== MERGE ===================== -->
+    <section class="panel active" data-panel="merge">
+      <div class="panel-head">
+        <p class="eyebrow">Gabungkan File</p>
+        <h2>Gabung PDF</h2>
+        <p>Satukan beberapa file PDF menjadi satu dokumen, sesuai urutan yang Anda atur.</p>
+      </div>
+
+      <div class="card">
+        <h3>Unggah File</h3>
+        <div class="dropzone" id="mergeDropzone">
+          <div class="dz-title">Klik atau seret beberapa file PDF ke sini</div>
+          <div class="dz-sub">Bisa pilih banyak file sekaligus</div>
+          <input type="file" id="mergeInput" accept="application/pdf" multiple>
+        </div>
+        <div class="filelist" id="mergeFileList"></div>
+      </div>
+
+      <div class="toolbar-row">
+        <button class="btn btn-primary" id="mergeBtn" disabled>Gabungkan PDF</button>
+        <span class="small-note" id="mergeCount"></span>
+      </div>
+      <div class="status" id="mergeStatus"></div>
+    </section>
+
+    <!-- ===================== SPLIT ===================== -->
+    <section class="panel" data-panel="split">
+      <div class="panel-head">
+        <p class="eyebrow">Pisahkan Dokumen</p>
+        <h2>Pisah PDF</h2>
+        <p>Pecah satu PDF menjadi beberapa file berdasarkan rentang halaman yang Anda tentukan.</p>
+      </div>
+
+      <div class="card">
+        <h3>Unggah File</h3>
+        <div class="dropzone" id="splitDropzone">
+          <div class="dz-title">Klik atau seret satu file PDF ke sini</div>
+          <div class="dz-sub">PDF.js akan membaca jumlah halamannya</div>
+          <input type="file" id="splitInput" accept="application/pdf">
+        </div>
+        <div id="splitFileInfo"></div>
+      </div>
+
+      <div class="card" id="splitOptionsCard" style="display:none;">
+        <h3>Rentang Halaman</h3>
+        <div class="field">
+          <label class="field-label">Contoh: 1-3, 4, 7-9 (kosongkan untuk memisah tiap halaman)</label>
+          <input type="text" id="splitRanges" placeholder="mis. 1-3, 5, 6-8">
+        </div>
+        <p class="hint">Total halaman: <b id="splitTotalPages">0</b>. Setiap rentang menjadi satu file PDF terpisah; jika lebih dari satu file, hasil akan dibungkus dalam satu ZIP.</p>
+      </div>
+
+      <div class="toolbar-row">
+        <button class="btn btn-primary" id="splitBtn" disabled>Pisahkan PDF</button>
+      </div>
+      <div class="status" id="splitStatus"></div>
+    </section>
+
+    <!-- ===================== ROTATE ===================== -->
+    <section class="panel" data-panel="rotate">
+      <div class="panel-head">
+        <p class="eyebrow">Putar Halaman</p>
+        <h2>Putar PDF</h2>
+        <p>Putar semua halaman sekaligus, atau klik tiap halaman untuk memutarnya satu per satu.</p>
+      </div>
+
+      <div class="card">
+        <h3>Unggah File</h3>
+        <div class="dropzone" id="rotateDropzone">
+          <div class="dz-title">Klik atau seret satu file PDF ke sini</div>
+          <div class="dz-sub"></div>
+          <input type="file" id="rotateInput" accept="application/pdf">
+        </div>
+      </div>
+
+      <div class="card" id="rotateOptionsCard" style="display:none;">
+        <h3>Halaman <span class="small-note">(klik untuk memutar 90° searah jarum jam)</span></h3>
+        <div class="toolbar-row">
+          <button class="btn btn-ghost" id="rotateAll90">Putar semua 90°</button>
+          <button class="btn btn-ghost" id="rotateAll180">Putar semua 180°</button>
+          <button class="btn btn-ghost" id="rotateReset">Reset</button>
+        </div>
+        <div class="page-grid" id="rotateGrid"></div>
+      </div>
+
+      <div class="toolbar-row">
+        <button class="btn btn-primary" id="rotateBtn" disabled>Terapkan Rotasi</button>
+      </div>
+      <div class="status" id="rotateStatus"></div>
+    </section>
+
+    <!-- ===================== DELETE ===================== -->
+    <section class="panel" data-panel="delete">
+      <div class="panel-head">
+        <p class="eyebrow">Buang Halaman</p>
+        <h2>Hapus Halaman</h2>
+        <p>Pilih halaman yang ingin dibuang dari dokumen.</p>
+      </div>
+
+      <div class="card">
+        <h3>Unggah File</h3>
+        <div class="dropzone" id="deleteDropzone">
+          <div class="dz-title">Klik atau seret satu file PDF ke sini</div>
+          <div class="dz-sub"></div>
+          <input type="file" id="deleteInput" accept="application/pdf">
+        </div>
+      </div>
+
+      <div class="card" id="deleteOptionsCard" style="display:none;">
+        <h3>Pilih Halaman yang Dihapus <span class="small-note" id="deleteSelCount"></span></h3>
+        <div class="toolbar-row">
+          <button class="btn btn-ghost" id="deleteSelectAll">Pilih semua</button>
+          <button class="btn btn-ghost" id="deleteSelectNone">Kosongkan</button>
+        </div>
+        <div class="page-grid" id="deleteGrid"></div>
+      </div>
+
+      <div class="toolbar-row">
+        <button class="btn btn-primary" id="deleteBtn" disabled>Hapus Halaman Terpilih</button>
+      </div>
+      <div class="status" id="deleteStatus"></div>
+    </section>
+
+    <!-- ===================== EXTRACT ===================== -->
+    <section class="panel" data-panel="extract">
+      <div class="panel-head">
+        <p class="eyebrow">Ambil Sebagian</p>
+        <h2>Ekstrak Halaman</h2>
+        <p>Pilih halaman yang ingin disimpan menjadi PDF baru.</p>
+      </div>
+
+      <div class="card">
+        <h3>Unggah File</h3>
+        <div class="dropzone" id="extractDropzone">
+          <div class="dz-title">Klik atau seret satu file PDF ke sini</div>
+          <div class="dz-sub"></div>
+          <input type="file" id="extractInput" accept="application/pdf">
+        </div>
+      </div>
+
+      <div class="card" id="extractOptionsCard" style="display:none;">
+        <h3>Pilih Halaman yang Disimpan <span class="small-note" id="extractSelCount"></span></h3>
+        <div class="toolbar-row">
+          <button class="btn btn-ghost" id="extractSelectAll">Pilih semua</button>
+          <button class="btn btn-ghost" id="extractSelectNone">Kosongkan</button>
+        </div>
+        <div class="page-grid" id="extractGrid"></div>
+        <label class="check-row" style="margin-top:10px;">
+          <input type="checkbox" id="extractAsZip">
+          Simpan tiap halaman terpilih sebagai file terpisah (ZIP)
+        </label>
+      </div>
+
+      <div class="toolbar-row">
+        <button class="btn btn-primary" id="extractBtn" disabled>Ekstrak Halaman Terpilih</button>
+      </div>
+      <div class="status" id="extractStatus"></div>
+    </section>
+
+    <!-- ===================== PROTECT ===================== -->
+    <section class="panel" data-panel="protect">
+      <div class="panel-head">
+        <p class="eyebrow">Enkripsi Kata Sandi</p>
+        <h2>Kunci PDF</h2>
+        <p>Tambahkan kata sandi ke PDF (enkripsi standar PDF, RC4 128-bit) agar hanya bisa dibuka oleh yang tahu kata sandinya.</p>
+      </div>
+
+      <div class="card">
+        <h3>Unggah File</h3>
+        <div class="dropzone" id="protectDropzone">
+          <div class="dz-title">Klik atau seret satu file PDF ke sini</div>
+          <div class="dz-sub"></div>
+          <input type="file" id="protectInput" accept="application/pdf">
+        </div>
+      </div>
+
+      <div class="card" id="protectOptionsCard" style="display:none;">
+        <h3>Kata Sandi</h3>
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label">Kata sandi buka dokumen (wajib)</label>
+            <input type="password" id="protectUserPw" placeholder="Kata sandi untuk membuka file">
+          </div>
+          <div class="field">
+            <label class="field-label">Kata sandi pemilik (opsional)</label>
+            <input type="password" id="protectOwnerPw" placeholder="Untuk mengubah izin — samakan jika kosong">
+          </div>
+        </div>
+        <h3 style="margin-top:6px;">Izin</h3>
+        <label class="check-row"><input type="checkbox" id="permPrint" checked> Izinkan mencetak</label>
+        <label class="check-row"><input type="checkbox" id="permCopy" checked> Izinkan menyalin teks &amp; gambar</label>
+        <label class="check-row"><input type="checkbox" id="permEdit" checked> Izinkan mengedit konten</label>
+        <label class="check-row"><input type="checkbox" id="permAnnotate" checked> Izinkan menambah komentar/anotasi</label>
+      </div>
+
+      <div class="toolbar-row">
+        <button class="btn btn-primary" id="protectBtn" disabled>Lindungi dengan Kata Sandi</button>
+      </div>
+      <div class="status" id="protectStatus"></div>
+    </section>
+
+    <!-- ===================== UNLOCK ===================== -->
+    <section class="panel" data-panel="unlock">
+      <div class="panel-head">
+        <p class="eyebrow">Hapus Enkripsi</p>
+        <h2>Buka Kunci PDF</h2>
+        <p>Hapus kata sandi dari PDF yang terenkripsi (mendukung enkripsi standar RC4 40/128-bit).</p>
+      </div>
+
+      <div class="card">
+        <h3>Unggah File</h3>
+        <div class="dropzone" id="unlockDropzone">
+          <div class="dz-title">Klik atau seret file PDF yang terkunci ke sini</div>
+          <div class="dz-sub"></div>
+          <input type="file" id="unlockInput" accept="application/pdf">
+        </div>
+      </div>
+
+      <div class="card" id="unlockOptionsCard" style="display:none;">
+        <h3>Kata Sandi</h3>
+        <div class="field">
+          <label class="field-label">Kata sandi (buka dokumen atau pemilik)</label>
+          <input type="password" id="unlockPw" placeholder="Masukkan kata sandi PDF ini">
+        </div>
+        <p class="hint">Alat ini mendukung enkripsi standar RC4 (40-bit &amp; 128-bit), yang paling umum dipakai. PDF dengan enkripsi AES-256 modern (mis. dari Adobe Acrobat versi baru) atau struktur object-stream terkompresi tertentu belum didukung sepenuhnya di sisi klien.</p>
+      </div>
+
+      <div class="toolbar-row">
+        <button class="btn btn-primary" id="unlockBtn" disabled>Buka Kunci PDF</button>
+      </div>
+      <div class="status" id="unlockStatus"></div>
+    </section>
+
+    <!-- ===================== SIGN ===================== -->
+    <section class="panel" data-panel="sign">
+      <div class="panel-head">
+        <p class="eyebrow">Bubuhkan Tanda Tangan</p>
+        <h2>Tanda Tangan PDF</h2>
+        <p>Gambar atau ketik tanda tangan, lalu tempatkan pada halaman pilihan Anda.</p>
+      </div>
+
+      <div class="card">
+        <h3>Unggah File</h3>
+        <div class="dropzone" id="signDropzone">
+          <div class="dz-title">Klik atau seret satu file PDF ke sini</div>
+          <div class="dz-sub"></div>
+          <input type="file" id="signInput" accept="application/pdf">
+        </div>
+      </div>
+
+      <div class="card" id="signOptionsCard" style="display:none;">
+        <h3>Tanda Tangan</h3>
+        <div class="sig-tabs">
+          <button class="sig-tab active" data-sigmode="draw">Gambar</button>
+          <button class="sig-tab" data-sigmode="type">Ketik nama</button>
+        </div>
+
+        <div id="sigDrawWrap">
+          <canvas id="sigPad" width="700" height="220"></canvas>
+          <div class="toolbar-row" style="margin-top:10px;">
+            <button class="btn btn-ghost" id="sigClear">Bersihkan</button>
+          </div>
+        </div>
+
+        <div id="sigTypeWrap" style="display:none;">
+          <div class="field">
+            <label class="field-label">Nama Anda</label>
+            <input type="text" id="sigTypedName" placeholder="mis. Budi Santoso">
+          </div>
+          <div class="sig-typed-preview"><canvas id="sigTypedCanvas" width="700" height="220"></canvas></div>
+        </div>
+
+        <h3 style="margin-top:20px;">Penempatan</h3>
+        <div class="field-row">
+          <div class="field" style="max-width:120px;">
+            <label class="field-label">Halaman</label>
+            <input type="number" id="signPageNum" min="1" value="1">
+          </div>
+          <div class="field">
+            <label class="field-label">Posisi</label>
+            <div class="corner-grid">
+              <button class="corner-btn" data-corner="top-left">Kiri Atas</button>
+              <button class="corner-btn" data-corner="top-right">Kanan Atas</button>
+              <button class="corner-btn active" data-corner="bottom-left">Kiri Bawah</button>
+              <button class="corner-btn" data-corner="bottom-right">Kanan Bawah</button>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Ukuran lebar tanda tangan: <span id="sigSizeLabel">160px</span></label>
+          <input type="range" id="sigSize" min="80" max="320" value="160">
+        </div>
+        <label class="check-row"><input type="checkbox" id="sigAddDate" checked> Sertakan tanggal hari ini di bawah tanda tangan</label>
+      </div>
+
+      <div class="toolbar-row">
+        <button class="btn btn-primary" id="signBtn" disabled>Tambahkan Tanda Tangan</button>
+      </div>
+      <div class="status" id="signStatus"></div>
+    </section>
+
+
+          <p class="flex items-start gap-2 text-[11.5px] text-[var(--text-muted)] leading-relaxed mt-6 pt-4 border-t border-[var(--border)]">
+            <i class="fa-solid fa-shield-halved text-brand-emerald mt-0.5"></i>
+            <span>File tidak pernah diunggah. Semua proses (gabung, enkripsi, dsb.) berjalan lokal di browser Anda.</span>
+          </p>
+
+        </div><!-- /.pdftk -->
+
+      </main>
+      <!-- =========================== AKHIR KONTEN UNIK =========================== -->
+
+      <!-- Mount point: FOOTER + bottom nav mobile -->
+      <div id="site-footer"></div>
+    </div>
+  </div>
+
+  <!-- Mount point: MOBILE DRAWER -->
+  <div id="site-mobile-menu"></div>
+
+  <!-- Layout engine: memuat header/sidebar/drawer/footer + semua interaksi global -->
+  <script src="/assets/js/layout.js"></script>
+
+  <!-- Logika PDF Toolkit (murni JS, tidak bergantung pada CSS var lama) -->
+  <script>
+(function(){
+'use strict';
+const { PDFDocument, PDFName, PDFHexString, PDFString, PDFNumber, PDFDict, PDFArray, PDFRawStream, StandardFonts, degrees, rgb } = PDFLib;
+
+/* =========================================================================
+   NAV / TAB SWITCHING
+   ========================================================================= */
+document.querySelectorAll('.stamp-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.stamp-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const tool = btn.dataset.tool;
+    document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.dataset.panel === tool));
+  });
+});
+
+/* =========================================================================
+   SHARED HELPERS
+   ========================================================================= */
+function fmtBytes(n){
+  if (n < 1024) return n + ' B';
+  if (n < 1024*1024) return (n/1024).toFixed(1) + ' KB';
+  return (n/1024/1024).toFixed(2) + ' MB';
+}
+function showStatus(el, type, msg){
+  el.className = 'status show ' + type;
+  const icon = type === 'error'
+    ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>'
+    : type === 'success'
+    ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg>'
+    : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v5h1"/></svg>';
+  el.innerHTML = icon + '<span>' + msg + '</span>';
+}
+function hideStatus(el){ el.className = 'status'; el.innerHTML=''; }
+
+function downloadBytes(bytes, filename, mime){
+  const blob = new Blob([bytes], { type: mime || 'application/pdf' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+function baseName(name){ return name.replace(/\.pdf$/i, ''); }
+
+function setupDropzone(dzId, inputId, onFiles, multiple){
+  const dz = document.getElementById(dzId);
+  const input = document.getElementById(inputId);
+  dz.addEventListener('click', () => input.click());
+  input.addEventListener('change', () => { if (input.files.length) onFiles(multiple ? Array.from(input.files) : [input.files[0]]); input.value=''; });
+  ['dragover','dragenter'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('drag'); }));
+  ['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('drag'); }));
+  dz.addEventListener('drop', e => {
+    const files = Array.from(e.dataTransfer.files).filter(f => f.type === 'application/pdf' || /\.pdf$/i.test(f.name));
+    if (files.length) onFiles(multiple ? files : [files[0]]);
+  });
+}
+
+async function fileToBytes(file){ return new Uint8Array(await file.arrayBuffer()); }
+
+// Try to load; distinguish "encrypted" from "corrupt" so we can point the user
+// at the Unlock tool instead of just saying the file is invalid.
+async function loadPdfOrExplain(bytes, statusEl){
+  try {
+    return await PDFDocument.load(bytes);
+  } catch (e) {
+    const msg = (e && e.message) || '';
+    if (e && (e.name === 'EncryptedPDFError' || /encrypt/i.test(msg))) {
+      showStatus(statusEl, 'error', 'File ini terkunci kata sandi. Buka kuncinya dulu lewat tab "Buka Kunci", lalu unggah hasilnya di sini.');
+    } else {
+      showStatus(statusEl, 'error', 'File PDF tidak valid atau rusak, dan tidak bisa dibaca.');
+    }
+    return null;
+  }
+}
+
+function busy(btn, isBusy, label){
+  if (isBusy){
+    btn.dataset.label = btn.dataset.label || btn.textContent;
+    btn.innerHTML = '<span class="spinner"></span> ' + (label || 'Memproses…');
+    btn.disabled = true;
+  } else {
+    btn.textContent = btn.dataset.label || btn.textContent;
+    btn.disabled = false;
+  }
+}
+
+/* =========================================================================
+   PDF crypto core (PDF Standard Security Handler, RC4 — implemented from
+   scratch on top of pdf-lib's low-level object graph, since pdf-lib itself
+   has no built-in encryption support).
+   ========================================================================= */
+const PAD_BYTES = new Uint8Array([
+  0x28,0xBF,0x4E,0x5E,0x4E,0x75,0x8A,0x41,0x64,0x00,0x4E,0x56,0xFF,0xFA,0x01,0x08,
+  0x2E,0x2E,0x00,0xB6,0xD0,0x68,0x3E,0x80,0x2F,0x0C,0xA9,0xFE,0x64,0x53,0x69,0x7A
+]);
+function concatBytes(...arrs){
+  const total = arrs.reduce((s,a)=>s+a.length,0);
+  const out = new Uint8Array(total);
+  let off=0; for (const a of arrs){ out.set(a, off); off += a.length; }
+  return out;
+}
+function strToLatin1Bytes(s){
+  const out = new Uint8Array(s.length);
+  for (let i=0;i<s.length;i++) out[i] = s.charCodeAt(i) & 0xff;
+  return out;
+}
+function bytesToHex(bytes){ return Array.from(bytes).map(b=>b.toString(16).padStart(2,'0')).join(''); }
+function int32leBytes(n){ const b=new Uint8Array(4); new DataView(b.buffer).setInt32(0,n,true); return b; }
+function bytesToWordArray(bytes){
+  const words=[];
+  for (let i=0;i<bytes.length;i+=4) words.push(((bytes[i]||0)<<24)|((bytes[i+1]||0)<<16)|((bytes[i+2]||0)<<8)|(bytes[i+3]||0));
+  return CryptoJS.lib.WordArray.create(words, bytes.length);
+}
+function wordArrayToBytes(wa){
+  const {words, sigBytes} = wa;
+  const out = new Uint8Array(sigBytes);
+  for (let i=0;i<sigBytes;i++) out[i] = (words[i>>>2] >>> (24-(i%4)*8)) & 0xff;
+  return out;
+}
+function md5(bytes){ return wordArrayToBytes(CryptoJS.MD5(bytesToWordArray(bytes))); }
+function rc4(keyBytes, dataBytes){
+  const out = CryptoJS.RC4.encrypt(bytesToWordArray(dataBytes), bytesToWordArray(keyBytes), { mode:CryptoJS.mode.ECB, padding:CryptoJS.pad.NoPadding });
+  return wordArrayToBytes(out.ciphertext);
+}
+function padPassword(pw){
+  const pwBytes = strToLatin1Bytes(pw||'').slice(0,32);
+  const out = new Uint8Array(32);
+  out.set(pwBytes,0);
+  out.set(PAD_BYTES.slice(0, 32-pwBytes.length), pwBytes.length);
+  return out;
+}
+function bytesEqualPrefix(a,b,len){ for(let i=0;i<len;i++) if(a[i]!==b[i]) return false; return true; }
+function xorByteArray(arr,x){ const out=new Uint8Array(arr.length); for(let i=0;i<arr.length;i++) out[i]=arr[i]^x; return out; }
+
+function computeOwnerKey(ownerPw, userPw, keyLen, R){
+  let hash = md5(padPassword(ownerPw || userPw));
+  if (R>=3) for (let i=0;i<50;i++) hash = md5(hash.subarray(0,keyLen));
+  const rc4key = hash.subarray(0,keyLen);
+  let enc = rc4(rc4key, padPassword(userPw));
+  if (R>=3) for (let i=1;i<=19;i++) enc = rc4(xorByteArray(rc4key,i), enc);
+  return enc;
+}
+function computeFileKeyFromPaddedBytes(paddedPwBuf, O, P, idBytes, keyLen, R){
+  const input = concatBytes(paddedPwBuf, O, int32leBytes(P), idBytes);
+  let hash = md5(input);
+  if (R>=3) for (let i=0;i<50;i++) hash = md5(hash.subarray(0,keyLen));
+  return hash.subarray(0,keyLen);
+}
+function computeFileKey(userPw, O, P, idBytes, keyLen, R){
+  return computeFileKeyFromPaddedBytes(padPassword(userPw), O, P, idBytes, keyLen, R);
+}
+function recoverPaddedUserPasswordFromOwner(ownerPw, O, keyLen, R){
+  let hash = md5(padPassword(ownerPw));
+  if (R>=3) for (let i=0;i<50;i++) hash = md5(hash.subarray(0,keyLen));
+  const rc4key = hash.subarray(0,keyLen);
+  let result = O.slice();
+  if (R===2){ result = rc4(rc4key, result); }
+  else { for (let i=19;i>=0;i--) result = rc4(xorByteArray(rc4key,i), result); }
+  return result;
+}
+function computeUserEntry(fileKey, R, idBytes){
+  if (R===2) return rc4(fileKey, PAD_BYTES);
+  let hash = md5(concatBytes(PAD_BYTES, idBytes));
+  let enc = rc4(fileKey, hash);
+  for (let i=1;i<=19;i++) enc = rc4(xorByteArray(fileKey,i), enc);
+  return concatBytes(enc, new Uint8Array(16));
+}
+function objectKey(fileKey, objNum, genNum, keyLen){
+  const extra = new Uint8Array([objNum&0xff,(objNum>>8)&0xff,(objNum>>16)&0xff, genNum&0xff,(genNum>>8)&0xff]);
+  const hash = md5(concatBytes(fileKey, extra));
+  return hash.subarray(0, Math.min(keyLen+5, 16));
+}
+function cryptWalk(obj, key, fn){
+  if (obj instanceof PDFRawStream){
+    const type = obj.dict.get(PDFName.of('Type'));
+    const isXRef = type && type.toString() === '/XRef';
+    cryptWalk(obj.dict, key, fn);
+    if (!isXRef) obj.contents = rc4(key, obj.contents);
+    return;
+  }
+  if (obj instanceof PDFDict){
+    for (const [k,v] of obj.entries()){ const r = fn(v,key); if (r!==v) obj.set(k,r); }
+    return;
+  }
+  if (obj instanceof PDFArray){
+    for (let i=0;i<obj.size();i++){ const v=obj.get(i); const r=fn(v,key); if (r!==v) obj.set(i,r); }
+    return;
+  }
+}
+function cryptVal(v, key){
+  if (v instanceof PDFString || v instanceof PDFHexString){ return PDFHexString.of(bytesToHex(rc4(key, v.asBytes()))); }
+  if (v instanceof PDFDict || v instanceof PDFArray || v instanceof PDFRawStream){ cryptWalk(v, key, cryptVal); return v; }
+  return v;
+}
+
+async function protectPdfBytes(inputBytes, userPassword, ownerPassword, permissions){
+  const doc1 = await PDFDocument.load(inputBytes, { ignoreEncryption:true });
+  const normalized = await doc1.save({ useObjectStreams:false });
+  const doc = await PDFDocument.load(normalized);
+  const ctx = doc.context;
+  const R=3, V=2, keyLen=16;
+  const P = permissions | 0;
+
+  let idBytes;
+  const existingId = ctx.trailerInfo.ID;
+  if (existingId instanceof PDFArray && existingId.size() > 0){
+    idBytes = existingId.get(0).asBytes();
+  } else {
+    idBytes = crypto.getRandomValues(new Uint8Array(16));
+    const idHex = bytesToHex(idBytes);
+    ctx.trailerInfo.ID = ctx.obj([PDFHexString.of(idHex), PDFHexString.of(idHex)]);
+  }
+
+  const O = computeOwnerKey(ownerPassword, userPassword, keyLen, R);
+  const fileKey = computeFileKey(userPassword, O, P, idBytes, keyLen, R);
+  const U = computeUserEntry(fileKey, R, idBytes);
+
+  const entries = ctx.enumerateIndirectObjects();
+  for (const [ref, obj] of entries){
+    const key = objectKey(fileKey, ref.objectNumber, ref.generationNumber, keyLen);
+    cryptVal(obj, key);
+  }
+
+  const encDict = ctx.obj({
+    Filter: PDFName.of('Standard'), V: PDFNumber.of(V), R: PDFNumber.of(R),
+    O: PDFHexString.of(bytesToHex(O)), U: PDFHexString.of(bytesToHex(U)),
+    P: PDFNumber.of(P), Length: PDFNumber.of(keyLen*8),
+  });
+  ctx.trailerInfo.Encrypt = ctx.register(encDict);
+  return doc.save({ useObjectStreams:false });
+}
+
+async function unlockPdfBytes(inputBytes, password){
+  const doc = await PDFDocument.load(inputBytes, { ignoreEncryption:true });
+  const ctx = doc.context;
+  const encRef = ctx.trailerInfo.Encrypt;
+  if (!encRef) return { bytes: inputBytes, wasEncrypted:false };
+  const encDict = ctx.lookup(encRef, PDFDict);
+
+  const filter = encDict.get(PDFName.of('Filter'));
+  if (!filter || filter.toString() !== '/Standard') throw new Error('UNSUPPORTED_FILTER');
+  const V = encDict.get(PDFName.of('V'))?.asNumber() ?? 1;
+  const R = encDict.get(PDFName.of('R'))?.asNumber() ?? 2;
+  if (V > 2) throw new Error('UNSUPPORTED_ENCRYPTION_VERSION');
+  const keyLen = Math.floor((encDict.get(PDFName.of('Length'))?.asNumber() ?? 40) / 8);
+  const O = encDict.get(PDFName.of('O')).asBytes();
+  const P = encDict.get(PDFName.of('P')).asNumber();
+  const idArr = ctx.trailerInfo.ID;
+  const idBytes = (idArr instanceof PDFArray && idArr.size() > 0) ? idArr.get(0).asBytes() : new Uint8Array(0);
+  const storedU = encDict.get(PDFName.of('U')).asBytes();
+  const checkLen = R === 2 ? 32 : 16;
+
+  let fileKey = computeFileKey(password, O, P, idBytes, keyLen, R);
+  let U = computeUserEntry(fileKey, R, idBytes);
+  let matched = bytesEqualPrefix(U, storedU, checkLen);
+
+  if (!matched){
+    const recoveredPadded = recoverPaddedUserPasswordFromOwner(password, O, keyLen, R);
+    const candidateKey = computeFileKeyFromPaddedBytes(recoveredPadded, O, P, idBytes, keyLen, R);
+    const candidateU = computeUserEntry(candidateKey, R, idBytes);
+    if (bytesEqualPrefix(candidateU, storedU, checkLen)){ fileKey = candidateKey; matched = true; }
+  }
+  if (!matched) throw new Error('WRONG_PASSWORD');
+
+  const entries = ctx.enumerateIndirectObjects();
+  for (const [, obj] of entries){
+    if (obj && obj.constructor && obj.constructor.name === 'PDFInvalidObject') throw new Error('UNSUPPORTED_STRUCTURE');
+  }
+  for (const [ref, obj] of entries){
+    if (ref === encRef) continue;
+    const key = objectKey(fileKey, ref.objectNumber, ref.generationNumber, keyLen);
+    cryptWalk(obj, key, cryptVal);
+  }
+  delete ctx.trailerInfo.Encrypt;
+  return { bytes: await doc.save({ useObjectStreams:false }), wasEncrypted:true };
+}
+
+/* =========================================================================
+   PAGE-SELECTION HELPER (used by delete / extract)
+   ========================================================================= */
+async function buildPdfFromIndices(bytes, keepIndicesAscending){
+  const src = await PDFDocument.load(bytes, { ignoreEncryption:true });
+  const out = await PDFDocument.create();
+  const pages = await out.copyPages(src, keepIndicesAscending);
+  pages.forEach(p => out.addPage(p));
+  return out.save();
+}
+
+function parseRanges(str, total){
+  str = (str||'').trim();
+  if (!str) return Array.from({length: total}, (_,i) => [i]); // one group per page
+  const groups = [];
+  for (const part of str.split(',')){
+    const p = part.trim();
+    if (!p) continue;
+    const m = p.match(/^(\d+)\s*-\s*(\d+)$/);
+    if (m){
+      let a = parseInt(m[1],10), b = parseInt(m[2],10);
+      if (a > b) [a,b] = [b,a];
+      const idxs = [];
+      for (let n=a; n<=b; n++){ if (n>=1 && n<=total) idxs.push(n-1); }
+      if (idxs.length) groups.push(idxs);
+    } else if (/^\d+$/.test(p)){
+      const n = parseInt(p,10);
+      if (n>=1 && n<=total) groups.push([n-1]);
+    }
+  }
+  return groups;
+}
+
+/* =========================================================================
+   TOOL 1 — MERGE
+   ========================================================================= */
+(function initMerge(){
+  const listEl = document.getElementById('mergeFileList');
+  const btn = document.getElementById('mergeBtn');
+  const countEl = document.getElementById('mergeCount');
+  const statusEl = document.getElementById('mergeStatus');
+  let files = [];
+
+  function render(){
+    listEl.innerHTML = '';
+    files.forEach((f, i) => {
+      const row = document.createElement('div');
+      row.className = 'file-row';
+      row.innerHTML = `
+        <div class="order-btns">
+          <button class="icon-btn" data-act="up" data-i="${i}" title="Naik">▲</button>
+          <button class="icon-btn" data-act="down" data-i="${i}" title="Turun">▼</button>
+        </div>
+        <span class="fname">${i+1}. ${f.name}</span>
+        <span class="fmeta">${fmtBytes(f.size)}</span>
+        <button class="icon-btn" data-act="remove" data-i="${i}" title="Hapus">✕</button>
+      `;
+      listEl.appendChild(row);
+    });
+    btn.disabled = files.length < 2;
+    countEl.textContent = files.length ? `${files.length} file dipilih` : '';
+    hideStatus(statusEl);
+  }
+  listEl.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    const i = parseInt(b.dataset.i,10), act = b.dataset.act;
+    if (act === 'remove') files.splice(i,1);
+    else if (act === 'up' && i>0) [files[i-1],files[i]] = [files[i],files[i-1]];
+    else if (act === 'down' && i<files.length-1) [files[i+1],files[i]] = [files[i],files[i+1]];
+    render();
+  });
+
+  setupDropzone('mergeDropzone','mergeInput', fs => { files = files.concat(fs); render(); }, true);
+
+  btn.addEventListener('click', async () => {
+    hideStatus(statusEl);
+    busy(btn, true, 'Menggabungkan…');
+    try {
+      const merged = await PDFDocument.create();
+      for (const f of files){
+        const bytes = await fileToBytes(f);
+        let src;
+        try { src = await PDFDocument.load(bytes, { ignoreEncryption:true }); }
+        catch(e){ throw new Error(`"${f.name}" tidak bisa dibaca (mungkin rusak).`); }
+        const copied = await merged.copyPages(src, src.getPageIndices());
+        copied.forEach(p => merged.addPage(p));
+      }
+      const out = await merged.save();
+      downloadBytes(out, 'gabungan.pdf');
+      showStatus(statusEl, 'success', `Berhasil! ${files.length} file digabung menjadi satu PDF (${fmtBytes(out.length)}) dan diunduh.`);
+    } catch(e){
+      showStatus(statusEl, 'error', e.message || 'Gagal menggabungkan file.');
+    } finally { busy(btn, false); }
+  });
+})();
+
+/* =========================================================================
+   TOOL 2 — SPLIT
+   ========================================================================= */
+(function initSplit(){
+  const infoEl = document.getElementById('splitFileInfo');
+  const optCard = document.getElementById('splitOptionsCard');
+  const totalEl = document.getElementById('splitTotalPages');
+  const rangesInput = document.getElementById('splitRanges');
+  const btn = document.getElementById('splitBtn');
+  const statusEl = document.getElementById('splitStatus');
+  let currentFile = null, totalPages = 0;
+
+  setupDropzone('splitDropzone','splitInput', async ([file]) => {
+    hideStatus(statusEl);
+    const bytes = await fileToBytes(file);
+    const doc = await loadPdfOrExplain(bytes, statusEl);
+    if (!doc){ optCard.style.display='none'; btn.disabled=true; return; }
+    currentFile = { file, bytes };
+    totalPages = doc.getPageCount();
+    infoEl.innerHTML = `<div class="file-row"><span class="fname">${file.name}</span><span class="fmeta">${totalPages} hlm · ${fmtBytes(file.size)}</span></div>`;
+    totalEl.textContent = totalPages;
+    optCard.style.display = 'block';
+    btn.disabled = false;
+  }, false);
+
+  btn.addEventListener('click', async () => {
+    if (!currentFile) return;
+    hideStatus(statusEl);
+    busy(btn, true, 'Memisahkan…');
+    try {
+      const groups = parseRanges(rangesInput.value, totalPages);
+      if (!groups.length) throw new Error('Rentang halaman tidak valid.');
+      const base = baseName(currentFile.file.name);
+
+      if (groups.length === 1){
+        const out = await buildPdfFromIndices(currentFile.bytes, groups[0]);
+        downloadBytes(out, `${base}_bagian1.pdf`);
+        showStatus(statusEl, 'success', 'Berhasil dipisahkan menjadi 1 file dan diunduh.');
+      } else {
+        const zip = new JSZip();
+        for (let i=0;i<groups.length;i++){
+          const out = await buildPdfFromIndices(currentFile.bytes, groups[i]);
+          zip.file(`${base}_bagian${i+1}.pdf`, out);
+        }
+        const blob = await zip.generateAsync({ type:'blob' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href=url; a.download=`${base}_split.zip`;
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(()=>URL.revokeObjectURL(url), 4000);
+        showStatus(statusEl, 'success', `Berhasil dipisahkan menjadi ${groups.length} file, dibungkus dalam satu ZIP dan diunduh.`);
+      }
+    } catch(e){
+      showStatus(statusEl, 'error', e.message || 'Gagal memisahkan PDF.');
+    } finally { busy(btn, false); }
+  });
+})();
+
+/* =========================================================================
+   TOOL 3 — ROTATE
+   ========================================================================= */
+(function initRotate(){
+  const optCard = document.getElementById('rotateOptionsCard');
+  const grid = document.getElementById('rotateGrid');
+  const btn = document.getElementById('rotateBtn');
+  const statusEl = document.getElementById('rotateStatus');
+  let currentFile = null, baseRotations = [], targetRotations = [];
+
+  function render(){
+    grid.innerHTML = '';
+    targetRotations.forEach((rot, i) => {
+      const chip = document.createElement('button');
+      chip.className = 'page-chip';
+      chip.innerHTML = `<span class="pnum">${i+1}</span><span class="rot-arrow">↻ ${rot}°</span>`;
+      chip.addEventListener('click', () => { targetRotations[i] = (targetRotations[i] + 90) % 360; render(); });
+      grid.appendChild(chip);
+    });
+  }
+
+  setupDropzone('rotateDropzone','rotateInput', async ([file]) => {
+    hideStatus(statusEl);
+    const bytes = await fileToBytes(file);
+    const doc = await loadPdfOrExplain(bytes, statusEl);
+    if (!doc){ optCard.style.display='none'; btn.disabled=true; return; }
+    currentFile = { file, bytes };
+    baseRotations = doc.getPages().map(p => ((p.getRotation().angle % 360) + 360) % 360);
+    targetRotations = baseRotations.slice();
+    optCard.style.display = 'block';
+    btn.disabled = false;
+    render();
+  }, false);
+
+  document.getElementById('rotateAll90').addEventListener('click', () => { targetRotations = targetRotations.map(r => (r+90)%360); render(); });
+  document.getElementById('rotateAll180').addEventListener('click', () => { targetRotations = targetRotations.map(r => (r+180)%360); render(); });
+  document.getElementById('rotateReset').addEventListener('click', () => { targetRotations = baseRotations.slice(); render(); });
+
+  btn.addEventListener('click', async () => {
+    if (!currentFile) return;
+    hideStatus(statusEl);
+    busy(btn, true, 'Memutar…');
+    try {
+      const doc = await PDFDocument.load(currentFile.bytes, { ignoreEncryption:true });
+      const pages = doc.getPages();
+      pages.forEach((p,i) => p.setRotation(degrees(targetRotations[i])));
+      const out = await doc.save();
+      downloadBytes(out, `${baseName(currentFile.file.name)}_diputar.pdf`);
+      showStatus(statusEl, 'success', 'Rotasi diterapkan dan file diunduh.');
+    } catch(e){
+      showStatus(statusEl, 'error', e.message || 'Gagal memutar halaman.');
+    } finally { busy(btn, false); }
+  });
+})();
+
+/* =========================================================================
+   TOOL 4 — DELETE PAGES
+   ========================================================================= */
+(function initDelete(){
+  const optCard = document.getElementById('deleteOptionsCard');
+  const grid = document.getElementById('deleteGrid');
+  const btn = document.getElementById('deleteBtn');
+  const statusEl = document.getElementById('deleteStatus');
+  const selCount = document.getElementById('deleteSelCount');
+  let currentFile = null, total = 0, selected = new Set();
+
+  function render(){
+    grid.innerHTML = '';
+    for (let i=0;i<total;i++){
+      const chip = document.createElement('button');
+      chip.className = 'page-chip' + (selected.has(i) ? ' selected' : '');
+      chip.innerHTML = `<span class="pnum">${i+1}</span><span class="small-note">${selected.has(i) ? 'hapus' : 'simpan'}</span>`;
+      chip.addEventListener('click', () => { selected.has(i) ? selected.delete(i) : selected.add(i); render(); });
+      grid.appendChild(chip);
+    }
+    selCount.textContent = `(${selected.size} dipilih)`;
+    btn.disabled = selected.size === 0 || selected.size === total;
+  }
+
+  setupDropzone('deleteDropzone','deleteInput', async ([file]) => {
+    hideStatus(statusEl);
+    const bytes = await fileToBytes(file);
+    const doc = await loadPdfOrExplain(bytes, statusEl);
+    if (!doc){ optCard.style.display='none'; btn.disabled=true; return; }
+    currentFile = { file, bytes };
+    total = doc.getPageCount();
+    selected = new Set();
+    optCard.style.display = 'block';
+    render();
+  }, false);
+
+  document.getElementById('deleteSelectAll').addEventListener('click', () => { for(let i=0;i<total;i++) selected.add(i); render(); });
+  document.getElementById('deleteSelectNone').addEventListener('click', () => { selected.clear(); render(); });
+
+  btn.addEventListener('click', async () => {
+    if (!currentFile) return;
+    hideStatus(statusEl);
+    busy(btn, true, 'Menghapus…');
+    try {
+      const keep = [];
+      for (let i=0;i<total;i++) if (!selected.has(i)) keep.push(i);
+      if (!keep.length) throw new Error('Tidak bisa menghapus semua halaman.');
+      const out = await buildPdfFromIndices(currentFile.bytes, keep);
+      downloadBytes(out, `${baseName(currentFile.file.name)}_terhapus.pdf`);
+      showStatus(statusEl, 'success', `${selected.size} halaman dihapus. File diunduh.`);
+    } catch(e){
+      showStatus(statusEl, 'error', e.message || 'Gagal menghapus halaman.');
+    } finally { busy(btn, false); }
+  });
+})();
+
+/* =========================================================================
+   TOOL 5 — EXTRACT PAGES
+   ========================================================================= */
+(function initExtract(){
+  const optCard = document.getElementById('extractOptionsCard');
+  const grid = document.getElementById('extractGrid');
+  const btn = document.getElementById('extractBtn');
+  const statusEl = document.getElementById('extractStatus');
+  const selCount = document.getElementById('extractSelCount');
+  const zipCheck = document.getElementById('extractAsZip');
+  let currentFile = null, total = 0, selected = new Set();
+
+  function render(){
+    grid.innerHTML = '';
+    for (let i=0;i<total;i++){
+      const chip = document.createElement('button');
+      chip.className = 'page-chip' + (selected.has(i) ? ' selected' : '');
+      chip.innerHTML = `<span class="pnum">${i+1}</span><span class="small-note">${selected.has(i) ? 'simpan' : '—'}</span>`;
+      chip.addEventListener('click', () => { selected.has(i) ? selected.delete(i) : selected.add(i); render(); });
+      grid.appendChild(chip);
+    }
+    selCount.textContent = `(${selected.size} dipilih)`;
+    btn.disabled = selected.size === 0;
+  }
+
+  setupDropzone('extractDropzone','extractInput', async ([file]) => {
+    hideStatus(statusEl);
+    const bytes = await fileToBytes(file);
+    const doc = await loadPdfOrExplain(bytes, statusEl);
+    if (!doc){ optCard.style.display='none'; btn.disabled=true; return; }
+    currentFile = { file, bytes };
+    total = doc.getPageCount();
+    selected = new Set(Array.from({length: total}, (_,i)=>i)); // default: all selected
+    optCard.style.display = 'block';
+    render();
+  }, false);
+
+  document.getElementById('extractSelectAll').addEventListener('click', () => { for(let i=0;i<total;i++) selected.add(i); render(); });
+  document.getElementById('extractSelectNone').addEventListener('click', () => { selected.clear(); render(); });
+
+  btn.addEventListener('click', async () => {
+    if (!currentFile) return;
+    hideStatus(statusEl);
+    busy(btn, true, 'Mengekstrak…');
+    try {
+      const idxs = Array.from(selected).sort((a,b)=>a-b);
+      const base = baseName(currentFile.file.name);
+      if (zipCheck.checked && idxs.length > 1){
+        const zip = new JSZip();
+        for (const i of idxs){
+          const out = await buildPdfFromIndices(currentFile.bytes, [i]);
+          zip.file(`${base}_hlm${i+1}.pdf`, out);
+        }
+        const blob = await zip.generateAsync({ type:'blob' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href=url; a.download=`${base}_ekstrak.zip`;
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        setTimeout(()=>URL.revokeObjectURL(url), 4000);
+        showStatus(statusEl, 'success', `${idxs.length} halaman diekstrak sebagai file terpisah dalam satu ZIP.`);
+      } else {
+        const out = await buildPdfFromIndices(currentFile.bytes, idxs);
+        downloadBytes(out, `${base}_ekstrak.pdf`);
+        showStatus(statusEl, 'success', `${idxs.length} halaman diekstrak menjadi satu PDF baru dan diunduh.`);
+      }
+    } catch(e){
+      showStatus(statusEl, 'error', e.message || 'Gagal mengekstrak halaman.');
+    } finally { busy(btn, false); }
+  });
+})();
+
+/* =========================================================================
+   TOOL 6 — PROTECT (add password)
+   ========================================================================= */
+(function initProtect(){
+  const optCard = document.getElementById('protectOptionsCard');
+  const btn = document.getElementById('protectBtn');
+  const statusEl = document.getElementById('protectStatus');
+  let currentFile = null;
+
+  setupDropzone('protectDropzone','protectInput', async ([file]) => {
+    hideStatus(statusEl);
+    const bytes = await fileToBytes(file);
+    try { await PDFDocument.load(bytes); }
+    catch(e){
+      if (e && (e.name === 'EncryptedPDFError' || /encrypt/i.test(e.message||''))){
+        showStatus(statusEl, 'info', 'File ini sudah terenkripsi. Melindunginya lagi akan menggantikan kata sandi lama dengan yang baru.');
+      } else {
+        showStatus(statusEl, 'error', 'File PDF tidak valid atau rusak.');
+        optCard.style.display='none'; btn.disabled=true; return;
+      }
+    }
+    currentFile = { file, bytes };
+    optCard.style.display = 'block';
+    btn.disabled = false;
+  }, false);
+
+  btn.addEventListener('click', async () => {
+    if (!currentFile) return;
+    const userPw = document.getElementById('protectUserPw').value;
+    const ownerPw = document.getElementById('protectOwnerPw').value;
+    if (!userPw){ showStatus(statusEl, 'error', 'Isi kata sandi buka dokumen terlebih dahulu.'); return; }
+    hideStatus(statusEl);
+    busy(btn, true, 'Mengenkripsi…');
+    try {
+      let P = -4; // baseline: everything allowed except reserved bits
+      if (!document.getElementById('permPrint').checked) P &= ~(1<<2) & ~(1<<11);
+      if (!document.getElementById('permCopy').checked) P &= ~(1<<4) & ~(1<<9);
+      if (!document.getElementById('permEdit').checked) P &= ~(1<<3) & ~(1<<10);
+      if (!document.getElementById('permAnnotate').checked) P &= ~(1<<5);
+      const out = await protectPdfBytes(currentFile.bytes, userPw, ownerPw || userPw, P);
+      downloadBytes(out, `${baseName(currentFile.file.name)}_terkunci.pdf`);
+      showStatus(statusEl, 'success', 'PDF berhasil dilindungi kata sandi dan diunduh.');
+    } catch(e){
+      console.error(e);
+      showStatus(statusEl, 'error', 'Gagal melindungi PDF: ' + (e.message || 'kesalahan tak terduga.'));
+    } finally { busy(btn, false); }
+  });
+})();
+
+/* =========================================================================
+   TOOL 7 — UNLOCK (remove password)
+   ========================================================================= */
+(function initUnlock(){
+  const optCard = document.getElementById('unlockOptionsCard');
+  const btn = document.getElementById('unlockBtn');
+  const statusEl = document.getElementById('unlockStatus');
+  let currentFile = null;
+
+  setupDropzone('unlockDropzone','unlockInput', async ([file]) => {
+    hideStatus(statusEl);
+    currentFile = { file, bytes: await fileToBytes(file) };
+    optCard.style.display = 'block';
+    btn.disabled = false;
+  }, false);
+
+  btn.addEventListener('click', async () => {
+    if (!currentFile) return;
+    const pw = document.getElementById('unlockPw').value;
+    hideStatus(statusEl);
+    busy(btn, true, 'Membuka kunci…');
+    try {
+      const result = await unlockPdfBytes(currentFile.bytes, pw);
+      if (!result.wasEncrypted){
+        showStatus(statusEl, 'info', 'File ini tidak terkunci kata sandi — tidak ada yang perlu dibuka.');
+        return;
+      }
+      downloadBytes(result.bytes, `${baseName(currentFile.file.name)}_terbuka.pdf`);
+      showStatus(statusEl, 'success', 'Kata sandi berhasil dihapus. File diunduh.');
+    } catch(e){
+      let msg = 'Gagal membuka kunci PDF.';
+      if (e.message === 'WRONG_PASSWORD') msg = 'Kata sandi salah.';
+      else if (e.message === 'UNSUPPORTED_ENCRYPTION_VERSION' || e.message === 'UNSUPPORTED_FILTER') msg = 'PDF ini memakai metode enkripsi (mis. AES-256) yang belum didukung oleh alat ringan berbasis-browser ini.';
+      else if (e.message === 'UNSUPPORTED_STRUCTURE') msg = 'Struktur file ini (object stream terkompresi) tidak dapat diproses sepenuhnya di sisi klien.';
+      showStatus(statusEl, 'error', msg);
+    } finally { busy(btn, false); }
+  });
+})();
+
+/* =========================================================================
+   TOOL 8 — SIGN
+   ========================================================================= */
+(function initSign(){
+  const optCard = document.getElementById('signOptionsCard');
+  const btn = document.getElementById('signBtn');
+  const statusEl = document.getElementById('signStatus');
+  let currentFile = null, pageCount = 0;
+  let sigMode = 'draw', corner = 'bottom-left';
+
+  // signature tabs
+  document.querySelectorAll('.sig-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.sig-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      sigMode = tab.dataset.sigmode;
+      document.getElementById('sigDrawWrap').style.display = sigMode === 'draw' ? 'block' : 'none';
+      document.getElementById('sigTypeWrap').style.display = sigMode === 'type' ? 'block' : 'none';
+    });
+  });
+
+  // draw pad
+  const pad = document.getElementById('sigPad');
+  const padCtx = pad.getContext('2d');
+  let drawing = false, lastX=0, lastY=0, hasDrawing=false;
+  function padPos(e){
+    const r = pad.getBoundingClientRect();
+    const cx = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+    const cy = (e.touches ? e.touches[0].clientY : e.clientY) - r.top;
+    return [cx * (pad.width/r.width), cy * (pad.height/r.height)];
+  }
+  function startDraw(e){ e.preventDefault(); drawing = true; [lastX,lastY] = padPos(e); }
+  function moveDraw(e){
+    if (!drawing) return; e.preventDefault();
+    const [x,y] = padPos(e);
+    padCtx.strokeStyle = '#111'; padCtx.lineWidth = 4; padCtx.lineCap = 'round'; padCtx.lineJoin = 'round';
+    padCtx.beginPath(); padCtx.moveTo(lastX,lastY); padCtx.lineTo(x,y); padCtx.stroke();
+    [lastX,lastY] = [x,y]; hasDrawing = true;
+  }
+  function endDraw(){ drawing = false; }
+  pad.addEventListener('mousedown', startDraw); pad.addEventListener('mousemove', moveDraw);
+  window.addEventListener('mouseup', endDraw);
+  pad.addEventListener('touchstart', startDraw, {passive:false}); pad.addEventListener('touchmove', moveDraw, {passive:false});
+  pad.addEventListener('touchend', endDraw);
+  document.getElementById('sigClear').addEventListener('click', () => { padCtx.clearRect(0,0,pad.width,pad.height); hasDrawing=false; });
+
+  // typed signature preview
+  const typedCanvas = document.getElementById('sigTypedCanvas');
+  const typedCtx = typedCanvas.getContext('2d');
+  function renderTyped(){
+    typedCtx.clearRect(0,0,typedCanvas.width,typedCanvas.height);
+    const name = document.getElementById('sigTypedName').value || '';
+    typedCtx.fillStyle = '#111';
+    typedCtx.font = "italic 64px 'Segoe Script','Brush Script MT','Lucida Handwriting',cursive";
+    typedCtx.textBaseline = 'middle'; typedCtx.textAlign = 'center';
+    typedCtx.fillText(name, typedCanvas.width/2, typedCanvas.height/2);
+  }
+  document.getElementById('sigTypedName').addEventListener('input', renderTyped);
+
+  // corner picker
+  document.querySelectorAll('.corner-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.corner-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active'); corner = b.dataset.corner;
+    });
+  });
+
+  const sizeSlider = document.getElementById('sigSize');
+  sizeSlider.addEventListener('input', () => { document.getElementById('sigSizeLabel').textContent = sizeSlider.value + 'px'; });
+
+  setupDropzone('signDropzone','signInput', async ([file]) => {
+    hideStatus(statusEl);
+    const bytes = await fileToBytes(file);
+    const doc = await loadPdfOrExplain(bytes, statusEl);
+    if (!doc){ optCard.style.display='none'; btn.disabled=true; return; }
+    currentFile = { file, bytes };
+    pageCount = doc.getPageCount();
+    document.getElementById('signPageNum').max = pageCount;
+    document.getElementById('signPageNum').value = 1;
+    optCard.style.display = 'block';
+    btn.disabled = false;
+  }, false);
+
+  function canvasToPngBytes(canvas){
+    const dataUrl = canvas.toDataURL('image/png');
+    const base64 = dataUrl.split(',')[1];
+    const bin = atob(base64);
+    const bytes = new Uint8Array(bin.length);
+    for (let i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+    return bytes;
+  }
+  // Trim transparent/white margins so the embedded signature isn't mostly empty space.
+  function trimCanvas(srcCanvas, isWhiteBg){
+    const w = srcCanvas.width, h = srcCanvas.height;
+    const ctx2 = srcCanvas.getContext('2d');
+    const data = ctx2.getImageData(0,0,w,h).data;
+    let minX=w, minY=h, maxX=0, maxY=0, found=false;
+    for (let y=0;y<h;y++){
+      for (let x=0;x<w;x++){
+        const idx = (y*w+x)*4;
+        const a = data[idx+3];
+        const isInk = isWhiteBg ? (a>0 && !(data[idx]>240 && data[idx+1]>240 && data[idx+2]>240)) : a>10;
+        if (isInk){ found=true; if(x<minX)minX=x; if(x>maxX)maxX=x; if(y<minY)minY=y; if(y>maxY)maxY=y; }
+      }
+    }
+    if (!found) return srcCanvas;
+    const pad = 8;
+    minX=Math.max(0,minX-pad); minY=Math.max(0,minY-pad); maxX=Math.min(w-1,maxX+pad); maxY=Math.min(h-1,maxY+pad);
+    const out = document.createElement('canvas');
+    out.width = maxX-minX+1; out.height = maxY-minY+1;
+    out.getContext('2d').drawImage(srcCanvas, minX, minY, out.width, out.height, 0, 0, out.width, out.height);
+    return out;
+  }
+
+  btn.addEventListener('click', async () => {
+    if (!currentFile) return;
+    hideStatus(statusEl);
+
+    let sourceCanvas;
+    if (sigMode === 'draw'){
+      if (!hasDrawing){ showStatus(statusEl, 'error', 'Gambar tanda tangan Anda terlebih dahulu.'); return; }
+      sourceCanvas = trimCanvas(pad, false);
+    } else {
+      const name = document.getElementById('sigTypedName').value.trim();
+      if (!name){ showStatus(statusEl, 'error', 'Ketik nama Anda terlebih dahulu.'); return; }
+      renderTyped();
+      sourceCanvas = trimCanvas(typedCanvas, true);
+    }
+
+    const pageNum = parseInt(document.getElementById('signPageNum').value, 10);
+    if (!pageNum || pageNum < 1 || pageNum > pageCount){ showStatus(statusEl, 'error', `Nomor halaman harus antara 1 dan ${pageCount}.`); return; }
+
+    busy(btn, true, 'Menandatangani…');
+    try {
+      const doc = await PDFDocument.load(currentFile.bytes, { ignoreEncryption:true });
+      const page = doc.getPage(pageNum - 1);
+      const { width: pw, height: ph } = page.getSize();
+
+      const pngBytes = canvasToPngBytes(sourceCanvas);
+      const png = await doc.embedPng(pngBytes);
+      const sigW = parseInt(sizeSlider.value, 10);
+      const sigH = sigW * (png.height / png.width);
+      const margin = 36;
+      let x, y;
+      if (corner === 'top-left'){ x = margin; y = ph - margin - sigH; }
+      else if (corner === 'top-right'){ x = pw - margin - sigW; y = ph - margin - sigH; }
+      else if (corner === 'bottom-right'){ x = pw - margin - sigW; y = margin; }
+      else { x = margin; y = margin; } // bottom-left
+
+      page.drawImage(png, { x, y, width: sigW, height: sigH });
+
+      if (document.getElementById('sigAddDate').checked){
+        const font = await doc.embedFont(StandardFonts.Helvetica);
+        const dateStr = new Date().toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' });
+        page.drawText(dateStr, { x, y: y - 13, size: 9, font, color: rgb(0.35,0.35,0.35) });
+      }
+
+      const out = await doc.save();
+      downloadBytes(out, `${baseName(currentFile.file.name)}_ttd.pdf`);
+      showStatus(statusEl, 'success', `Tanda tangan ditambahkan di halaman ${pageNum} dan file diunduh.`);
+    } catch(e){
+      console.error(e);
+      showStatus(statusEl, 'error', 'Gagal menambahkan tanda tangan: ' + (e.message || 'kesalahan tak terduga.'));
+    } finally { busy(btn, false); }
+  });
+})();
+
+})();
+</script>
+</body>
+</html>

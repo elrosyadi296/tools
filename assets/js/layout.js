@@ -11,6 +11,16 @@
 (function () {
   'use strict';
 
+  // Runtime PWA dipisahkan agar fondasi aplikasi dapat diperbarui tanpa
+  // mencampur logika shell dan logika cache/offline.
+  if (!document.querySelector('script[data-296-app-runtime]')) {
+    var appRuntime = document.createElement('script');
+    appRuntime.src = '/assets/js/app-runtime.js';
+    appRuntime.defer = true;
+    appRuntime.setAttribute('data-296-app-runtime', 'true');
+    document.head.appendChild(appRuntime);
+  }
+
   var BASE = '/assets/components/';
   var STORAGE_THEME = 'theme';
   var STORAGE_COLLAPSED = '296tools_sidebar_collapsed';
